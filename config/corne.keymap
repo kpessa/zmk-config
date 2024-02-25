@@ -9,6 +9,20 @@
 #include <dt-bindings/zmk/keys.h>
 
 / {
+    combos {
+        compatible = "zmk,combos";
+
+        numpad-toggle {
+            bindings = <&tog 3>;
+            key-positions = <37 38>;
+        };
+
+        colemak-toggle {
+            bindings = <&tog 4>;
+            key-positions = <40 39>;
+        };
+    };
+
     keymap {
         compatible = "zmk,keymap";
 
@@ -21,8 +35,8 @@
 
             bindings = <
 &mt ESC TAB     &kp Q  &kp W  &kp E     &kp R        &kp T                   &kp Y                   &kp U        &kp I      &kp O    &kp P          &kp BSPC
-&kp LCTRL       &kp A  &kp S  &kp D     &kp F        &kp G                   &kp H                   &kp J        &kp K      &kp L    &kp SEMICOLON  &mt APOS ENTER
-&kp LEFT_SHIFT  &kp Z  &kp X  &kp C     &kp V        &kp B                   &kp N                   &kp M        &kp COMMA  &kp DOT  &kp FSLH       &kp RIGHT_SHIFT
+&kp LEFT_SHIFT  &kp A  &kp S  &kp D     &kp F        &kp G                   &kp H                   &kp J        &kp K      &kp L    &kp SEMICOLON  &mt APOS ENTER
+&kp LCTRL       &kp Z  &kp X  &kp C     &kp V        &kp B                   &kp N                   &kp M        &kp COMMA  &kp DOT  &kp FSLH       &kp RIGHT_SHIFT
                               &kp LGUI  &lt 1 SPACE  &mt LC(RIGHT) DELETE    &mt RC(LEFT) BACKSPACE  &lt 2 SPACE  &kp RALT
             >;
         };
@@ -63,6 +77,15 @@
 &trans  &trans  &trans  &trans  &trans  &trans    &kp N4  &kp N5  &kp N6   &kp KP_SUBTRACT  &trans  &trans
 &trans  &trans  &trans  &trans  &trans  &trans    &kp N1  &kp N2  &kp N3   &kp EQUAL        &trans  &trans
                         &trans  &trans  &trans    &trans  &kp N0  &kp DOT
+            >;
+        };
+
+        colemak {
+            bindings = <
+&mt ESCAPE TAB  &kp Q  &kp W  &kp F     &kp P        &kp G                   &kp J                   &kp L        &kp U      &kp Y    &kp SEMI  &kp BSPC
+&kp LSHFT       &kp A  &kp R  &kp S     &kp T        &kp D                   &kp H                   &kp N        &kp E      &kp I    &kp O     &kp SQT
+&kp LCTRL       &kp Z  &kp X  &kp C     &kp V        &kp B                   &kp K                   &kp M        &kp COMMA  &kp DOT  &kp FSLH  &kp RSHFT
+                              &kp LGUI  &lt 1 SPACE  &mt LC(RIGHT) DELETE    &mt RC(LEFT) BACKSPACE  &lt 2 SPACE  &kp RALT
             >;
         };
     };
