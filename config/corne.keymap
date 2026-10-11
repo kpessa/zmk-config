@@ -31,11 +31,11 @@
     combos {
         compatible = "zmk,combos";
 
-        // both outer thumb keys together: steno on/off
+        // both inner thumb keys together: steno on/off
         steno_toggle {
             timeout-ms = <50>;
             bindings = <&tog STENO>;
-            key-positions = <36 41>;
+            key-positions = <38 39>;
         };
     };
 
@@ -100,13 +100,13 @@
             // |  #   |  #  |  #  |  #  |  #  |  #  |   |  #  |  #  |  #  |  #  |  #  |  #   |
             // |      |  S  |  T  |  P  |  H  |  *  |   |  *  |  F  |  P  |  L  |  T  |  D   |
             // |      |  S  |  K  |  W  |  R  |  *  |   |  *  |  R  |  B  |  G  |  S  |  Z   |
-            //                    |     |  A  |  O  |   |  E  |  U  |     |
+            //                    |  A  |  O  |     |   |     |  E  |  U  |
 
             bindings = <
 &kp N1  &kp N2  &kp N3  &kp N4  &kp N5  &kp N6    &kp N7  &kp N8  &kp N9  &kp N0  &kp MINUS  &kp EQUAL
 &none   &kp Q   &kp W   &kp E   &kp R   &kp T     &kp Y   &kp U   &kp I   &kp O   &kp P      &kp LBKT
 &none   &kp A   &kp S   &kp D   &kp F   &kp G     &kp H   &kp J   &kp K   &kp L   &kp SEMI   &kp SQT
-                        &none   &kp C   &kp V     &kp N   &kp M   &none
+                        &kp C   &kp V   &none     &none   &kp N   &kp M
             >;
         };
     };
