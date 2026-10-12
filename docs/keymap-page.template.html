@@ -138,6 +138,29 @@ text { font-family: inherit; text-anchor: middle; dominant-baseline: central; po
 
 .keys-help { margin: 34px 0 0; font-size: 12.5px; color: var(--faint); }
 
+/* ---- live, inside the viewer app: keys light as they are pressed ---- */
+.down .side { stroke: var(--led); stroke-width: 2.4; fill: var(--cap-side); }
+.down .top { fill: color-mix(in srgb, var(--led) 72%, var(--cap)); }
+.key.down:not(.steno) text { fill: #0c0d10; }
+.steno.down .side, .steno.down .top { filter: brightness(2); }
+.steno.down .tap { fill: #fff; }
+
+#live-status { display: none; margin: 10px 0 0; font-size: 12px; color: var(--quiet); }
+body.live #live-status { display: block; }
+body.live h1, body.live .keys-help { display: none; }
+/* the window has no title bar: leave room for its close/minimise buttons */
+body.live main { padding: 32px 14px 12px; }
+body.live { -webkit-user-select: none; user-select: none; cursor: default; }
+body.live .tab { padding: 6px 10px 7px; border-radius: 3px 3px 8px 8px; }
+body.live .tab svg { display: none; }
+body.live .tab .name { font-size: 15px; }
+body.live .tab .how { font-size: 11.5px; line-height: 1.25; }
+body.live .stage { margin-top: 4px; padding-top: 6px; }
+body.live #board { min-width: 0; }
+body.live .caption { margin-top: 6px; gap: 6px 24px; }
+body.live #status { font-size: 13px; }
+body.live #legend { font-size: 11.5px; gap: 4px 14px; }
+
 @media (max-width: 760px) {
   main { padding: 20px 16px 32px; }
   .tabs { display: flex; overflow-x: auto; margin: 0 -16px; padding: 0 16px; }
@@ -159,6 +182,7 @@ text { font-family: inherit; text-anchor: middle; dominant-baseline: central; po
     <p id="status" aria-live="polite"></p>
     <ul id="legend"></ul>
   </div>
+  <p id="live-status"></p>
   <p class="keys-help">Switch layers with the tabs, the coloured keys on the board, ← →, or 1–<span id="count">5</span>. Generated from config/corne.keymap by ./draw-keymap.</p>
 </main>
 
@@ -241,6 +265,7 @@ function drawBoard() {
     } else if (key.type === "held") {
       activate(g, `Let go, back to ${back}`, () => show(back));
     }
+    if (downPos.has(pos)) cls.push("down");
     g.setAttribute("class", cls.join(" "));
     keysG.append(g);
   });
@@ -320,6 +345,46 @@ function point(name) {
     if (on) node.style.setProperty("--hot", byName[name].colour); else node.style.removeProperty("--hot");
   }
 }
+
+// ---- live input: the viewer app calls these with what the keyboard sends ----
+const downKeys = new Map();   // HID usage -> the positions it lit
+const downPos = new Set();
+const LEFT_SHIFT = 225;
+let shiftAt = -1e9, shiftedAt = -1e9;
+
+function paintDown() {
+  downPos.clear();
+  for (const positions of downKeys.values()) positions.forEach(p => downPos.add(p));
+  for (const node of keysG.children) node.classList.toggle("down", downPos.has(+node.dataset.pos));
+}
+const sending = (layer, usage) => layer.codes.flatMap((codes, pos) => codes.includes(usage) ? [pos] : []);
+
+window.live = {
+  hid(page, usage, value) {
+    document.body.classList.add("live");
+    if (page === 12) {
+      // a layer signal: reported either as the usage going down or as the value
+      const layer = layers.find(l => l.signal === usage);
+      const to = layer ? (value ? layer : null) : layers.find(l => l.signal === value);
+      if (to && to.name !== current) show(to.name, current);
+    } else if (page === 7 && usage >= 4 && usage <= 231) {
+      if (!value) { downKeys.delete(usage); return paintDown(); }
+      const here = byName[current], now = performance.now();
+      let positions = sending(here, usage);
+      if (!positions.length) positions = sending(byName[DATA.base], usage);
+      // symbols arrive as shift + key: don't light the shift key for those
+      const implied = positions.some(p => here.shifted.includes(p));
+      if (usage === LEFT_SHIFT) { shiftAt = now; if (now - shiftedAt < 40) return; }
+      if (implied) { shiftedAt = now; if (now - shiftAt < 40) downKeys.delete(LEFT_SHIFT); }
+      downKeys.set(usage, positions);
+      paintDown();
+    }
+  },
+  status(text) {
+    document.body.classList.add("live");
+    document.getElementById("live-status").textContent = text;
+  },
+};
 
 // ---- tabs ----
 tablist.style.setProperty("--n", layers.length);

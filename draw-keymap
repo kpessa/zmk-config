@@ -29,7 +29,7 @@ uvx --from keymap-drawer keymap -c "$CARD" draw docs/corne-keymap.yaml -s Steno 
 
 # interactive page: legends from the YAML, key positions from the drawn SVG
 uv run --quiet --with pyyaml docs/keymap_page.py docs/corne-keymap.yaml docs/corne-keymap.svg \
-  docs/keymap-page.template.html > docs/corne-keymap.html
+  docs/keymap-page.template.html config/corne.keymap > docs/corne-keymap.html
 
 echo "wrote docs/corne-keymap.html, docs/corne-keymap.svg and docs/corne-steno.svg"
 [ "${1:-}" = "--open" ] && open docs/corne-keymap.html

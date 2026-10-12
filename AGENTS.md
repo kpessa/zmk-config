@@ -58,6 +58,31 @@ To check a change visually, screenshot the SVG with headless Chrome and look at 
   "file://$PWD/docs/corne-keymap.svg"
 ```
 
+## Live viewer app
+
+`./viewer/build [--open]` compiles `viewer/CorneLayers.swift` into
+`viewer/dist/Corne Layers.app` (git-ignored): a floating window that hosts
+`docs/corne-keymap.html` and feeds it what the keyboard sends.
+
+- The app reads the Corne's raw HID reports through `IOHIDManager` (Input
+  Monitoring permission). It only listens, so nothing is intercepted. It keeps
+  devices whose product name contains "Corne" (`--device NAME` to change,
+  `--log` to print every HID value).
+- The Mac can't see layers, so every layer macro in the keymap also taps a
+  consumer key macOS ignores (`SIG_*` defines at the top of `corne.keymap`:
+  Media Select TV/VCR/Tuner/Tape/Cable/Satellite). A new layer needs a `SIG_`
+  define, a tap in its macro, and an entry in `CONSUMER` in `keymap_page.py`.
+- Signals have to be consumer keys: with NKRO on, ZMK's keyboard report stops
+  at keypad `=`, so F13 and up can't be sent.
+- `keymap_page.py` parses the keymap's bindings into per-layer HID usages
+  (`codes`), shift-implied positions (`shifted`) and the layer `signal`; the
+  page's `window.live.hid(page, usage, value)` does the rest. Rebuild the app
+  after a keymap change, since it bundles a copy of the page.
+- Karabiner-Elements is installed on Kurt's Mac. If it grabs the Corne, the app
+  sees nothing from it: turn off "Modify events" for the Corne in Karabiner.
+- Not yet verified on hardware (2026-10-12): that the signals arrive and that
+  macOS ignores them, and that keys still show while Plover is capturing.
+
 ## Design state (2026-10-12)
 
 First designed pass is done and was checked layer by layer. Known rough edges and

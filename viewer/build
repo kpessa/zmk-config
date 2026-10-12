@@ -1,0 +1,42 @@
+#!/bin/bash
+# Build "Corne Layers.app" into viewer/dist/ (git-ignored) from CorneLayers.swift
+# and the current docs/corne-keymap.html. Needs the Xcode command line tools.
+#   ./viewer/build [--open]
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+./draw-keymap >/dev/null
+
+APP="viewer/dist/Corne Layers.app"
+rm -rf "$APP"
+mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
+cp docs/corne-keymap.html "$APP/Contents/Resources/"
+swiftc -O -swift-version 5 -target "$(uname -m)-apple-macosx13.0" -o "$APP/Contents/MacOS/CorneLayers" viewer/CorneLayers.swift
+
+cat > "$APP/Contents/Info.plist" <<'EOF'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleName</key><string>Corne Layers</string>
+  <key>CFBundleIdentifier</key><string>com.kpessa.corne-layers</string>
+  <key>CFBundleExecutable</key><string>CorneLayers</string>
+  <key>CFBundlePackageType</key><string>APPL</string>
+  <key>CFBundleShortVersionString</key><string>1.0</string>
+  <key>LSMinimumSystemVersion</key><string>13.0</string>
+  <key>NSHighResolutionCapable</key><true/>
+</dict>
+</plist>
+EOF
+
+# Sign with a real identity when there is one, so the Input Monitoring grant
+# survives rebuilds; an ad-hoc signature has to be re-allowed after each build.
+IDENTITY=$(security find-identity -v -p codesigning | awk -F'"' '/Apple Development|Developer ID/ {print $2; exit}')
+if [ -z "$IDENTITY" ] || ! codesign --force --sign "$IDENTITY" "$APP" 2>/dev/null; then
+  codesign --force --sign - "$APP"
+  echo "signed ad hoc: re-allow it under Input Monitoring after each rebuild"
+fi
+
+echo "built $APP"
+[ "${1:-}" = "--open" ] && open "$APP"
+exit 0
