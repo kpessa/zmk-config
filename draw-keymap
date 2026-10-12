@@ -1,0 +1,36 @@
+#!/bin/bash
+# Redraw docs/corne-keymap.svg (all layers), docs/corne-steno.svg (steno card) and
+# docs/corne-keymap.html (interactive, one layer at a time) from config/corne.keymap.
+# Needs uv (brew install uv).
+set -euo pipefail
+cd "$(dirname "$0")"
+
+KD=(uvx --from keymap-drawer keymap -c docs/keymap-drawer.config.yaml)
+
+"${KD[@]}" parse -c 12 -z config/corne.keymap 2>/dev/null \
+  | uv run --quiet --with pyyaml docs/keymap_style.py > docs/corne-keymap.yaml
+
+hints() {
+  sed -E \
+    -e 's|(class="label"[^>]*>)Kinesis<|\1Kinesis<tspan class="hint" dx="10">base · white LEDs</tspan><|' \
+    -e 's|(class="label"[^>]*>)Num/Nav<|\1Num / Nav<tspan class="hint" dx="10">hold ⌦ · blue</tspan><|' \
+    -e 's|(class="label"[^>]*>)Symbols<|\1Symbols<tspan class="hint" dx="10">hold ⏎ · orange · the Num layer, shifted</tspan><|' \
+    -e 's|(class="label"[^>]*>)Fn<|\1Fn<tspan class="hint" dx="10">hold \\ (top right) · purple</tspan><|' \
+    -e 's|(class="label"[^>]*>)Steno<|\1Steno<tspan class="hint" dx="10">both inner thumbs together, same to leave · green · small letter = key Plover sees</tspan><|' \
+    -e 's|(class="label"[^>]*>)Arrows<|\1Arrows<tspan class="hint" dx="10">both outer thumbs together, same to leave · cyan</tspan><|'
+}
+
+"${KD[@]}" draw docs/corne-keymap.yaml | hints > docs/corne-keymap.svg
+# steno card: one layer, one column, bigger keys
+CARD=$(mktemp); trap 'rm -f "$CARD"' EXIT
+sed -e 's/n_columns: 2/n_columns: 1/' -e 's/key_w: 64/key_w: 84/' -e 's/key_h: 60/key_h: 78/' \
+  docs/keymap-drawer.config.yaml > "$CARD"
+uvx --from keymap-drawer keymap -c "$CARD" draw docs/corne-keymap.yaml -s Steno | hints > docs/corne-steno.svg
+
+# interactive page: legends from the YAML, key positions from the drawn SVG
+uv run --quiet --with pyyaml docs/keymap_page.py docs/corne-keymap.yaml docs/corne-keymap.svg \
+  docs/keymap-page.template.html > docs/corne-keymap.html
+
+echo "wrote docs/corne-keymap.html, docs/corne-keymap.svg and docs/corne-steno.svg"
+[ "${1:-}" = "--open" ] && open docs/corne-keymap.html
+exit 0

@@ -1,0 +1,475 @@
+layout:
+  zmk_keyboard: corne
+layers:
+  Kinesis:
+  - t: ⇥
+  - t: Q
+  - t: W
+  - t: E
+  - t: R
+  - t: T
+  - t: Y
+  - t: U
+  - t: I
+  - t: O
+  - t: P
+  - t: \
+    h: Fn
+  - t: esc
+    h: ctrl
+  - t: A
+  - t: S
+  - t: D
+  - t: F
+  - t: G
+  - t: H
+  - t: J
+  - t: K
+  - t: L
+  - t: ;
+  - t: ''''
+  - t: ⇧
+  - t: Z
+  - t: X
+  - t: C
+  - t: V
+  - t: B
+  - t: N
+  - t: M
+  - t: ','
+  - t: .
+  - t: /
+  - t: ⇧
+  - t: ⌘
+  - t: ⌫
+  - t: ⌦
+    h: Num
+  - t: ⏎
+    h: Sym
+  - t: ␣
+  - t: ⌥
+  Num/Nav:
+  - t: '='
+  - t: '1'
+  - t: '2'
+  - t: '3'
+  - t: '4'
+  - t: '5'
+  - t: '6'
+  - t: '7'
+  - t: '8'
+  - t: '9'
+  - t: '0'
+  - t: '-'
+  - t: esc
+    type: thru
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: home
+  - t: end
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: pg↑
+  - t: pg↓
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''''
+    type: thru
+  - t: ⇧
+    type: thru
+  - t: '`'
+  - t: caps
+  - t: ←
+  - t: →
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ↑
+  - t: ↓
+  - t: '['
+  - t: ']'
+  - t: ⇧
+    type: thru
+  - t: ⌘
+    type: thru
+  - t: ⌫
+    type: thru
+  - t: ⌦
+    h: held
+    type: held
+  - t: ⏎
+    type: thru
+  - t: ␣
+    type: thru
+  - t: ⌥
+    type: thru
+  Symbols:
+  - t: +
+  - t: '!'
+  - t: '@'
+  - t: '#'
+  - t: $
+  - t: '%'
+  - t: ^
+  - t: '&'
+  - t: '*'
+  - t: (
+  - t: )
+  - t: _
+  - t: esc
+    type: thru
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: home
+  - t: end
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: pg↑
+  - t: pg↓
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''''
+    type: thru
+  - t: ⇧
+    type: thru
+  - t: '~'
+  - t: caps
+  - t: ←
+  - t: →
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ↑
+  - t: ↓
+  - t: '{'
+  - t: '}'
+  - t: ⇧
+    type: thru
+  - t: ⌘
+    type: thru
+  - t: ⌫
+    type: thru
+  - t: ⌦
+    type: thru
+  - t: ⏎
+    h: held
+    type: held
+  - t: ␣
+    type: thru
+  - t: ⌥
+    type: thru
+  Fn:
+  - t: boot
+  - t: BT
+    h: '0'
+  - t: BT
+    h: '1'
+  - t: BT
+    h: '2'
+  - t: BT
+    h: '3'
+  - t: BT
+    h: '4'
+  - t: F1
+  - t: F2
+  - t: F3
+  - t: F4
+  - t: boot
+  - t: \
+    h: held
+    type: held
+  - t: BT clr
+  - t: USB BT
+  - t: RGB
+  - t: studio
+  - t: RGB fix
+  - t: ''
+    type: 'off'
+  - t: F5
+  - t: F6
+  - t: F7
+  - t: F8
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: reset
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: F9
+  - t: F10
+  - t: F11
+  - t: F12
+  - t: reset
+  - t: ''
+    type: 'off'
+  - t: ⌘
+    type: thru
+  - t: ⌫
+    type: thru
+  - t: ⌦
+    type: thru
+  - t: ⏎
+    type: thru
+  - t: ␣
+    type: thru
+  - t: ⌥
+    type: thru
+  Steno:
+  - t: '#'
+    s: '1'
+    type: sn
+  - t: '#'
+    s: '2'
+    type: sn
+  - t: '#'
+    s: '3'
+    type: sn
+  - t: '#'
+    s: '4'
+    type: sn
+  - t: '#'
+    s: '5'
+    type: sn
+  - t: '#'
+    s: '6'
+    type: sn
+  - t: '#'
+    s: '7'
+    type: sn
+  - t: '#'
+    s: '8'
+    type: sn
+  - t: '#'
+    s: '9'
+    type: sn
+  - t: '#'
+    s: '0'
+    type: sn
+  - t: '#'
+    s: '-'
+    type: sn
+  - t: '#'
+    s: '='
+    type: sn
+  - t: ''
+    type: 'off'
+  - t: S
+    s: q
+    type: sl
+  - t: T
+    s: w
+    type: sl
+  - t: P
+    s: e
+    type: sl
+  - t: H
+    s: r
+    type: sl
+  - t: ✱
+    s: t
+    type: sx
+  - t: ✱
+    s: y
+    type: sx
+  - t: F
+    s: u
+    type: sr
+  - t: P
+    s: i
+    type: sr
+  - t: L
+    s: o
+    type: sr
+  - t: T
+    s: p
+    type: sr
+  - t: D
+    s: '['
+    type: sr
+  - t: ''
+    type: 'off'
+  - t: S
+    s: a
+    type: sl
+  - t: K
+    s: s
+    type: sl
+  - t: W
+    s: d
+    type: sl
+  - t: R
+    s: f
+    type: sl
+  - t: ✱
+    s: g
+    type: sx
+  - t: ✱
+    s: h
+    type: sx
+  - t: R
+    s: j
+    type: sr
+  - t: B
+    s: k
+    type: sr
+  - t: G
+    s: l
+    type: sr
+  - t: S
+    s: ;
+    type: sr
+  - t: Z
+    s: ''''
+    type: sr
+  - t: A
+    s: c
+    type: sv
+  - t: O
+    s: v
+    type: sv
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: E
+    s: n
+    type: sv
+  - t: U
+    s: m
+    type: sv
+  Arrows:
+  - t: ⌥
+  - t: Q
+    type: thru
+  - t: W
+    type: thru
+  - t: E
+    type: thru
+  - t: R
+    type: thru
+  - t: T
+    type: thru
+  - t: Y
+    type: thru
+  - t: U
+    type: thru
+  - t: I
+    type: thru
+  - t: O
+    type: thru
+  - t: P
+    type: thru
+  - t: \
+    h: Fn
+  - t: ctrl
+  - t: A
+    type: thru
+  - t: S
+    type: thru
+  - t: D
+    type: thru
+  - t: F
+    type: thru
+  - t: G
+    type: thru
+  - t: H
+    type: thru
+  - t: J
+    type: thru
+  - t: K
+    type: thru
+  - t: L
+    type: thru
+  - t: ↑
+  - t: ''''
+    type: thru
+  - t: ⇧
+  - t: Z
+    type: thru
+  - t: X
+    type: thru
+  - t: C
+    type: thru
+  - t: V
+    type: thru
+  - t: B
+    type: thru
+  - t: N
+    type: thru
+  - t: M
+    type: thru
+  - t: ','
+    type: thru
+  - t: ←
+  - t: ↓
+  - t: →
+  - t: ⌘
+    type: thru
+  - t: ⌫
+    type: thru
+  - t: ⌦
+    h: Num
+  - t: ⏎
+    h: Sym
+  - t: ␣
+    type: thru
+  - t: ⌥
+    type: thru
+combos:
+- p:
+  - 38
+  - 39
+  k: Steno
+  l:
+  - Kinesis
+  a: top
+  o: 0.35
+- p:
+  - 36
+  - 41
+  k: Arrows
+  l:
+  - Kinesis
+  a: bottom
+  o: 0.35
+  type: nav
+- p:
+  - 36
+  - 41
+  k: exit
+  l:
+  - Arrows
+  a: bottom
+  o: 0.35
+  type: nav
+- p:
+  - 38
+  - 39
+  k: exit
+  l:
+  - Steno
+  a: top
+  o: 0.35
