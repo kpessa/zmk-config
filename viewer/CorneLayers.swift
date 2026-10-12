@@ -58,7 +58,7 @@ final class Viewer: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKScr
 
     func buildWindow() {
         // a panel that floats over other apps and never takes keyboard focus
-        window = NSPanel(contentRect: NSRect(x: 0, y: 0, width: 820, height: 532),
+        window = NSPanel(contentRect: NSRect(x: 0, y: 0, width: 900, height: 570),
                          styleMask: [.titled, .closable, .resizable, .nonactivatingPanel, .fullSizeContentView],
                          backing: .buffered, defer: false)
         window.title = "Corne Layers"
@@ -71,7 +71,7 @@ final class Viewer: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKScr
         window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         window.backgroundColor = NSColor(red: 0x11 / 255, green: 0x13 / 255, blue: 0x18 / 255, alpha: 1)
         window.appearance = NSAppearance(named: .darkAqua)
-        window.contentAspectRatio = NSSize(width: 820, height: 532)
+        window.contentAspectRatio = NSSize(width: 900, height: 570)
         window.setFrameAutosaveName("CorneLayers")
         if window.frame.origin == .zero { window.center() }
 

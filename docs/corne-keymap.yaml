@@ -103,7 +103,7 @@ layers:
   - t: ⏎
     type: thru
   - t: ␣
-    type: thru
+    h: '123'
   - t: ⌥
     type: thru
   Symbols:
@@ -154,7 +154,7 @@ layers:
   - t: ⌘
     type: thru
   - t: ⌫
-    type: thru
+    h: '!@#'
   - t: ⌦
     type: thru
   - t: ⏎
@@ -430,7 +430,7 @@ layers:
     type: thru
   - t: ⌥
     type: thru
-  Row:
+  NumRow:
   - t: '='
   - t: '1'
   - t: '2'
@@ -498,6 +498,81 @@ layers:
   - t: ⌦
     h: held
     type: held
+  - t: ⏎
+    type: thru
+  - t: ␣
+    h: held
+    type: held
+  - t: ⌥
+    type: thru
+  SymRow:
+  - t: +
+  - t: '!'
+  - t: '@'
+  - t: '#'
+  - t: $
+  - t: '%'
+  - t: ^
+  - t: '&'
+  - t: '*'
+  - t: (
+  - t: )
+  - t: _
+  - t: esc
+    type: thru
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''''
+    type: thru
+  - t: ⇧
+    type: thru
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ⇧
+    type: thru
+  - t: ⌘
+    type: thru
+  - t: ⌫
+    h: held
+    type: held
+  - t: ⌦
+    type: thru
   - t: ⏎
     h: held
     type: held

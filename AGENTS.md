@@ -6,16 +6,21 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
 
 ## Layout
 
-- `config/corne.keymap` — the source of truth. Seven layers: **Kinesis** (base,
+- `config/corne.keymap` — the source of truth. Eight layers: **Kinesis** (base,
   Kinesis Advantage360 letter block), **Num/Nav** (hold ⌦; numpad under the right
   hand reading 1 2 3 from the top, arrow cluster under the left), **Symbols**
-  (hold ⏎; the Num layer with shift already applied, nav keys unchanged), **Row**
-  (hold ⌦ and ⏎ one after the other, a ZMK conditional layer; the classic number
-  row, no LED colour or signal of its own), **Fn** (hold `\`,
+  (hold ⏎; the Num layer with shift already applied, nav keys unchanged), **NumRow**
+  (hold ⌦, then also ␣: the classic number row across the top), **SymRow** (hold
+  ⏎, then also ⌫: that row's symbols), **Fn** (hold `\`,
   top right), **Steno** (both inner thumbs together toggles), **Arrows** (both
   outer thumbs together toggles, locks on).
 - Each layer sets the underglow colour through a macro: white base, blue Num/Nav,
-  orange Symbols, purple Fn, green Steno, cyan Arrows.
+  orange Symbols, yellow NumRow, pink SymRow, purple Fn, green Steno, cyan Arrows.
+- Both inner thumbs pressed together is the Steno toggle, so nothing else should
+  use ⌦ + ⏎ (a both-thumbs number row was tried on 2026-10-12 and collided).
+- Home row mods are a planned later step (Kurt agreed 2026-10-12: after the
+  numpad settles, additive, with opposite-hand and prior-idle settings). If they
+  stick, the esc/ctrl key's hold is the candidate for a pinky-held symbol row.
 - `config/corne.conf` — NKRO is on (`CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y`) because
   steno chords exceed six keys.
 - The Steno layer sends the QWERTY letters Plover's "Keyboard" machine expects.
@@ -26,7 +31,7 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
 
 `./draw-keymap [--open]` regenerates, from the keymap:
 
-- `docs/corne-keymap.svg` — all seven layers, dark theme, two columns
+- `docs/corne-keymap.svg` — all eight layers, dark theme, two columns
 - `docs/corne-steno.svg` — the Steno layer alone, larger, as a practice card
 - `docs/corne-keymap.html` — interactive: one layer at a time, a tab per layer
   (`--open` opens this one)
@@ -73,10 +78,10 @@ To check a change visually, screenshot the SVG with headless Chrome and look at 
   `--log` to print every HID value).
 - The Mac can't see layers, so every layer macro in the keymap also sends a
   consumer key macOS ignores (`SIG_*` defines at the top of `corne.keymap`:
-  Media Select TV/VCR/Tuner/Tape/Cable/Satellite). Held layers keep theirs down
+  Media Select TV/VCR/Tuner/Tape/Cable/Satellite/Games/CD). Held layers keep theirs down
   while held; locked layers and the way back to base tap theirs. The page works
-  out the layer from which are down, including conditional layers (Row), which
-  it reads from the keymap's `conditional_layers`. A new layer needs a `SIG_`
+  out the layer from which are down (the newest held one wins). It also handles
+  ZMK `conditional_layers`, though the keymap has none at the moment. A new layer needs a `SIG_`
   define, its macro sending it, and an entry in `CONSUMER` in `keymap_page.py`.
 - Signals have to be consumer keys: with NKRO on, ZMK's keyboard report stops
   at keypad `=`, so F13 and up can't be sent.

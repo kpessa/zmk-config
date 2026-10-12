@@ -20,7 +20,8 @@ SYMBOLS = {
     "CAPS": "caps", "BT CLR": "BT clr", "OUT TOG": "USB BT", "RGB TOG": "RGB",
     "&bootloader": "boot", "&sys_reset": "reset", "&studio_unlock": "studio",
     "&rgb_reset": "RGB fix",
-    "&num_c": "Num", "&num_cn": "Num", "&sym_c": "Sym", "&sym_cn": "Sym", "&fn_c": "Fn", "&fn_cn": "Fn",
+    "&num_c": "Num", "&num_cn": "Num", "&sym_c": "Sym", "&sym_cn": "Sym",
+    "&row_c": "123", "&srow_c": "!@#", "&fn_c": "Fn", "&fn_cn": "Fn",
     "&steno_on": "Steno", "&steno_off": "exit", "&nav_on": "Arrows", "&nav_off": "exit",
 }
 
@@ -36,7 +37,7 @@ STENO = {
 }
 
 # key positions that are physically held down while a layer is showing
-HELD = {"Num/Nav": [38], "Symbols": [39], "Fn": [11], "Row": [38, 39]}
+HELD = {"Num/Nav": [38], "Symbols": [39], "Fn": [11], "NumRow": [38, 40], "SymRow": [39, 37]}
 
 
 def as_dict(key):
