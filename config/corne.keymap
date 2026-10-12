@@ -17,6 +17,15 @@
 #define STENO 4
 #define NAV 5
 
+// Layer signals for the viewer app (viewer/): every layer change also taps a
+// consumer key that macOS ignores, so the app can follow the active layer.
+#define SIG_BASE C_MEDIA_TV
+#define SIG_NUM C_MEDIA_VCR
+#define SIG_SYM C_MEDIA_TUNER
+#define SIG_FN C_MEDIA_TAPE
+#define SIG_STENO C_MEDIA_CABLE
+#define SIG_NAV C_MEDIA_SATELLITE
+
 &mt {
     flavor = "balanced";
     tapping-term-ms = <200>;
@@ -39,9 +48,10 @@
             tap-ms = <0>;
             bindings = <&macro_tap &rgb_ug RGB_COLOR_HSB(240,100,25)>,
                        <&macro_press &mo NUM>,
+                       <&macro_tap &kp SIG_NUM>,
                        <&macro_pause_for_release>,
                        <&macro_release &mo NUM>,
-                       <&macro_tap &rgb_ug RGB_COLOR_HSB(0,0,25)>;
+                       <&macro_tap &rgb_ug RGB_COLOR_HSB(0,0,25) &kp SIG_BASE>;
         };
 
         sym_c: sym_colour {
@@ -51,9 +61,10 @@
             tap-ms = <0>;
             bindings = <&macro_tap &rgb_ug RGB_COLOR_HSB(30,100,25)>,
                        <&macro_press &mo SYM>,
+                       <&macro_tap &kp SIG_SYM>,
                        <&macro_pause_for_release>,
                        <&macro_release &mo SYM>,
-                       <&macro_tap &rgb_ug RGB_COLOR_HSB(0,0,25)>;
+                       <&macro_tap &rgb_ug RGB_COLOR_HSB(0,0,25) &kp SIG_BASE>;
         };
 
         fn_c: fn_colour {
@@ -63,33 +74,34 @@
             tap-ms = <0>;
             bindings = <&macro_tap &rgb_ug RGB_COLOR_HSB(280,100,25)>,
                        <&macro_press &mo FN>,
+                       <&macro_tap &kp SIG_FN>,
                        <&macro_pause_for_release>,
                        <&macro_release &mo FN>,
-                       <&macro_tap &rgb_ug RGB_COLOR_HSB(0,0,25)>;
+                       <&macro_tap &rgb_ug RGB_COLOR_HSB(0,0,25) &kp SIG_BASE>;
         };
 
         steno_on: steno_on {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&rgb_ug RGB_COLOR_HSB(120,100,25)>, <&to STENO>;
+            bindings = <&rgb_ug RGB_COLOR_HSB(120,100,25)>, <&to STENO>, <&kp SIG_STENO>;
         };
 
         steno_off: steno_off {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&rgb_ug RGB_COLOR_HSB(0,0,25)>, <&to BASE>;
+            bindings = <&rgb_ug RGB_COLOR_HSB(0,0,25)>, <&to BASE>, <&kp SIG_BASE>;
         };
 
         nav_on: nav_on {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&rgb_ug RGB_COLOR_HSB(180,100,25)>, <&to NAV>;
+            bindings = <&rgb_ug RGB_COLOR_HSB(180,100,25)>, <&to NAV>, <&kp SIG_NAV>;
         };
 
         nav_off: nav_off {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            bindings = <&rgb_ug RGB_COLOR_HSB(0,0,25)>, <&to BASE>;
+            bindings = <&rgb_ug RGB_COLOR_HSB(0,0,25)>, <&to BASE>, <&kp SIG_BASE>;
         };
 
         // same as num_c / sym_c / fn_c, but fall back to the NAV colour on release
@@ -100,9 +112,10 @@
             tap-ms = <0>;
             bindings = <&macro_tap &rgb_ug RGB_COLOR_HSB(240,100,25)>,
                        <&macro_press &mo NUM>,
+                       <&macro_tap &kp SIG_NUM>,
                        <&macro_pause_for_release>,
                        <&macro_release &mo NUM>,
-                       <&macro_tap &rgb_ug RGB_COLOR_HSB(180,100,25)>;
+                       <&macro_tap &rgb_ug RGB_COLOR_HSB(180,100,25) &kp SIG_NAV>;
         };
 
         sym_cn: sym_colour_nav {
@@ -112,9 +125,10 @@
             tap-ms = <0>;
             bindings = <&macro_tap &rgb_ug RGB_COLOR_HSB(30,100,25)>,
                        <&macro_press &mo SYM>,
+                       <&macro_tap &kp SIG_SYM>,
                        <&macro_pause_for_release>,
                        <&macro_release &mo SYM>,
-                       <&macro_tap &rgb_ug RGB_COLOR_HSB(180,100,25)>;
+                       <&macro_tap &rgb_ug RGB_COLOR_HSB(180,100,25) &kp SIG_NAV>;
         };
 
         fn_cn: fn_colour_nav {
@@ -124,9 +138,10 @@
             tap-ms = <0>;
             bindings = <&macro_tap &rgb_ug RGB_COLOR_HSB(280,100,25)>,
                        <&macro_press &mo FN>,
+                       <&macro_tap &kp SIG_FN>,
                        <&macro_pause_for_release>,
                        <&macro_release &mo FN>,
-                       <&macro_tap &rgb_ug RGB_COLOR_HSB(180,100,25)>;
+                       <&macro_tap &rgb_ug RGB_COLOR_HSB(180,100,25) &kp SIG_NAV>;
         };
 
         // lights on, solid, white: use if the colours ever get out of step
