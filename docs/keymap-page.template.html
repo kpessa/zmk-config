@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Corne layers</title>
+<style>
+@property --led { syntax: "<color>"; inherits: true; initial-value: #f2f3f5; }
+
+:root {
+  --mat: #111318;
+  --plate: #1a1d24;
+  --cap-side: #1b1e25;
+  --cap: #272b34;
+  --edge: #3b414c;
+  --ink: #e9ebef;
+  --quiet: #8d95a3;
+  --faint: #4c5361;
+  --led: #f2f3f5;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--mat);
+  color: var(--ink);
+  font: 500 15px/1.45 "SF Pro Rounded", ui-rounded, "SF Pro Text", -apple-system, "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: --led .35s ease;
+}
+
+main { max-width: 1180px; margin: 0 auto; padding: 28px 24px 40px; }
+
+h1 { margin: 0 0 18px; font-size: 15px; font-weight: 600; color: var(--quiet); }
+
+/* ---- layer tabs: each one shows the keys that take you there ---- */
+.tabs { display: grid; grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr)); gap: 6px; }
+
+.tab {
+  --c: var(--quiet);
+  appearance: none;
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  padding: 12px 14px 12px;
+  border: 0;
+  border-top: 3px solid transparent;
+  border-radius: 4px 4px 12px 12px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.tab:hover { background: color-mix(in srgb, var(--c) 7%, transparent); }
+.tab:focus-visible { outline: 2px solid var(--c); outline-offset: 2px; }
+.tab[aria-selected="true"] { background: var(--plate); border-top-color: var(--c); }
+
+.tab svg { display: block; width: 100%; max-width: 132px; height: auto; margin-bottom: 8px; }
+.tab svg rect { fill: #2a2e37; }
+.tab svg rect.lit { fill: var(--c); }
+.tab svg.all rect { fill: color-mix(in srgb, var(--c) 45%, #2a2e37); }
+
+.tab .name { font-size: 19px; font-weight: 700; letter-spacing: .01em; color: var(--c); }
+.tab .how { font-size: 13px; color: var(--quiet); }
+.tab[aria-selected="true"] .how { color: var(--ink); }
+
+/* ---- the board ---- */
+.stage { margin-top: 10px; padding: 26px 0 0; overflow-x: auto; }
+#board { display: block; width: 100%; min-width: 640px; height: auto; overflow: visible; }
+
+.glow { fill: var(--led); opacity: .2; }
+
+text { font-family: inherit; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.side { fill: var(--cap-side); stroke: var(--edge); stroke-width: 1.2; }
+.top { fill: var(--cap); }
+.tap { fill: var(--ink); font-size: 17px; font-weight: 500; }
+.tap.mid { font-size: 13px; }
+.tap.small { font-size: 11px; }
+.icon { fill: none; stroke: var(--ink); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.key.down .icon { stroke: #0c0d10; }
+.hold, .shift { fill: var(--quiet); font-size: 9.5px; font-weight: 600; letter-spacing: .04em; }
+
+/* keys this layer changes, tinted with its LED colour */
+.live .side { stroke: color-mix(in srgb, var(--led) 55%, var(--mat)); }
+.live .top { fill: color-mix(in srgb, var(--led) 17%, var(--cap)); }
+
+/* same as the base layer: its legend, ghosted */
+.thru .side { fill: #16181e; stroke: #252930; }
+.thru .top { fill: none; }
+.thru .tap { fill: var(--faint); font-weight: 400; }
+/* does nothing here */
+.off .side { fill: var(--mat); fill-opacity: .7; stroke: #2b2f38; stroke-dasharray: 3 4; }
+.off .top { fill: none; }
+
+/* the key you are holding down */
+.held .side { stroke: var(--led); stroke-width: 2; }
+.held .top { fill: color-mix(in srgb, var(--led) 10%, var(--cap)); }
+.held .tap { fill: var(--quiet); }
+.held .hold { fill: var(--led); }
+
+/* keys that lead to another layer, in that layer's colour */
+.door, .held, .link { cursor: pointer; }
+.door .side { stroke: var(--to); stroke-width: 1.8; }
+.door .hold { fill: var(--to); font-size: 10.5px; }
+.door:hover .top, .held:hover .top { fill: color-mix(in srgb, var(--to, var(--led)) 22%, var(--cap)); }
+.door:focus-visible, .held:focus-visible, .link:focus-visible { outline: none; }
+.door:focus-visible .side, .held:focus-visible .side { stroke-width: 3; }
+
+.link path { fill: none; stroke: var(--to); stroke-width: 1.4; stroke-dasharray: 2 4; stroke-linecap: round; opacity: .7; }
+.link rect { fill: var(--mat); stroke: var(--to); stroke-width: 1.5; }
+.link text { fill: var(--to); font-size: 12px; font-weight: 700; letter-spacing: .02em; }
+.link:hover rect, .link:focus-visible rect { fill: color-mix(in srgb, var(--to) 22%, var(--mat)); }
+
+/* pointing at a tab: show its way in, quieten the rest */
+#board .key, #board .link { transition: opacity .15s; }
+#board.pointing .key:not(.hot), #board.pointing .link:not(.hot) { opacity: .28; }
+#board .hot .side { stroke: var(--hot); stroke-width: 2.5; }
+#board .hot .top { fill: color-mix(in srgb, var(--hot) 30%, var(--cap)); }
+
+/* steno keys */
+.steno .tap { font-size: 21px; font-weight: 700; }
+.steno .shift { font-size: 10.5px; }
+.sl .side { fill: #16283f; stroke: #4a82c9; } .sl .top { fill: #1d3350; } .sl .tap { fill: #a9cdfb; } .sl .shift { fill: #6f9bd0; }
+.sr .side { fill: #152d25; stroke: #3fa57a; } .sr .top { fill: #1b3a30; } .sr .tap { fill: #a5ecc9; } .sr .shift { fill: #5fb894; }
+.sv .side { fill: #362913; stroke: #d19a3c; } .sv .top { fill: #45351a; } .sv .tap { fill: #ffd995; } .sv .shift { fill: #c9a05a; }
+.sx .side { fill: #351a20; stroke: #cf5f72; } .sx .top { fill: #44222a; } .sx .tap { fill: #ffb3bf; } .sx .shift { fill: #c9788a; }
+.sn .side { stroke: #596170; } .sn .tap { fill: #a7aebb; font-size: 16px; }
+
+/* ---- under the board ---- */
+.caption { display: flex; flex-wrap: wrap; gap: 14px 40px; justify-content: space-between; align-items: baseline; margin-top: 22px; }
+#status { margin: 0; max-width: 62ch; font-size: 16px; }
+#status b { color: var(--led); font-weight: 700; }
+#legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 0; padding: 0; list-style: none; font-size: 13px; color: var(--quiet); }
+#legend li { display: flex; align-items: center; gap: 7px; }
+#legend i { width: 15px; height: 15px; border-radius: 4px; border: 1.5px solid var(--edge); background: var(--cap); }
+
+.keys-help { margin: 34px 0 0; font-size: 12.5px; color: var(--faint); }
+
+/* ---- live, inside the viewer app: keys light as they are pressed ---- */
+.down .side { stroke: var(--led); stroke-width: 2.4; fill: var(--cap-side); }
+.down .top { fill: color-mix(in srgb, var(--led) 72%, var(--cap)); }
+.key.down:not(.steno) text { fill: #0c0d10; }
+
+#live-status { display: none; margin: 10px 0 0; font-size: 12px; color: var(--quiet); }
+body.live #live-status { display: block; }
+body.live h1, body.live .keys-help { display: none; }
+/* the window has no title bar: leave room for its close/minimise buttons */
+body.live main { max-width: none; height: 100vh; padding: 32px 14px 12px; }
+body.live { overflow: hidden; }
+body.live .deck { height: 100%; }
+body.live { -webkit-user-select: none; user-select: none; cursor: default; }
+body.live .tabs { gap: 2px; }
+body.live .tab { padding: 6px 7px 7px; border-radius: 3px 3px 8px 8px; }
+body.live .tab svg { display: none; }
+body.live .tab .name { font-size: 13.5px; white-space: nowrap; }
+body.live .tab .how { font-size: 10.5px; line-height: 1.25; }
+body.live .stage { margin-top: 4px; padding-top: 6px; }
+/* the board shrinks to fit the window's height as well as its width */
+body.live #board { min-width: 0; max-height: calc(100vh - 204px); }
+/* the caption and the steno readout take turns in the same slot, so the board never moves */
+body.live .caption, body.live #readout { margin-top: 6px; height: 62px; overflow: hidden; }
+body.live .caption { gap: 6px 24px; align-content: start; }
+body.live #status { font-size: 13px; }
+body.live #legend { font-size: 11.5px; gap: 4px 14px; }
+
+/* ---- steno practice, live: the last chord stays lit, with its stroke and a paper tape ---- */
+#readout, #tape { display: none; }
+/* the steno pane is added beside everything else; in the app the window widens to make
+   room for it, so the board keeps its size */
+.deck { display: flex; gap: 18px; align-items: stretch; }
+.left { flex: 1 1 auto; min-width: 0; }
+body.steno-mode .caption { display: none; }
+body.steno-mode .stage { overflow: visible; }
+
+body.steno-mode #readout { display: flex; align-items: baseline; gap: 22px; padding: 0 4px; white-space: nowrap; }
+#stroke { font-size: 46px; font-weight: 800; letter-spacing: .05em; line-height: 1.1; }
+#stroke.empty { font-size: 17px; font-weight: 500; letter-spacing: 0; color: var(--quiet); }
+#word { font-size: 25px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+#word.none { font-size: 15px; font-weight: 500; color: var(--quiet); }
+#word small { display: block; font-size: 12px; font-weight: 500; color: var(--quiet); }
+
+.g-sl { color: #a9cdfb; } .g-sr { color: #a5ecc9; } .g-sv { color: #ffd995; }
+.g-sx { color: #ffb3bf; } .g-sn { color: #a7aebb; } .g-dash { color: var(--faint); }
+
+/* the chord: keys in it stay lit, the rest step back */
+/* (solid fills, not CSS filters: WebKit ignores filters on elements inside an SVG) */
+#board.has-chord .steno:not(.chord), #board.has-chord .off { opacity: .32; }
+.sl.chord .side { fill: #3c74c0; stroke: #d6e8ff; } .sl.chord .top { fill: #9cc8ff; }
+.sr.chord .side { fill: #2f9a70; stroke: #d2f7e6; } .sr.chord .top { fill: #86e6bd; }
+.sv.chord .side { fill: #c08a2c; stroke: #ffefc9; } .sv.chord .top { fill: #ffd27a; }
+.sx.chord .side { fill: #c24e63; stroke: #ffdbe1; } .sx.chord .top { fill: #ff9fae; }
+.sn.chord .side { fill: #7b8494; stroke: #eef0f4; } .sn.chord .top { fill: #cfd4dd; }
+.steno.chord .side { stroke-width: 2; }
+.steno.chord text { fill: #0b0d12; }
+.steno.chord .shift { opacity: .6; }
+.steno.chord.down .side { stroke: #fff; stroke-width: 3.5; }
+
+body.steno-mode #tape {
+  display: flex; flex-direction: column; min-height: 0; flex: 0 0 318px; box-sizing: border-box;
+  padding: 12px 14px 10px; border-radius: 12px; background: var(--plate);
+}
+.cells { display: grid; grid-template-columns: repeat(23, 10px); font-size: 12px; font-weight: 700; line-height: 20px; text-align: center; }
+.cells.head { padding-bottom: 6px; margin-bottom: 4px; border-bottom: 1px solid #2b2f38; }
+.cells.head i { opacity: .55; }
+.cells i { font-style: normal; }
+#tape-rows {
+  flex: 1 1 0; min-height: 0; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 34%); mask-image: linear-gradient(to bottom, transparent, #000 34%);
+}
+.tape-row { display: flex; gap: 12px; align-items: baseline; opacity: .62; }
+.tape-row:last-child { opacity: 1; }
+.tape-row:last-child .cells { font-size: 13px; }
+.tape-row .w { flex: 1; min-width: 0; font-size: 12px; color: var(--quiet); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tape-row:last-child .w { color: var(--ink); }
+
+@media (max-width: 760px) {
+  main { padding: 20px 16px 32px; }
+  .tabs { display: flex; overflow-x: auto; margin: 0 -16px; padding: 0 16px; }
+  .tab { flex: 0 0 148px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body, #board .key, #board .link { transition: none; }
+}
+</style>
+</head>
+<body>
+<main>
+  <h1>Corne layers</h1>
+  <div class="deck">
+    <div class="left">
+      <div class="tabs" role="tablist" aria-label="Layers"></div>
+      <div class="stage" role="tabpanel" id="panel">
+        <svg id="board" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <div class="caption">
+        <p id="status" aria-live="polite"></p>
+        <ul id="legend"></ul>
+      </div>
+      <div id="readout" aria-live="polite">
+        <span id="stroke"></span>
+        <span id="word"></span>
+      </div>
+      <p id="live-status"></p>
+      <p class="keys-help">Switch layers with the tabs, the coloured keys on the board, ← →, or 1–<span id="count">5</span>. Generated from config/corne.keymap by ./draw-keymap.</p>
+    </div>
+    <aside id="tape" aria-label="Recent strokes">
+      <div class="cells head"></div>
+      <div id="tape-rows"></div>
+    </aside>
+  </div>
+</main>
+
+<script>
+const DATA = __KEYMAP_DATA__;
+const NS = "http://www.w3.org/2000/svg";
+const layers = DATA.layers, geo = DATA.geometry;
+const byName = Object.fromEntries(layers.map(l => [l.name, l]));
+const slug = name => name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+const board = document.getElementById("board");
+const tablist = document.querySelector(".tabs");
+
+let current = DATA.base;
+let back = DATA.base;   // where a held layer drops you when you let go
+
+function svg(tag, attrs = {}, text) {
+  const node = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
+  if (text != null) node.textContent = text;
+  return node;
+}
+const place = k => `translate(${k.x} ${k.y})` + (k.r ? ` rotate(${k.r})` : "");
+
+// ---- board frame: size and underglow, drawn once ----
+const xs = geo.map(k => k.x), ys = geo.map(k => k.y);
+const box = { x0: Math.min(...xs) - 50, x1: Math.max(...xs) + 50, y0: Math.min(...ys) - 44, y1: Math.max(...ys) + 96 };
+const midX = (box.x0 + box.x1) / 2;
+board.setAttribute("viewBox", `${box.x0} ${box.y0} ${box.x1 - box.x0} ${box.y1 - box.y0}`);
+board.appendChild(svg("defs")).appendChild(svg("filter", { id: "blur", x: "-60%", y: "-90%", width: "220%", height: "280%" }))
+  .appendChild(svg("feGaussianBlur", { stdDeviation: 42 }));
+for (const half of [geo.filter(k => k.x < midX), geo.filter(k => k.x > midX)]) {
+  const cx = half.reduce((s, k) => s + k.x, 0) / half.length;
+  const cy = half.reduce((s, k) => s + k.y, 0) / half.length;
+  board.append(svg("ellipse", { class: "glow", cx, cy, rx: 190, ry: 95, filter: "url(#blur)" }));
+}
+const linksG = board.appendChild(svg("g"));
+const keysG = board.appendChild(svg("g"));
+
+function activate(node, label, fn) {
+  node.setAttribute("tabindex", 0);
+  node.setAttribute("role", "button");
+  node.setAttribute("aria-label", label);
+  node.addEventListener("click", fn);
+  node.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fn(); } });
+}
+
+// the Bluetooth mark, drawn about 9 wide and 16 tall around its centre
+const BLUETOOTH = "M-4.5 -4.5 L4.5 4.5 L0 8.5 L0 -8.5 L4.5 -4.5 L-4.5 4.5";
+
+function drawLegend(g, key) {
+  const t = String(key.t ?? "");
+  const bt = t.match(/^BT (.+)$/);
+  if (bt) {
+    // "BT 3" is the mark beside the number; "BT clear" is the mark over the word
+    const short = bt[1].length <= 2;
+    g.append(svg("path", { class: "icon", d: BLUETOOTH, transform: short ? "translate(-9 0)" : "translate(0 -9) scale(.8)" }));
+    g.append(svg("text", { class: short ? "tap" : "tap small", x: short ? 8 : 0, y: short ? 0 : 10 }, bt[1]));
+    return;
+  }
+  const words = t.length > 4 && t.includes(" ") ? t.split(" ") : [t];
+  const longest = Math.max(...words.map(w => w.length));
+  const size = longest > 4 ? "tap small" : longest > 2 ? "tap mid" : "tap";
+  words.forEach((w, i) => g.append(svg("text", { class: size, y: (i - (words.length - 1) / 2) * 14 }, w)));
+}
+
+// live only: legends follow the shift key (a / A, 1 / !)
+let shiftHeld = false;
+function shown(key) {
+  if (!document.body.classList.contains("live") || (key.type && key.type !== "thru")) return key;
+  const t = String(key.t ?? "");
+  if (/^[A-Z]$/.test(t)) return shiftHeld ? key : { ...key, t: t.toLowerCase() };
+  if (key.s && key.s.length === 1 && shiftHeld) return { ...key, t: key.s, s: t };
+  return key;
+}
+
+function drawBoard() {
+  const layer = byName[current];
+  keysG.replaceChildren();
+  linksG.replaceChildren();
+  const holdDoor = {};
+  for (const d of layer.doors) if (d.kind === "hold") for (const p of d.p) holdDoor[p] = d.to;
+
+  layer.keys.forEach((key, pos) => {
+    key = shown(key);
+    const k = geo[pos];
+    const g = svg("g", { transform: place(k), "data-pos": pos });
+    const cls = ["key"];
+    if (key.type) cls.push(key.type);
+    if (/^s[lrvxn]$/.test(key.type || "")) cls.push("steno");
+    if (!key.type && current !== DATA.base && !holdDoor[pos]) cls.push("live");
+    g.append(svg("rect", { class: "side", x: -k.w / 2, y: -k.h / 2, width: k.w, height: k.h, rx: 9 }));
+    g.append(svg("rect", { class: "top", x: -k.w / 2 + 4, y: -k.h / 2 + 3, width: k.w - 8, height: k.h - 9, rx: 6 }));
+    drawLegend(g, key);
+    if (key.h) g.append(svg("text", { class: "hold", y: k.h / 2 - 12 }, key.h));
+    if (key.s) g.append(svg("text", { class: "shift", y: -k.h / 2 + 12 }, key.s));
+
+    if (holdDoor[pos]) {
+      cls.push("door");
+      g.style.setProperty("--to", byName[holdDoor[pos]].colour);
+      g.dataset.to = holdDoor[pos];
+      activate(g, `Hold for ${holdDoor[pos]}`, () => show(holdDoor[pos], current));
+    } else if (key.type === "held") {
+      activate(g, `Let go, back to ${back}`, () => show(back));
+    }
+    if (downPos.has(pos)) cls.push("down");
+    g.setAttribute("class", cls.join(" "));
+    keysG.append(g);
+  });
+
+  // two keys pressed together: a labelled link between them
+  for (const d of layer.doors.filter(d => d.kind === "combo")) {
+    const [a, b] = d.p.map(p => geo[p]);
+    const up = d.a !== "bottom";
+    const y = up ? Math.min(a.y, b.y) - 62 : Math.max(a.y, b.y) + 84;
+    const x = (a.x + b.x) / 2;
+    const label = d.to === DATA.base && current !== DATA.base ? `leave ${current}` : d.to;
+    const w = label.length * 7.2 + 26;
+    const g = svg("g", { class: "link", "data-to": d.to, "data-pos": d.p.join(" ") });
+    g.style.setProperty("--to", byName[d.to === DATA.base ? current : d.to].colour);
+    g.append(svg("path", { d: `M${a.x} ${a.y}V${y}H${b.x}V${b.y}` }));
+    g.append(svg("rect", { x: x - w / 2, y: y - 13, width: w, height: 26, rx: 13 }));
+    g.append(svg("text", { x, y }, label));
+    activate(g, d.to === DATA.base ? `Leave ${current}` : `Go to ${d.to}`, () => show(d.to));
+    linksG.append(g);
+  }
+  setPane(document.body.classList.contains("live") && isSteno(layer));
+  markChord();
+}
+
+function drawCaption() {
+  const layer = byName[current];
+  const status = document.getElementById("status");
+  const led = document.createElement("b");
+  led.textContent = `${layer.led} LEDs`;
+  let rest;
+  if (layer.kind === "hold") rest = ` while you hold ${layer.how}. Let go to return to ${back}.`;
+  else if (layer.kind === "toggle") rest = `, and it stays on. Press ${layer.how} together again to leave.`;
+  else rest = ". This is where you start, and the coloured keys lead to the other layers.";
+  status.replaceChildren(led, rest + (layer.note ? " " + layer.note : ""));
+
+  const kinds = new Set(layer.keys.map(k => k.type).filter(Boolean));
+  const items = [];
+  if (kinds.has("sl")) items.push(["Left consonants", "border-color:#4a82c9;background:#1d3350"],
+    ["Vowels", "border-color:#d19a3c;background:#45351a"], ["Star", "border-color:#cf5f72;background:#44222a"],
+    ["Right consonants", "border-color:#3fa57a;background:#1b3a30"], ["Number bar", "border-color:#596170"]);
+  if (kinds.has("thru")) items.push([`Same as ${DATA.base}`, "background:#16181e;border-color:#252930"]);
+  if (kinds.has("off")) items.push(["Does nothing", "background:none;border-style:dashed"]);
+  const legend = document.getElementById("legend");
+  legend.replaceChildren(...items.map(([text, style]) => {
+    const li = document.createElement("li"), sw = document.createElement("i");
+    sw.style.cssText = style;
+    li.append(sw, text);
+    return li;
+  }));
+}
+
+function show(name, from) {
+  if (!byName[name]) return;
+  if (name !== current) clearChord();
+  current = name;
+  back = from && byName[name].kind === "hold" ? from : DATA.base;
+  document.body.style.setProperty("--led", byName[name].colour);
+  for (const tab of tablist.children) {
+    const on = tab.dataset.layer === name;
+    tab.setAttribute("aria-selected", on);
+    tab.tabIndex = on ? 0 : -1;
+    if (on) tab.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }
+  point(null);
+  drawBoard();
+  drawCaption();
+  history.replaceState(null, "", "#" + slug(name));
+}
+
+// light up the keys on the current board that lead to `name`
+function point(name) {
+  const doors = name && name !== current ? byName[current].doors.filter(d => d.to === name) : [];
+  const hot = new Set(doors.flatMap(d => d.p));
+  board.classList.toggle("pointing", hot.size > 0);
+  for (const node of board.querySelectorAll(".key, .link")) {
+    const on = node.classList.contains("link")
+      ? node.dataset.to === name && hot.size > 0
+      : hot.has(+node.dataset.pos);
+    node.classList.toggle("hot", on);
+    if (on) node.style.setProperty("--hot", byName[name].colour); else node.style.removeProperty("--hot");
+  }
+}
+
+// ---- steno practice: the last chord stays on show, with its stroke and a paper tape ----
+const STENO_ORDER = ["#", "S-", "T-", "K-", "P-", "W-", "H-", "R-", "A", "O", "*", "E", "U",
+                     "-F", "-R", "-P", "-B", "-L", "-G", "-T", "-S", "-D", "-Z"];
+const NUMBER_KEYS = { "S-": "1", "T-": "2", "P-": "3", "H-": "4", "A": "5", "O": "0", "-F": "6", "-P": "7", "-L": "8", "-T": "9" };
+const isSteno = layer => layer.keys.some(k => k.type === "sl");
+const stenoId = key => ({ sn: "#", sx: "*", sv: key.t, sl: key.t + "-", sr: "-" + key.t })[key.type] || null;
+const stenoGroup = id => id === "#" ? "sn" : id === "*" ? "sx" : id.endsWith("-") ? "sl" : id.startsWith("-") ? "sr" : "sv";
+
+let chordPos = new Set();   // keys in the chord being pressed, including ones already let go
+let lastPos = new Set();    // the finished chord, kept lit until the next one starts
+const tape = [];            // finished strokes, oldest first: {id, ids, text, word, joined}
+let strokeCount = 0;
+
+// Open or close the steno pane. The left side is pinned to its current width while the
+// app resizes the window around it, so nothing on it shifts.
+function setPane(open) {
+  if (document.body.classList.contains("steno-mode") === open) return;
+  const left = document.querySelector(".left");
+  left.style.flex = `0 0 ${left.offsetWidth}px`;
+  document.body.classList.toggle("steno-mode", open);
+  const app = window.webkit?.messageHandlers?.pane;
+  if (app) app.postMessage(open); else left.style.flex = "";
+}
+
+function clearChord() {
+  chordPos = new Set(); lastPos = new Set();
+  tape.length = 0;
+  drawSteno();
+}
+
+function markChord() {
+  const lit = chordPos.size ? chordPos : lastPos;
+  board.classList.toggle("has-chord", lit.size > 0);
+  for (const node of keysG.children) node.classList.toggle("chord", lit.has(+node.dataset.pos));
+  if (document.body.classList.contains("steno-mode")) drawSteno();
+}
+
+// a chord as Plover writes it: steno order, digits with the number bar, a dash when it's needed
+function strokeParts(ids) {
+  const digits = ids.has("#") && STENO_ORDER.some(id => ids.has(id) && NUMBER_KEYS[id]);
+  const needsDash = !["A", "O", "*", "E", "U"].some(id => ids.has(id));
+  const parts = [];
+  for (const id of STENO_ORDER) {
+    if (!ids.has(id) || (id === "#" && digits)) continue;
+    if (id.startsWith("-") && needsDash && !parts.some(p => p.group === "sr")) parts.push({ ch: "-", group: "dash" });
+    parts.push({ ch: digits && NUMBER_KEYS[id] ? NUMBER_KEYS[id] : id.replace(/-/g, ""), group: stenoGroup(id) });
+  }
+  return parts;
+}
+
+function finishChord() {
+  const layer = byName[current];
+  const ids = new Set([...chordPos].map(p => stenoId(layer.keys[p])));
+  lastPos = chordPos; chordPos = new Set();
+  const text = strokeParts(ids).map(p => p.ch).join("");
+  const entry = { id: ++strokeCount, ids, text, word: undefined, joined: "" };
+  tape.push(entry);
+  if (tape.length > 60) tape.shift();
+  // ask the app what the dictionaries make of it, together with the strokes before it
+  const context = [];
+  for (const t of tape.slice(-8)) { if (t.text === "*") context.pop(); else context.push(t.text); }
+  if (text === "*") entry.word = "undo";
+  else window.webkit?.messageHandlers?.lookup?.postMessage({ id: entry.id, strokes: context.slice(-6) });
+  drawSteno();
+}
+
+// a dictionary entry in plain words
+function readable(text) {
+  if (text == null) return null;
+  let m;
+  if (/\{PLOVER:/i.test(text)) return "Plover command";
+  if ((m = text.match(/\{#([^}]+)\}/))) return m[1].replace(/_[LR]\b/g, "").replace(/[()]/g, " ").trim() + " key";
+  if (/\{-\|\}/.test(text) && !text.replace(/\{[^}]*\}/g, "").trim()) return "cap next";
+  if ((m = text.match(/^\{\^([^}^]+)\}$/))) return "-" + m[1];
+  if ((m = text.match(/^\{([^}^]+)\^\}$/))) return m[1] + "-";
+  if ((m = text.match(/^\{([.,?!:;])\}$/))) return m[1];
+  return text.replace(/\{[^}]*\}/g, "").trim() || text;
+}
+
+function cells(parent, ids, head) {
+  for (const id of STENO_ORDER) {
+    const cell = document.createElement("i");
+    cell.className = "g-" + stenoGroup(id);
+    if (head || ids.has(id)) cell.textContent = id.replace(/-/g, "");
+    parent.append(cell);
+  }
+}
+
+function drawSteno() {
+  const stroke = document.getElementById("stroke"), word = document.getElementById("word");
+  const last = tape[tape.length - 1];
+  // while a chord is going down, show it as it builds
+  const building = chordPos.size ? new Set([...chordPos].map(p => stenoId(byName[current].keys[p]))) : null;
+  const ids = building || (last && last.ids);
+  stroke.replaceChildren();
+  word.replaceChildren();
+  stroke.classList.toggle("empty", !ids);
+  word.className = "";
+  if (!ids) {
+    stroke.textContent = "Press a chord. It stays here until the next one.";
+  } else {
+    for (const part of strokeParts(ids)) {
+      const span = document.createElement("span");
+      span.className = "g-" + part.group;
+      span.textContent = part.ch;
+      stroke.append(span);
+    }
+    if (building) {
+      // no word until the chord is released
+    } else if (last.word) {
+      if (last.joined) { const how = document.createElement("small"); how.textContent = last.joined; word.append(how); }
+      word.append(last.word);
+    } else if (last.word === null) {
+      word.className = "none";
+      word.textContent = "not in your dictionaries";
+    }
+  }
+  const rows = document.getElementById("tape-rows");
+  rows.replaceChildren(...tape.slice(-16).map(entry => {
+    const row = document.createElement("div"), strip = document.createElement("div"), w = document.createElement("span");
+    row.className = "tape-row"; strip.className = "cells"; w.className = "w";
+    cells(strip, entry.ids, false);
+    w.textContent = entry.word || "";
+    row.append(strip, w);
+    return row;
+  }));
+}
+cells(document.querySelector("#tape .head"), null, true);
+
+// ---- live input: the viewer app calls these with what the keyboard sends ----
+const downKeys = new Map();   // HID usage -> the positions it lit
+const downPos = new Set();
+const LEFT_SHIFT = 225, RIGHT_SHIFT = 229;
+const modAt = new Map();        // modifier usage -> when it last went down
+const heldLayers = [];          // hold layers whose signal is down, oldest first
+let lockedLayer = DATA.base;    // the base layer, or one that was toggled on
+
+function paintDown() {
+  downPos.clear();
+  for (const positions of downKeys.values()) positions.forEach(p => downPos.add(p));
+  const shift = downKeys.has(LEFT_SHIFT) || downKeys.has(RIGHT_SHIFT);
+  if (shift !== shiftHeld) { shiftHeld = shift; return drawBoard(); }
+  for (const node of keysG.children) node.classList.toggle("down", downPos.has(+node.dataset.pos));
+  markChord();
+}
+const sending = (layer, usage) => layer.codes.flatMap((codes, pos) => codes.includes(usage) ? [pos] : []);
+
+function goLive() {
+  if (document.body.classList.contains("live")) return;
+  document.body.classList.add("live");
+  drawBoard();
+}
+
+window.live = {
+  hid(page, usage, value) {
+    goLive();
+    if (page === 12) {
+      // a layer signal: held layers keep theirs down, locked layers tap theirs
+      const layer = layers.find(l => l.signal === usage);
+      if (!layer) return;
+      if (layer.kind === "hold") {
+        const i = heldLayers.indexOf(layer.name);
+        if (value && i < 0) heldLayers.push(layer.name);
+        if (!value && i >= 0) heldLayers.splice(i, 1);
+      } else if (value) lockedLayer = layer.name;
+      else return;
+      const rule = DATA.conditional.find(c => c.if.every(name => heldLayers.includes(name)));
+      const to = rule ? rule.then : heldLayers.length ? heldLayers[heldLayers.length - 1] : lockedLayer;
+      // tell the app which layer the keyboard is really on (it switches Plover with Steno)
+      window.webkit?.messageHandlers?.layer?.postMessage(to);
+      if (to !== current) show(to, lockedLayer);
+    } else if (page === 7 && usage >= 4 && usage <= 231) {
+      if (!value) {
+        downKeys.delete(usage);
+        if (chordPos.size && !downKeys.size) finishChord();
+        return paintDown();
+      }
+      const here = byName[current], now = performance.now();
+      if (usage >= 224) modAt.set(usage, now);
+      // keys that send their own modifiers (! is shift+1, desk ← is ctrl+←): light that one
+      // key, and un-light the modifiers that arrived with it
+      const combo = here.combos
+        .filter(c => c.key === usage && c.mods.every(m => downKeys.has(m)))
+        .sort((a, b) => b.mods.length - a.mods.length)[0];
+      let positions;
+      if (combo) {
+        positions = [combo.pos];
+        combo.mods.forEach(m => { if (now - (modAt.get(m) ?? -1e9) < 40) downKeys.delete(m); });
+      } else {
+        positions = sending(here, usage);
+        if (!positions.length) positions = sending(byName[DATA.base], usage);
+      }
+      downKeys.set(usage, positions);
+      if (isSteno(here)) {
+        if (!chordPos.size) lastPos = new Set();   // a new chord replaces the one on show
+        positions.forEach(p => stenoId(here.keys[p]) && chordPos.add(p));
+      }
+      paintDown();
+    }
+  },
+  // the app's answer to a dictionary lookup: `count` strokes ending at stroke `id` make `text`
+  translation(id, text, count) {
+    const entry = tape.find(t => t.id === id);
+    if (!entry) return;
+    entry.word = readable(text);
+    entry.joined = count > 1 ? tape.slice(tape.indexOf(entry) - count + 1, tape.indexOf(entry) + 1).map(t => t.text).join("/") : "";
+    drawSteno();
+  },
+  // the app has finished resizing the window for the pane
+  paneDone() { document.querySelector(".left").style.flex = ""; },
+  status(text) {
+    goLive();
+    document.getElementById("live-status").textContent = text;
+  },
+};
+
+// ---- tabs ----
+tablist.style.setProperty("--n", layers.length);
+document.getElementById("count").textContent = layers.length;
+const gx = geo.map(k => k.x), gy = geo.map(k => k.y);
+layers.forEach(layer => {
+  const tab = document.createElement("button");
+  tab.className = "tab";
+  tab.type = "button";
+  tab.setAttribute("role", "tab");
+  tab.setAttribute("aria-controls", "panel");
+  tab.dataset.layer = layer.name;
+  tab.style.setProperty("--c", layer.colour);
+
+  const mini = svg("svg", { viewBox: `${Math.min(...gx) - 30} ${Math.min(...gy) - 30} ${Math.max(...gx) - Math.min(...gx) + 60} ${Math.max(...gy) - Math.min(...gy) + 80}`, "aria-hidden": "true" });
+  if (layer.kind === "base") mini.setAttribute("class", "all");
+  geo.forEach((k, pos) => mini.append(svg("rect", {
+    transform: place(k), x: -k.w / 2 + 2, y: -k.h / 2 + 2, width: k.w - 4, height: k.h - 4, rx: 10,
+    class: layer.enter.includes(pos) ? "lit" : "",
+  })));
+
+  const name = document.createElement("span"), how = document.createElement("span");
+  name.className = "name"; name.textContent = layer.name.replace("/", " / ").replace(/([a-z])([A-Z])/g, "$1 $2");
+  how.className = "how";
+  how.textContent = layer.kind === "hold" ? `Hold ${layer.how}`
+    : layer.kind === "toggle" ? layer.how[0].toUpperCase() + layer.how.slice(1) + " together"
+    : "Where you start";
+  tab.append(mini, name, how);
+
+  tab.addEventListener("click", () => show(layer.name));
+  tab.addEventListener("pointerenter", () => point(layer.name));
+  tab.addEventListener("pointerleave", () => point(null));
+  tablist.append(tab);
+});
+
+document.addEventListener("keydown", e => {
+  if (e.metaKey || e.ctrlKey || e.altKey) return;
+  const i = layers.findIndex(l => l.name === current);
+  let next = null;
+  if (e.key === "ArrowRight") next = layers[(i + 1) % layers.length];
+  else if (e.key === "ArrowLeft") next = layers[(i - 1 + layers.length) % layers.length];
+  else if (/^[1-9]$/.test(e.key)) next = layers[+e.key - 1];
+  if (!next) return;
+  e.preventDefault();
+  show(next.name);
+  if (tablist.contains(document.activeElement)) tablist.querySelector('[aria-selected="true"]').focus();
+});
+
+const wanted = layers.find(l => slug(l.name) === location.hash.slice(1));
+show(wanted ? wanted.name : DATA.base);
+</script>
+</body>
+</html>
