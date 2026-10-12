@@ -10,7 +10,7 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
   Kinesis Advantage360 letter block), **Num/Nav** (hold ⌦; numpad under the right
   hand reading 1 2 3 from the top, arrow cluster under the left), **Symbols**
   (hold ⏎; right hand is the Num layer with shift already applied, left hand is
-  the bracket pairs `[ ]` / `( )` / `{ }` stacked on the D and F columns), **NumRow**
+  the bracket pairs `[ ]` / `( )` / `{ }` stacked on the E/R, D/F, C/V columns), **NumRow**
   (hold ⌦, then also ␣: the classic number row across the top), **SymRow** (hold
   ⏎, then also ⌫: that row's symbols), **Fn** (hold `\`,
   top right), **Steno** (both inner thumbs together toggles), **Arrows** (both
@@ -22,6 +22,9 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
 - Home row mods are a planned later step (Kurt agreed 2026-10-12: after the
   numpad settles, additive, with opposite-hand and prior-idle settings). If they
   stick, the esc/ctrl key's hold is the candidate for a pinky-held symbol row.
+- Mac shortcuts: the ⌘ thumb is tap = dictation (Ctrl+Opt+Shift+Cmd+D, Kurt's
+  macOS dictation shortcut) / hold = Command; the Symbols layer's far left has
+  Mission Control (W) over desktop left / right (A, S), sent as Ctrl+arrows.
 - `config/corne.conf` — NKRO is on (`CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y`) because
   steno chords exceed six keys.
 - The Steno layer sends the QWERTY letters Plover's "Keyboard" machine expects.
@@ -87,13 +90,22 @@ To check a change visually, screenshot the SVG with headless Chrome and look at 
 - Signals have to be consumer keys: with NKRO on, ZMK's keyboard report stops
   at keypad `=`, so F13 and up can't be sent.
 - `keymap_page.py` parses the keymap's bindings into per-layer HID usages
-  (`codes`), shift-implied positions (`shifted`) and the layer `signal`; the
-  page's `window.live.hid(page, usage, value)` does the rest. Rebuild the app
+  (`codes`) and the layer `signal`; the
+  page's `window.live.hid(page, usage, value)` does the rest. Keys that send
+  their own modifiers (`!`, `LC(LEFT)`, the dictation tap) are listed per layer
+  as `combos` so the page lights that one key and not the modifiers. Rebuild the app
   after a keymap change, since it bundles a copy of the page.
 - The app switches Plover with the Steno layer, so chords work without touching
   Plover: `Plover -s plover_send_command resume` on entering Steno, `suspend` on
   leaving and at launch, starting Plover first if needed (`--no-plover` to turn
   this off). The page posts each layer signal to the app for this.
+- Steno practice view (the app's main use): on the Steno layer the page keeps the
+  last chord lit until the next one starts, shows the stroke large in steno order
+  (Plover notation, coloured by key group), and keeps a paper tape of recent
+  strokes in fixed columns. The word beside each stroke is a lookup the app does
+  in Plover's default dictionaries (`user.json`, `commands.json`, `main.json`),
+  trying the longest run of recent strokes first. It is a dictionary lookup, not
+  Plover's actual output, so it can differ for affixes and unusual entries.
 - Karabiner-Elements is installed on Kurt's Mac. It grabs keyboards
   exclusively, which hides them from the app, so the Corne is in its ignored
   devices (Kurt's Karabiner rules don't apply on the Corne).

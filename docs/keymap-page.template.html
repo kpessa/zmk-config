@@ -80,6 +80,8 @@ text { font-family: inherit; text-anchor: middle; dominant-baseline: central; po
 .tap { fill: var(--ink); font-size: 17px; font-weight: 500; }
 .tap.mid { font-size: 13px; }
 .tap.small { font-size: 11px; }
+.icon { fill: none; stroke: var(--ink); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.key.down .icon { stroke: #0c0d10; }
 .hold, .shift { fill: var(--quiet); font-size: 9.5px; font-weight: 600; letter-spacing: .04em; }
 
 /* keys this layer changes, tinted with its LED colour */
@@ -142,14 +144,14 @@ text { font-family: inherit; text-anchor: middle; dominant-baseline: central; po
 .down .side { stroke: var(--led); stroke-width: 2.4; fill: var(--cap-side); }
 .down .top { fill: color-mix(in srgb, var(--led) 72%, var(--cap)); }
 .key.down:not(.steno) text { fill: #0c0d10; }
-.steno.down .side, .steno.down .top { filter: brightness(2); }
-.steno.down .tap { fill: #fff; }
 
 #live-status { display: none; margin: 10px 0 0; font-size: 12px; color: var(--quiet); }
 body.live #live-status { display: block; }
 body.live h1, body.live .keys-help { display: none; }
 /* the window has no title bar: leave room for its close/minimise buttons */
-body.live main { padding: 32px 14px 12px; }
+body.live main { max-width: none; height: 100vh; padding: 32px 14px 12px; }
+body.live { overflow: hidden; }
+body.live .deck { height: 100%; }
 body.live { -webkit-user-select: none; user-select: none; cursor: default; }
 body.live .tabs { gap: 2px; }
 body.live .tab { padding: 6px 7px 7px; border-radius: 3px 3px 8px 8px; }
@@ -157,10 +159,64 @@ body.live .tab svg { display: none; }
 body.live .tab .name { font-size: 13.5px; white-space: nowrap; }
 body.live .tab .how { font-size: 10.5px; line-height: 1.25; }
 body.live .stage { margin-top: 4px; padding-top: 6px; }
-body.live #board { min-width: 0; }
-body.live .caption { margin-top: 6px; gap: 6px 24px; }
+/* the board shrinks to fit the window's height as well as its width */
+body.live #board { min-width: 0; max-height: calc(100vh - 204px); }
+/* the caption and the steno readout take turns in the same slot, so the board never moves */
+body.live .caption, body.live #readout { margin-top: 6px; height: 62px; overflow: hidden; }
+body.live .caption { gap: 6px 24px; align-content: start; }
 body.live #status { font-size: 13px; }
 body.live #legend { font-size: 11.5px; gap: 4px 14px; }
+
+/* ---- steno practice, live: the last chord stays lit, with its stroke and a paper tape ---- */
+#readout, #tape { display: none; }
+/* the steno pane is added beside everything else; in the app the window widens to make
+   room for it, so the board keeps its size */
+.deck { display: flex; gap: 18px; align-items: stretch; }
+.left { flex: 1 1 auto; min-width: 0; }
+body.steno-mode .caption { display: none; }
+body.steno-mode .stage { overflow: visible; }
+
+body.steno-mode #readout { display: flex; align-items: baseline; gap: 22px; padding: 0 4px; white-space: nowrap; }
+#stroke { font-size: 46px; font-weight: 800; letter-spacing: .05em; line-height: 1.1; }
+#stroke.empty { font-size: 17px; font-weight: 500; letter-spacing: 0; color: var(--quiet); }
+#word { font-size: 25px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+#word.none { font-size: 15px; font-weight: 500; color: var(--quiet); }
+#word small { display: block; font-size: 12px; font-weight: 500; color: var(--quiet); }
+
+.g-sl { color: #a9cdfb; } .g-sr { color: #a5ecc9; } .g-sv { color: #ffd995; }
+.g-sx { color: #ffb3bf; } .g-sn { color: #a7aebb; } .g-dash { color: var(--faint); }
+
+/* the chord: keys in it stay lit, the rest step back */
+/* (solid fills, not CSS filters: WebKit ignores filters on elements inside an SVG) */
+#board.has-chord .steno:not(.chord), #board.has-chord .off { opacity: .32; }
+.sl.chord .side { fill: #3c74c0; stroke: #d6e8ff; } .sl.chord .top { fill: #9cc8ff; }
+.sr.chord .side { fill: #2f9a70; stroke: #d2f7e6; } .sr.chord .top { fill: #86e6bd; }
+.sv.chord .side { fill: #c08a2c; stroke: #ffefc9; } .sv.chord .top { fill: #ffd27a; }
+.sx.chord .side { fill: #c24e63; stroke: #ffdbe1; } .sx.chord .top { fill: #ff9fae; }
+.sn.chord .side { fill: #7b8494; stroke: #eef0f4; } .sn.chord .top { fill: #cfd4dd; }
+.steno.chord .side { stroke-width: 2; }
+.steno.chord text { fill: #0b0d12; }
+.steno.chord .shift { opacity: .6; }
+.steno.chord.down .side { stroke: #fff; stroke-width: 3.5; }
+
+body.steno-mode #tape {
+  display: flex; flex-direction: column; min-height: 0; flex: 0 0 318px; box-sizing: border-box;
+  padding: 12px 14px 10px; border-radius: 12px; background: var(--plate);
+}
+.cells { display: grid; grid-template-columns: repeat(23, 10px); font-size: 12px; font-weight: 700; line-height: 20px; text-align: center; }
+.cells.head { padding-bottom: 6px; margin-bottom: 4px; border-bottom: 1px solid #2b2f38; }
+.cells.head i { opacity: .55; }
+.cells i { font-style: normal; }
+#tape-rows {
+  flex: 1 1 0; min-height: 0; overflow: hidden;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 34%); mask-image: linear-gradient(to bottom, transparent, #000 34%);
+}
+.tape-row { display: flex; gap: 12px; align-items: baseline; opacity: .62; }
+.tape-row:last-child { opacity: 1; }
+.tape-row:last-child .cells { font-size: 13px; }
+.tape-row .w { flex: 1; min-width: 0; font-size: 12px; color: var(--quiet); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tape-row:last-child .w { color: var(--ink); }
 
 @media (max-width: 760px) {
   main { padding: 20px 16px 32px; }
@@ -175,16 +231,28 @@ body.live #legend { font-size: 11.5px; gap: 4px 14px; }
 <body>
 <main>
   <h1>Corne layers</h1>
-  <div class="tabs" role="tablist" aria-label="Layers"></div>
-  <div class="stage" role="tabpanel" id="panel">
-    <svg id="board" xmlns="http://www.w3.org/2000/svg"></svg>
+  <div class="deck">
+    <div class="left">
+      <div class="tabs" role="tablist" aria-label="Layers"></div>
+      <div class="stage" role="tabpanel" id="panel">
+        <svg id="board" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+      <div class="caption">
+        <p id="status" aria-live="polite"></p>
+        <ul id="legend"></ul>
+      </div>
+      <div id="readout" aria-live="polite">
+        <span id="stroke"></span>
+        <span id="word"></span>
+      </div>
+      <p id="live-status"></p>
+      <p class="keys-help">Switch layers with the tabs, the coloured keys on the board, ← →, or 1–<span id="count">5</span>. Generated from config/corne.keymap by ./draw-keymap.</p>
+    </div>
+    <aside id="tape" aria-label="Recent strokes">
+      <div class="cells head"></div>
+      <div id="tape-rows"></div>
+    </aside>
   </div>
-  <div class="caption">
-    <p id="status" aria-live="polite"></p>
-    <ul id="legend"></ul>
-  </div>
-  <p id="live-status"></p>
-  <p class="keys-help">Switch layers with the tabs, the coloured keys on the board, ← →, or 1–<span id="count">5</span>. Generated from config/corne.keymap by ./draw-keymap.</p>
 </main>
 
 <script>
@@ -230,8 +298,19 @@ function activate(node, label, fn) {
   node.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fn(); } });
 }
 
+// the Bluetooth mark, drawn about 9 wide and 16 tall around its centre
+const BLUETOOTH = "M-4.5 -4.5 L4.5 4.5 L0 8.5 L0 -8.5 L4.5 -4.5 L-4.5 4.5";
+
 function drawLegend(g, key) {
   const t = String(key.t ?? "");
+  const bt = t.match(/^BT (.+)$/);
+  if (bt) {
+    // "BT 3" is the mark beside the number; "BT clear" is the mark over the word
+    const short = bt[1].length <= 2;
+    g.append(svg("path", { class: "icon", d: BLUETOOTH, transform: short ? "translate(-9 0)" : "translate(0 -9) scale(.8)" }));
+    g.append(svg("text", { class: short ? "tap" : "tap small", x: short ? 8 : 0, y: short ? 0 : 10 }, bt[1]));
+    return;
+  }
   const words = t.length > 4 && t.includes(" ") ? t.split(" ") : [t];
   const longest = Math.max(...words.map(w => w.length));
   const size = longest > 4 ? "tap small" : longest > 2 ? "tap mid" : "tap";
@@ -244,7 +323,7 @@ function shown(key) {
   if (!document.body.classList.contains("live") || (key.type && key.type !== "thru")) return key;
   const t = String(key.t ?? "");
   if (/^[A-Z]$/.test(t)) return shiftHeld ? key : { ...key, t: t.toLowerCase() };
-  if (key.s && shiftHeld) return { ...key, t: key.s, s: t };
+  if (key.s && key.s.length === 1 && shiftHeld) return { ...key, t: key.s, s: t };
   return key;
 }
 
@@ -298,6 +377,8 @@ function drawBoard() {
     activate(g, d.to === DATA.base ? `Leave ${current}` : `Go to ${d.to}`, () => show(d.to));
     linksG.append(g);
   }
+  setPane(document.body.classList.contains("live") && isSteno(layer));
+  markChord();
 }
 
 function drawCaption() {
@@ -329,6 +410,7 @@ function drawCaption() {
 
 function show(name, from) {
   if (!byName[name]) return;
+  if (name !== current) clearChord();
   current = name;
   back = from && byName[name].kind === "hold" ? from : DATA.base;
   document.body.style.setProperty("--led", byName[name].colour);
@@ -358,11 +440,140 @@ function point(name) {
   }
 }
 
+// ---- steno practice: the last chord stays on show, with its stroke and a paper tape ----
+const STENO_ORDER = ["#", "S-", "T-", "K-", "P-", "W-", "H-", "R-", "A", "O", "*", "E", "U",
+                     "-F", "-R", "-P", "-B", "-L", "-G", "-T", "-S", "-D", "-Z"];
+const NUMBER_KEYS = { "S-": "1", "T-": "2", "P-": "3", "H-": "4", "A": "5", "O": "0", "-F": "6", "-P": "7", "-L": "8", "-T": "9" };
+const isSteno = layer => layer.keys.some(k => k.type === "sl");
+const stenoId = key => ({ sn: "#", sx: "*", sv: key.t, sl: key.t + "-", sr: "-" + key.t })[key.type] || null;
+const stenoGroup = id => id === "#" ? "sn" : id === "*" ? "sx" : id.endsWith("-") ? "sl" : id.startsWith("-") ? "sr" : "sv";
+
+let chordPos = new Set();   // keys in the chord being pressed, including ones already let go
+let lastPos = new Set();    // the finished chord, kept lit until the next one starts
+const tape = [];            // finished strokes, oldest first: {id, ids, text, word, joined}
+let strokeCount = 0;
+
+// Open or close the steno pane. The left side is pinned to its current width while the
+// app resizes the window around it, so nothing on it shifts.
+function setPane(open) {
+  if (document.body.classList.contains("steno-mode") === open) return;
+  const left = document.querySelector(".left");
+  left.style.flex = `0 0 ${left.offsetWidth}px`;
+  document.body.classList.toggle("steno-mode", open);
+  const app = window.webkit?.messageHandlers?.pane;
+  if (app) app.postMessage(open); else left.style.flex = "";
+}
+
+function clearChord() {
+  chordPos = new Set(); lastPos = new Set();
+  tape.length = 0;
+  drawSteno();
+}
+
+function markChord() {
+  const lit = chordPos.size ? chordPos : lastPos;
+  board.classList.toggle("has-chord", lit.size > 0);
+  for (const node of keysG.children) node.classList.toggle("chord", lit.has(+node.dataset.pos));
+  if (document.body.classList.contains("steno-mode")) drawSteno();
+}
+
+// a chord as Plover writes it: steno order, digits with the number bar, a dash when it's needed
+function strokeParts(ids) {
+  const digits = ids.has("#") && STENO_ORDER.some(id => ids.has(id) && NUMBER_KEYS[id]);
+  const needsDash = !["A", "O", "*", "E", "U"].some(id => ids.has(id));
+  const parts = [];
+  for (const id of STENO_ORDER) {
+    if (!ids.has(id) || (id === "#" && digits)) continue;
+    if (id.startsWith("-") && needsDash && !parts.some(p => p.group === "sr")) parts.push({ ch: "-", group: "dash" });
+    parts.push({ ch: digits && NUMBER_KEYS[id] ? NUMBER_KEYS[id] : id.replace(/-/g, ""), group: stenoGroup(id) });
+  }
+  return parts;
+}
+
+function finishChord() {
+  const layer = byName[current];
+  const ids = new Set([...chordPos].map(p => stenoId(layer.keys[p])));
+  lastPos = chordPos; chordPos = new Set();
+  const text = strokeParts(ids).map(p => p.ch).join("");
+  const entry = { id: ++strokeCount, ids, text, word: undefined, joined: "" };
+  tape.push(entry);
+  if (tape.length > 60) tape.shift();
+  // ask the app what the dictionaries make of it, together with the strokes before it
+  const context = [];
+  for (const t of tape.slice(-8)) { if (t.text === "*") context.pop(); else context.push(t.text); }
+  if (text === "*") entry.word = "undo";
+  else window.webkit?.messageHandlers?.lookup?.postMessage({ id: entry.id, strokes: context.slice(-6) });
+  drawSteno();
+}
+
+// a dictionary entry in plain words
+function readable(text) {
+  if (text == null) return null;
+  let m;
+  if (/\{PLOVER:/i.test(text)) return "Plover command";
+  if ((m = text.match(/\{#([^}]+)\}/))) return m[1].replace(/_[LR]\b/g, "").replace(/[()]/g, " ").trim() + " key";
+  if (/\{-\|\}/.test(text) && !text.replace(/\{[^}]*\}/g, "").trim()) return "cap next";
+  if ((m = text.match(/^\{\^([^}^]+)\}$/))) return "-" + m[1];
+  if ((m = text.match(/^\{([^}^]+)\^\}$/))) return m[1] + "-";
+  if ((m = text.match(/^\{([.,?!:;])\}$/))) return m[1];
+  return text.replace(/\{[^}]*\}/g, "").trim() || text;
+}
+
+function cells(parent, ids, head) {
+  for (const id of STENO_ORDER) {
+    const cell = document.createElement("i");
+    cell.className = "g-" + stenoGroup(id);
+    if (head || ids.has(id)) cell.textContent = id.replace(/-/g, "");
+    parent.append(cell);
+  }
+}
+
+function drawSteno() {
+  const stroke = document.getElementById("stroke"), word = document.getElementById("word");
+  const last = tape[tape.length - 1];
+  // while a chord is going down, show it as it builds
+  const building = chordPos.size ? new Set([...chordPos].map(p => stenoId(byName[current].keys[p]))) : null;
+  const ids = building || (last && last.ids);
+  stroke.replaceChildren();
+  word.replaceChildren();
+  stroke.classList.toggle("empty", !ids);
+  word.className = "";
+  if (!ids) {
+    stroke.textContent = "Press a chord. It stays here until the next one.";
+  } else {
+    for (const part of strokeParts(ids)) {
+      const span = document.createElement("span");
+      span.className = "g-" + part.group;
+      span.textContent = part.ch;
+      stroke.append(span);
+    }
+    if (building) {
+      // no word until the chord is released
+    } else if (last.word) {
+      if (last.joined) { const how = document.createElement("small"); how.textContent = last.joined; word.append(how); }
+      word.append(last.word);
+    } else if (last.word === null) {
+      word.className = "none";
+      word.textContent = "not in your dictionaries";
+    }
+  }
+  const rows = document.getElementById("tape-rows");
+  rows.replaceChildren(...tape.slice(-16).map(entry => {
+    const row = document.createElement("div"), strip = document.createElement("div"), w = document.createElement("span");
+    row.className = "tape-row"; strip.className = "cells"; w.className = "w";
+    cells(strip, entry.ids, false);
+    w.textContent = entry.word || "";
+    row.append(strip, w);
+    return row;
+  }));
+}
+cells(document.querySelector("#tape .head"), null, true);
+
 // ---- live input: the viewer app calls these with what the keyboard sends ----
 const downKeys = new Map();   // HID usage -> the positions it lit
 const downPos = new Set();
 const LEFT_SHIFT = 225, RIGHT_SHIFT = 229;
-let shiftAt = -1e9, shiftedAt = -1e9;
+const modAt = new Map();        // modifier usage -> when it last went down
 const heldLayers = [];          // hold layers whose signal is down, oldest first
 let lockedLayer = DATA.base;    // the base layer, or one that was toggled on
 
@@ -372,6 +583,7 @@ function paintDown() {
   const shift = downKeys.has(LEFT_SHIFT) || downKeys.has(RIGHT_SHIFT);
   if (shift !== shiftHeld) { shiftHeld = shift; return drawBoard(); }
   for (const node of keysG.children) node.classList.toggle("down", downPos.has(+node.dataset.pos));
+  markChord();
 }
 const sending = (layer, usage) => layer.codes.flatMap((codes, pos) => codes.includes(usage) ? [pos] : []);
 
@@ -400,18 +612,44 @@ window.live = {
       window.webkit?.messageHandlers?.layer?.postMessage(to);
       if (to !== current) show(to, lockedLayer);
     } else if (page === 7 && usage >= 4 && usage <= 231) {
-      if (!value) { downKeys.delete(usage); return paintDown(); }
+      if (!value) {
+        downKeys.delete(usage);
+        if (chordPos.size && !downKeys.size) finishChord();
+        return paintDown();
+      }
       const here = byName[current], now = performance.now();
-      let positions = sending(here, usage);
-      if (!positions.length) positions = sending(byName[DATA.base], usage);
-      // symbols arrive as shift + key: don't light the shift key for those
-      const implied = positions.some(p => here.shifted.includes(p));
-      if (usage === LEFT_SHIFT) { shiftAt = now; if (now - shiftedAt < 40) return; }
-      if (implied) { shiftedAt = now; if (now - shiftAt < 40) downKeys.delete(LEFT_SHIFT); }
+      if (usage >= 224) modAt.set(usage, now);
+      // keys that send their own modifiers (! is shift+1, desk ← is ctrl+←): light that one
+      // key, and un-light the modifiers that arrived with it
+      const combo = here.combos
+        .filter(c => c.key === usage && c.mods.every(m => downKeys.has(m)))
+        .sort((a, b) => b.mods.length - a.mods.length)[0];
+      let positions;
+      if (combo) {
+        positions = [combo.pos];
+        combo.mods.forEach(m => { if (now - (modAt.get(m) ?? -1e9) < 40) downKeys.delete(m); });
+      } else {
+        positions = sending(here, usage);
+        if (!positions.length) positions = sending(byName[DATA.base], usage);
+      }
       downKeys.set(usage, positions);
+      if (isSteno(here)) {
+        if (!chordPos.size) lastPos = new Set();   // a new chord replaces the one on show
+        positions.forEach(p => stenoId(here.keys[p]) && chordPos.add(p));
+      }
       paintDown();
     }
   },
+  // the app's answer to a dictionary lookup: `count` strokes ending at stroke `id` make `text`
+  translation(id, text, count) {
+    const entry = tape.find(t => t.id === id);
+    if (!entry) return;
+    entry.word = readable(text);
+    entry.joined = count > 1 ? tape.slice(tape.indexOf(entry) - count + 1, tape.indexOf(entry) + 1).map(t => t.text).join("/") : "";
+    drawSteno();
+  },
+  // the app has finished resizing the window for the pane
+  paneDone() { document.querySelector(".left").style.flex = ""; },
   status(text) {
     goLive();
     document.getElementById("live-status").textContent = text;

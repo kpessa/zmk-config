@@ -17,9 +17,10 @@ SYMBOLS = {
     "LGUI": "⌘", "LALT": "⌥", "BSPC": "⌫", "DEL": "⌦", "ENTER": "⏎",
     "SPACE": "␣", "LEFT": "←", "RIGHT": "→", "UP": "↑", "DOWN": "↓",
     "PG UP": "pg↑", "PG DN": "pg↓", "HOME": "home", "END": "end",
-    "CAPS": "caps", "BT CLR": "BT clr", "OUT TOG": "USB BT", "RGB TOG": "RGB",
+    "CAPS": "caps", "BT CLR": "BT clear", "OUT TOG": "USB BT", "RGB TOG": "RGB",
     "&bootloader": "boot", "&sys_reset": "reset", "&studio_unlock": "studio",
     "&rgb_reset": "RGB fix",
+    "Ctl+UP": "mission control", "Ctl+LEFT": "desk ←", "Ctl+RIGHT": "desk →",
     "&num_c": "Num", "&num_cn": "Num", "&sym_c": "Sym", "&sym_cn": "Sym",
     "&row_c": "123", "&srow_c": "!@#", "&fn_c": "Fn", "&fn_cn": "Fn",
     "&steno_on": "Steno", "&steno_off": "exit", "&nav_on": "Arrows", "&nav_off": "exit",
@@ -45,6 +46,13 @@ def as_dict(key):
 
 
 def pretty(key):
+    # the Command thumb: Command is the point, dictation is what a lone tap does
+    if key.get("t") == "Hyper+D" and key.get("h") == "LGUI":
+        key.clear()
+        key.update({"t": "⌘", "s": "dictate"})
+    # Bluetooth profiles: ZMK counts from 0, people count from 1
+    if key.get("t") == "BT" and str(key.get("h", "")).isdigit():
+        key["t"] = f"BT {int(key.pop('h')) + 1}"
     for field in ("t", "h", "s"):
         if field in key:
             key[field] = SYMBOLS.get(str(key[field]), key[field])

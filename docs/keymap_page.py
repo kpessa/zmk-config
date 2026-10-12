@@ -63,6 +63,8 @@ WITH_SHIFT = {
     "TILDE": "GRAVE", "LBRC": "LBKT", "RBRC": "RBKT", "PIPE": "BSLH", "COLON": "SEMI",
     "DQT": "SQT", "LT": "COMMA", "GT": "DOT", "QMARK": "FSLH",
 }
+# modifier wrappers such as LC(...): letter -> left-hand usage (right-hand is +4)
+MODIFIERS = {"C": 224, "S": 225, "A": 226, "G": 227}
 # consumer keys used as layer signals -> HID consumer usage
 CONSUMER = {
     "C_MEDIA_TV": 0x89, "C_MEDIA_VCR": 0x92, "C_MEDIA_TUNER": 0x93,
@@ -83,23 +85,50 @@ def geometry(svg):
     return [keys[pos] for pos in sorted(keys)]
 
 
+def unwrap(param):
+    """LC(LS(X)) -> ([ctrl, shift], "X"); EXCL -> ([shift], "N1")."""
+    mods = []
+    while m := re.fullmatch(r"([LR])([CSAG])\((.+)\)", param):
+        mods.append(MODIFIERS[m[2]] + (4 if m[1] == "R" else 0))
+        param = m[3]
+    if param in WITH_SHIFT:
+        mods.append(MODIFIERS["S"])
+        param = WITH_SHIFT[param]
+    return mods, param
+
+
 def live(keymap):
-    """Per layer: the usages each position sends, the shift-implied positions, the signal."""
+    """Per layer: the usages each position sends, the keys sent with modifiers, the signal.
+
+    `combos` are positions that send a key together with modifiers of their own
+    ({pos, mods, key}); the page matches those first so it lights that one key
+    rather than the key and each modifier.
+    """
     defines = dict(re.findall(r"^#define (\w+) (\w+)$", keymap, re.M))
     signals = {int(n): CONSUMER[defines["SIG_" + name]] for name, n in defines.items()
                if n.isdigit() and defines.get("SIG_" + name) in CONSUMER}
     out = []
     for index, block in enumerate(re.findall(r"bindings\s*=\s*<(.*?)>;", keymap.split("keymap {")[-1], re.S)):
-        codes, shifted = [], []
+        codes, combos, own = [], [], []
         for pos, binding in enumerate(block.split("&")[1:]):
             behaviour, *params = binding.split()
+            codes.append([])
             if behaviour == "trans" and out:
-                codes.append(out[0]["codes"][pos])
+                codes[pos] = list(out[0]["codes"][pos])
+                combos += [c for c in out[0]["combos"] if c["pos"] == pos]
                 continue
-            if any(p in WITH_SHIFT for p in params):
-                shifted.append(pos)
-            codes.append([USAGE[WITH_SHIFT.get(p, p)] for p in params if WITH_SHIFT.get(p, p) in USAGE])
-        out.append({"codes": codes, "shifted": shifted, "signal": signals.get(index)})
+            for mods, name in map(unwrap, params):
+                if name not in USAGE:
+                    continue
+                if mods:
+                    own.append({"pos": pos, "mods": mods, "key": USAGE[name]})
+                else:
+                    codes[pos].append(USAGE[name])
+        # fallback for a combo whose modifiers went unseen: its key alone, when no other key sends it
+        for combo in own:
+            if not any(combo["key"] in sent for sent in codes):
+                codes[combo["pos"]].append(combo["key"])
+        out.append({"codes": codes, "combos": combos + own, "signal": signals.get(index)})
     return out
 
 

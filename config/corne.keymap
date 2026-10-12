@@ -178,6 +178,16 @@
     };
 
     behaviors {
+        // hold = Command, tap = dictation (Ctrl+Opt+Shift+Cmd+D, the shortcut set
+        // in macOS; the same thing Karabiner does for the other keyboards)
+        cmd_dict: cmd_tap_dictation {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "hold-preferred";
+            tapping-term-ms = <200>;
+            bindings = <&kp>, <&kp>;
+        };
+
         // tap = key, hold = NUM layer (blue)
         ltn: layer_tap_num {
             compatible = "zmk,behavior-hold-tap";
@@ -307,7 +317,7 @@
 &kp TAB        &kp Q  &kp W  &kp E     &kp R     &kp T          &kp Y          &kp U      &kp I      &kp O    &kp P     &ltf 0 BSLH
 &mt LCTRL ESC  &kp A  &kp S  &kp D     &kp F     &kp G          &kp H          &kp J      &kp K      &kp L    &kp SEMI  &kp SQT
 &kp LSHFT      &kp Z  &kp X  &kp C     &kp V     &kp B          &kp N          &kp M      &kp COMMA  &kp DOT  &kp FSLH  &kp RSHFT
-                             &kp LGUI  &kp BSPC  &ltn 0 DEL    &lts 0 ENTER  &kp SPACE  &kp LALT
+                             &cmd_dict LGUI LC(LA(LS(LG(D))))  &kp BSPC  &ltn 0 DEL    &lts 0 ENTER  &kp SPACE  &kp LALT
             >;
         };
 
@@ -333,15 +343,16 @@
             // Right hand: the Num layer with shift already held, same positions.
             // Left hand: the bracket pairs, opposite the thumb that holds the layer.
             // -----------------------------------------------------------------------------------------
-            // |      |     |     |  [  |  ]  |     |   |  ?  |  !  |  @  |  #  |  _  |  +   |
-            // |      |     |     |  (  |  )  |     |   |  )  |  $  |  %  |  ^  |  >  |      |
+            // Far left: Mission Control over desktop left / right (Ctrl + arrows).
+            // |      |     | MCTL|  [  |  ]  |     |   |  ?  |  !  |  @  |  #  |  _  |  +   |
+            // |      | DSK<| DSK>|  (  |  )  |     |   |  )  |  $  |  %  |  ^  |  >  |      |
             // |      |  ~  |     |  {  |  }  |     |   |  :  |  &  |  *  |  (  |  <  |      |
             //                          (also hold BSPC for the symbol row across the top)
 
             bindings = <
-&trans  &none      &none  &kp LBKT  &kp RBKT  &none    &kp QMARK  &kp EXCL  &kp AT     &kp HASH   &kp UNDER  &kp PLUS
-&trans  &none      &none  &kp LPAR  &kp RPAR  &none    &kp RPAR   &kp DLLR  &kp PRCNT  &kp CARET  &kp GT     &trans
-&trans  &kp TILDE  &none  &kp LBRC  &kp RBRC  &none    &kp COLON  &kp AMPS  &kp STAR   &kp LPAR   &kp LT     &trans
+&trans  &none         &kp LC(UP)     &kp LBKT  &kp RBKT  &none    &kp QMARK  &kp EXCL  &kp AT     &kp HASH   &kp UNDER  &kp PLUS
+&trans  &kp LC(LEFT)  &kp LC(RIGHT)  &kp LPAR  &kp RPAR  &none    &kp RPAR   &kp DLLR  &kp PRCNT  &kp CARET  &kp GT     &trans
+&trans  &kp TILDE      &none          &kp LBRC  &kp RBRC  &none    &kp COLON  &kp AMPS  &kp STAR   &kp LPAR   &kp LT     &trans
                              &trans    &ltsr 0 BSPC  &trans    &trans     &trans    &trans
             >;
         };

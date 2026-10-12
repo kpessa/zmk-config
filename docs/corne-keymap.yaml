@@ -41,6 +41,7 @@ layers:
   - t: /
   - t: ⇧
   - t: ⌘
+    s: dictate
   - t: ⌫
   - t: ⌦
     h: Num
@@ -111,8 +112,7 @@ layers:
     type: thru
   - t: ''
     type: 'off'
-  - t: ''
-    type: 'off'
+  - t: mission control
   - t: '['
   - t: ']'
   - t: ''
@@ -125,10 +125,8 @@ layers:
   - t: +
   - t: esc
     type: thru
-  - t: ''
-    type: 'off'
-  - t: ''
-    type: 'off'
+  - t: desk ←
+  - t: desk →
   - t: (
   - t: )
   - t: ''
@@ -171,16 +169,11 @@ layers:
     type: thru
   Fn:
   - t: boot
-  - t: BT
-    h: '0'
-  - t: BT
-    h: '1'
-  - t: BT
-    h: '2'
-  - t: BT
-    h: '3'
-  - t: BT
-    h: '4'
+  - t: BT 1
+  - t: BT 2
+  - t: BT 3
+  - t: BT 4
+  - t: BT 5
   - t: F1
   - t: F2
   - t: F3
@@ -189,7 +182,7 @@ layers:
   - t: \
     h: held
     type: held
-  - t: BT clr
+  - t: BT clear
   - t: USB BT
   - t: RGB
   - t: studio

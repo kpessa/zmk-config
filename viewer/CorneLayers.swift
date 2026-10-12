@@ -34,6 +34,9 @@ final class Viewer: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKScr
     var pageReady = false
     var status = ""
     var connected = Set<String>()
+    var paneOpen = false
+    var xBeforePane: CGFloat?
+    let paneWidth: CGFloat = 336   // the page's steno pane plus its gap
     var stenoOn = false
     var ploverNote = ""
     let ploverQueue = DispatchQueue(label: "plover")
@@ -58,7 +61,7 @@ final class Viewer: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKScr
 
     func buildWindow() {
         // a panel that floats over other apps and never takes keyboard focus
-        window = NSPanel(contentRect: NSRect(x: 0, y: 0, width: 900, height: 570),
+        window = NSPanel(contentRect: NSRect(x: 0, y: 0, width: 980, height: 500),
                          styleMask: [.titled, .closable, .resizable, .nonactivatingPanel, .fullSizeContentView],
                          backing: .buffered, defer: false)
         window.title = "Corne Layers"
@@ -71,12 +74,14 @@ final class Viewer: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKScr
         window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         window.backgroundColor = NSColor(red: 0x11 / 255, green: 0x13 / 255, blue: 0x18 / 255, alpha: 1)
         window.appearance = NSAppearance(named: .darkAqua)
-        window.contentAspectRatio = NSSize(width: 900, height: 570)
+        window.contentMinSize = NSSize(width: 760, height: 400)
         window.setFrameAutosaveName("CorneLayers")
         if window.frame.origin == .zero { window.center() }
 
         let configuration = WKWebViewConfiguration()
         configuration.userContentController.add(self, name: "layer")
+        configuration.userContentController.add(self, name: "lookup")
+        configuration.userContentController.add(self, name: "pane")
         web = WKWebView(frame: window.contentLayoutRect, configuration: configuration)
         web.autoresizingMask = [.width, .height]
         web.navigationDelegate = self
@@ -108,6 +113,8 @@ final class Viewer: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKScr
 
     // the page reports each layer signal from the keyboard
     func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
+        if message.name == "lookup" { return lookup(message.body) }
+        if message.name == "pane" { return pane(open: message.body as? Bool ?? false) }
         guard managePlover, let layer = message.body as? String else { return }
         let on = layer == stenoLayer
         if on != stenoOn {
@@ -147,6 +154,59 @@ final class Viewer: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKScr
                 if !self.connected.isEmpty { self.sayConnection() }
             }
         }
+    }
+
+    // MARK: Steno pane
+
+    // The page's steno pane sits to the right of the board. Widen the window by its width
+    // rather than squeezing the board, moving left only if there's no room on screen.
+    func pane(open: Bool) {
+        if open != paneOpen {
+            paneOpen = open
+            var frame = window.frame
+            frame.size.width += open ? paneWidth : -paneWidth
+            if open {
+                xBeforePane = nil
+                if let screen = window.screen?.visibleFrame, frame.maxX > screen.maxX {
+                    xBeforePane = frame.origin.x
+                    frame.origin.x = max(screen.minX, screen.maxX - frame.width)
+                }
+            } else if let x = xBeforePane {
+                frame.origin.x = x
+                xBeforePane = nil
+            }
+            window.setFrame(frame, display: true, animate: true)
+        }
+        js("window.live.paneDone()")
+    }
+
+    func applicationWillTerminate(_ note: Notification) {
+        // save the window at its normal width
+        if paneOpen { pane(open: false) }
+    }
+
+    // MARK: Steno dictionaries
+
+    // Plover's default dictionaries, highest priority first
+    lazy var dictionaries: [[String: String]] = ["user.json", "commands.json", "main.json"].compactMap { name in
+        let folder = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent("Library/Application Support/plover")
+        guard let data = try? Data(contentsOf: folder.appendingPathComponent(name)) else { return nil }
+        return (try? JSONSerialization.jsonObject(with: data)) as? [String: String]
+    }
+
+    // the page sends the last few strokes; answer with the longest run ending at the newest
+    // one that has an entry, the way a multi-stroke word would resolve
+    func lookup(_ body: Any) {
+        guard let request = body as? [String: Any], let id = request["id"] as? Int,
+              let strokes = request["strokes"] as? [String], !strokes.isEmpty else { return }
+        for count in stride(from: strokes.count, through: 1, by: -1) {
+            let outline = strokes.suffix(count).joined(separator: "/")
+            if let text = dictionaries.lazy.compactMap({ $0[outline] }).first {
+                let quoted = String(data: try! JSONEncoder().encode(text), encoding: .utf8)!
+                return js("window.live.translation(\(id), \(quoted), \(count))")
+            }
+        }
+        js("window.live.translation(\(id), null, 1)")
     }
 
     // MARK: HID

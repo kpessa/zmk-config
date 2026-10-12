@@ -338,6 +338,7 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <g transform="translate(240, 219)" class="key keypos-36">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
 <text x="0" y="0" class="key tap">⌘</text>
+<text x="0" y="-25" class="key shifted"><tspan style="font-size: 86%">dictate</tspan></text>
 </g>
 <g transform="translate(306, 228) rotate(15.0)" class="key keypos-37">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
@@ -559,8 +560,11 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <g transform="translate(90, 52)" class="key off keypos-1">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key off"/>
 </g>
-<g transform="translate(150, 38)" class="key off keypos-2">
-<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key off"/>
+<g transform="translate(150, 38)" class="key keypos-2">
+<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
+<text x="0" y="0" class="key tap">
+<tspan x="0" dy="-0.6em" style="font-size: 86%">mission</tspan><tspan x="0" dy="1.2em" style="font-size: 86%">control</tspan>
+</text>
 </g>
 <g transform="translate(210, 30)" class="key keypos-3">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
@@ -601,11 +605,17 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key thru"/>
 <text x="0" y="0" class="key thru tap">esc</text>
 </g>
-<g transform="translate(90, 112)" class="key off keypos-13">
-<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key off"/>
+<g transform="translate(90, 112)" class="key keypos-13">
+<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
+<text x="0" y="0" class="key tap">
+<tspan x="0" dy="-0.6em">desk</tspan><tspan x="0" dy="1.2em">←</tspan>
+</text>
 </g>
-<g transform="translate(150, 98)" class="key off keypos-14">
-<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key off"/>
+<g transform="translate(150, 98)" class="key keypos-14">
+<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
+<text x="0" y="0" class="key tap">
+<tspan x="0" dy="-0.6em">desk</tspan><tspan x="0" dy="1.2em">→</tspan>
+</text>
 </g>
 <g transform="translate(210, 90)" class="key keypos-15">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
@@ -725,28 +735,33 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 </g>
 <g transform="translate(90, 52)" class="key keypos-1">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">BT</text>
-<text x="0" y="25" class="key hold">0</text>
+<text x="0" y="0" class="key tap">
+<tspan x="0" dy="-0.6em">BT</tspan><tspan x="0" dy="1.2em">1</tspan>
+</text>
 </g>
 <g transform="translate(150, 38)" class="key keypos-2">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">BT</text>
-<text x="0" y="25" class="key hold">1</text>
+<text x="0" y="0" class="key tap">
+<tspan x="0" dy="-0.6em">BT</tspan><tspan x="0" dy="1.2em">2</tspan>
+</text>
 </g>
 <g transform="translate(210, 30)" class="key keypos-3">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">BT</text>
-<text x="0" y="25" class="key hold">2</text>
+<text x="0" y="0" class="key tap">
+<tspan x="0" dy="-0.6em">BT</tspan><tspan x="0" dy="1.2em">3</tspan>
+</text>
 </g>
 <g transform="translate(270, 38)" class="key keypos-4">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">BT</text>
-<text x="0" y="25" class="key hold">3</text>
+<text x="0" y="0" class="key tap">
+<tspan x="0" dy="-0.6em">BT</tspan><tspan x="0" dy="1.2em">4</tspan>
+</text>
 </g>
 <g transform="translate(330, 45)" class="key keypos-5">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">BT</text>
-<text x="0" y="25" class="key hold">4</text>
+<text x="0" y="0" class="key tap">
+<tspan x="0" dy="-0.6em">BT</tspan><tspan x="0" dy="1.2em">5</tspan>
+</text>
 </g>
 <g transform="translate(570, 45)" class="key keypos-6">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
@@ -776,7 +791,7 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <g transform="translate(30, 112)" class="key keypos-12">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
 <text x="0" y="0" class="key tap">
-<tspan x="0" dy="-0.6em">BT</tspan><tspan x="0" dy="1.2em">clr</tspan>
+<tspan x="0" dy="-0.6em">BT</tspan><tspan x="0" dy="1.2em">clear</tspan>
 </text>
 </g>
 <g transform="translate(90, 112)" class="key keypos-13">
