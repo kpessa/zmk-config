@@ -14,7 +14,7 @@ hints() {
   sed -E \
     -e 's|(class="label"[^>]*>)Kinesis<|\1Kinesis<tspan class="hint" dx="10">base · white LEDs</tspan><|' \
     -e 's|(class="label"[^>]*>)Num/Nav<|\1Num / Nav<tspan class="hint" dx="10">hold ⌦ · blue</tspan><|' \
-    -e 's|(class="label"[^>]*>)Symbols<|\1Symbols<tspan class="hint" dx="10">hold ⏎ · orange · the Num layer, shifted</tspan><|' \
+    -e 's|(class="label"[^>]*>)Symbols<|\1Symbols<tspan class="hint" dx="10">hold ⏎ · orange · numpad shifted, brackets on the left</tspan><|' \
     -e 's|(class="label"[^>]*>)NumRow<|\1Num row<tspan class="hint" dx="10">hold ⌦, then ␣ · yellow</tspan><|' \
     -e 's|(class="label"[^>]*>)SymRow<|\1Sym row<tspan class="hint" dx="10">hold ⏎, then ⌫ · pink</tspan><|' \
     -e 's|(class="label"[^>]*>)Fn<|\1Fn<tspan class="hint" dx="10">hold \\ (top right) · purple</tspan><|' \

@@ -111,10 +111,12 @@ layers:
     type: thru
   - t: ''
     type: 'off'
-  - t: home
-  - t: ↑
-  - t: end
-  - t: pg↑
+  - t: ''
+    type: 'off'
+  - t: '['
+  - t: ']'
+  - t: ''
+    type: 'off'
   - t: '?'
   - t: '!'
   - t: '@'
@@ -125,10 +127,12 @@ layers:
     type: thru
   - t: ''
     type: 'off'
-  - t: ←
-  - t: ↓
-  - t: →
-  - t: pg↓
+  - t: ''
+    type: 'off'
+  - t: (
+  - t: )
+  - t: ''
+    type: 'off'
   - t: )
   - t: $
   - t: '%'
@@ -139,7 +143,8 @@ layers:
   - t: ⇧
     type: thru
   - t: '~'
-  - t: caps
+  - t: ''
+    type: 'off'
   - t: '{'
   - t: '}'
   - t: ''

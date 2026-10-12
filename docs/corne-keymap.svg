@@ -550,7 +550,7 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 </g>
 </g>
 <g transform="translate(36, 358)" class="layer-Symbols">
-<text x="0" y="32" class="label" id="Symbols">Symbols<tspan class="hint" dx="10">hold ⏎ · orange · the Num layer, shifted</tspan></text>
+<text x="0" y="32" class="label" id="Symbols">Symbols<tspan class="hint" dx="10">hold ⏎ · orange · numpad shifted, brackets on the left</tspan></text>
 <g transform="translate(0, 64)">
 <g transform="translate(30, 52)" class="key thru keypos-0">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key thru"/>
@@ -559,21 +559,19 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <g transform="translate(90, 52)" class="key off keypos-1">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key off"/>
 </g>
-<g transform="translate(150, 38)" class="key keypos-2">
-<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">home</text>
+<g transform="translate(150, 38)" class="key off keypos-2">
+<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key off"/>
 </g>
 <g transform="translate(210, 30)" class="key keypos-3">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">↑</text>
+<text x="0" y="0" class="key tap">[</text>
 </g>
 <g transform="translate(270, 38)" class="key keypos-4">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">end</text>
+<text x="0" y="0" class="key tap">]</text>
 </g>
-<g transform="translate(330, 45)" class="key keypos-5">
-<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">pg↑</text>
+<g transform="translate(330, 45)" class="key off keypos-5">
+<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key off"/>
 </g>
 <g transform="translate(570, 45)" class="key keypos-6">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
@@ -606,21 +604,19 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <g transform="translate(90, 112)" class="key off keypos-13">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key off"/>
 </g>
-<g transform="translate(150, 98)" class="key keypos-14">
-<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">←</text>
+<g transform="translate(150, 98)" class="key off keypos-14">
+<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key off"/>
 </g>
 <g transform="translate(210, 90)" class="key keypos-15">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">↓</text>
+<text x="0" y="0" class="key tap">(</text>
 </g>
 <g transform="translate(270, 98)" class="key keypos-16">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">→</text>
+<text x="0" y="0" class="key tap">)</text>
 </g>
-<g transform="translate(330, 105)" class="key keypos-17">
-<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">pg↓</text>
+<g transform="translate(330, 105)" class="key off keypos-17">
+<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key off"/>
 </g>
 <g transform="translate(570, 105)" class="key keypos-18">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
@@ -654,9 +650,8 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
 <text x="0" y="0" class="key tap">~</text>
 </g>
-<g transform="translate(150, 158)" class="key keypos-26">
-<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">caps</text>
+<g transform="translate(150, 158)" class="key off keypos-26">
+<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key off"/>
 </g>
 <g transform="translate(210, 150)" class="key keypos-27">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>

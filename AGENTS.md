@@ -9,7 +9,8 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
 - `config/corne.keymap` — the source of truth. Eight layers: **Kinesis** (base,
   Kinesis Advantage360 letter block), **Num/Nav** (hold ⌦; numpad under the right
   hand reading 1 2 3 from the top, arrow cluster under the left), **Symbols**
-  (hold ⏎; the Num layer with shift already applied, nav keys unchanged), **NumRow**
+  (hold ⏎; right hand is the Num layer with shift already applied, left hand is
+  the bracket pairs `[ ]` / `( )` / `{ }` stacked on the D and F columns), **NumRow**
   (hold ⌦, then also ␣: the classic number row across the top), **SymRow** (hold
   ⏎, then also ⌫: that row's symbols), **Fn** (hold `\`,
   top right), **Steno** (both inner thumbs together toggles), **Arrows** (both

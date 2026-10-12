@@ -330,18 +330,18 @@
 
         sym_layer {
             display-name = "Symbols";
-            // The Num layer with shift already held: same positions, no shift needed.
-            // Nav keys are the same as on Num, so they work under either thumb.
+            // Right hand: the Num layer with shift already held, same positions.
+            // Left hand: the bracket pairs, opposite the thumb that holds the layer.
             // -----------------------------------------------------------------------------------------
-            // |      |     | HOME|  UP | END | PGUP|   |  ?  |  !  |  @  |  #  |  _  |  +   |
-            // |      |     | LFT | DWN | RGT | PGDN|   |  )  |  $  |  %  |  ^  |  >  |      |
-            // |      |  ~  | CAPS|  {  |  }  |     |   |  :  |  &  |  *  |  (  |  <  |      |
+            // |      |     |     |  [  |  ]  |     |   |  ?  |  !  |  @  |  #  |  _  |  +   |
+            // |      |     |     |  (  |  )  |     |   |  )  |  $  |  %  |  ^  |  >  |      |
+            // |      |  ~  |     |  {  |  }  |     |   |  :  |  &  |  *  |  (  |  <  |      |
             //                          (also hold BSPC for the symbol row across the top)
 
             bindings = <
-&trans  &none      &kp HOME  &kp UP    &kp END    &kp PG_UP    &kp QMARK  &kp EXCL  &kp AT     &kp HASH   &kp UNDER  &kp PLUS
-&trans  &none      &kp LEFT  &kp DOWN  &kp RIGHT  &kp PG_DN    &kp RPAR   &kp DLLR  &kp PRCNT  &kp CARET  &kp GT     &trans
-&trans  &kp TILDE  &kp CAPS  &kp LBRC  &kp RBRC   &none        &kp COLON  &kp AMPS  &kp STAR   &kp LPAR   &kp LT     &trans
+&trans  &none      &none  &kp LBKT  &kp RBKT  &none    &kp QMARK  &kp EXCL  &kp AT     &kp HASH   &kp UNDER  &kp PLUS
+&trans  &none      &none  &kp LPAR  &kp RPAR  &none    &kp RPAR   &kp DLLR  &kp PRCNT  &kp CARET  &kp GT     &trans
+&trans  &kp TILDE  &none  &kp LBRC  &kp RBRC  &none    &kp COLON  &kp AMPS  &kp STAR   &kp LPAR   &kp LT     &trans
                              &trans    &ltsr 0 BSPC  &trans    &trans     &trans    &trans
             >;
         };
