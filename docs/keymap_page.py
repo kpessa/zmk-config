@@ -26,6 +26,8 @@ LEDS = {
     "Fn": ("#b98aff", "Purple"),
     "Steno": ("#4fd684", "Green"),
     "Arrows": ("#3fd0dc", "Cyan"),
+    # no colour of its own: the LEDs keep whichever thumb's colour came last
+    "Row": ("#e6c84f", "Blue or orange"),
 }
 
 NOTES = {
@@ -100,6 +102,14 @@ def live(keymap):
     return out
 
 
+def conditionals(keymap, names):
+    """Layers that switch on while a set of other layers is held: [{if: [names], then: name}]."""
+    defines = dict(re.findall(r"^#define (\w+) (\d+)$", keymap, re.M))
+    rules = re.findall(r"if-layers\s*=\s*<([^>]*)>;\s*then-layer\s*=\s*<(\w+)>;", keymap)
+    return [{"if": [names[int(defines[n])] for n in needs.split()], "then": names[int(defines[then])]}
+            for needs, then in rules]
+
+
 def doors(name, keys, combos, layers):
     """Keys on this layer that take you to another one."""
     found = {}
@@ -148,7 +158,19 @@ def main():
                 layer["how"] = COMBO_KEYS.get(tuple(sorted(door["p"])), "the linked keys")
         out.append(layer)
 
-    page = {"base": BASE, "geometry": geometry(open(keymap_svg).read()), "layers": out}
+    # a conditional layer is held like its parts, and each part's key is a door to it
+    byname = {layer["name"]: layer for layer in out}
+    rules = conditionals(open(keymap).read(), list(layers))
+    for rule in rules:
+        then, parts = byname[rule["then"]], [byname[n] for n in rule["if"]]
+        then.update(kind="hold", how=" and ".join(p["how"] for p in parts),
+                    enter=[pos for p in parts for pos in p["enter"]])
+        for part in parts:
+            for other in parts:
+                if other is not part:
+                    part["doors"].append({"to": then["name"], "kind": "hold", "p": other["enter"]})
+
+    page = {"base": BASE, "conditional": rules, "geometry": geometry(open(keymap_svg).read()), "layers": out}
     blob = json.dumps(page, ensure_ascii=False).replace("</", "<\\/")
     sys.stdout.write(open(template).read().replace("__KEYMAP_DATA__", blob))
 

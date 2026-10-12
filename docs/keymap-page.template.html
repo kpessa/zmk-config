@@ -237,6 +237,16 @@ function drawLegend(g, key) {
   words.forEach((w, i) => g.append(svg("text", { class: size, y: (i - (words.length - 1) / 2) * 14 }, w)));
 }
 
+// live only: legends follow the shift key (a / A, 1 / !)
+let shiftHeld = false;
+function shown(key) {
+  if (!document.body.classList.contains("live") || (key.type && key.type !== "thru")) return key;
+  const t = String(key.t ?? "");
+  if (/^[A-Z]$/.test(t)) return shiftHeld ? key : { ...key, t: t.toLowerCase() };
+  if (key.s && shiftHeld) return { ...key, t: key.s, s: t };
+  return key;
+}
+
 function drawBoard() {
   const layer = byName[current];
   keysG.replaceChildren();
@@ -245,6 +255,7 @@ function drawBoard() {
   for (const d of layer.doors) if (d.kind === "hold") for (const p of d.p) holdDoor[p] = d.to;
 
   layer.keys.forEach((key, pos) => {
+    key = shown(key);
     const k = geo[pos];
     const g = svg("g", { transform: place(k), "data-pos": pos });
     const cls = ["key"];
@@ -349,24 +360,44 @@ function point(name) {
 // ---- live input: the viewer app calls these with what the keyboard sends ----
 const downKeys = new Map();   // HID usage -> the positions it lit
 const downPos = new Set();
-const LEFT_SHIFT = 225;
+const LEFT_SHIFT = 225, RIGHT_SHIFT = 229;
 let shiftAt = -1e9, shiftedAt = -1e9;
+const heldLayers = [];          // hold layers whose signal is down, oldest first
+let lockedLayer = DATA.base;    // the base layer, or one that was toggled on
 
 function paintDown() {
   downPos.clear();
   for (const positions of downKeys.values()) positions.forEach(p => downPos.add(p));
+  const shift = downKeys.has(LEFT_SHIFT) || downKeys.has(RIGHT_SHIFT);
+  if (shift !== shiftHeld) { shiftHeld = shift; return drawBoard(); }
   for (const node of keysG.children) node.classList.toggle("down", downPos.has(+node.dataset.pos));
 }
 const sending = (layer, usage) => layer.codes.flatMap((codes, pos) => codes.includes(usage) ? [pos] : []);
 
+function goLive() {
+  if (document.body.classList.contains("live")) return;
+  document.body.classList.add("live");
+  drawBoard();
+}
+
 window.live = {
   hid(page, usage, value) {
-    document.body.classList.add("live");
+    goLive();
     if (page === 12) {
-      // a layer signal: reported either as the usage going down or as the value
+      // a layer signal: held layers keep theirs down, locked layers tap theirs
       const layer = layers.find(l => l.signal === usage);
-      const to = layer ? (value ? layer : null) : layers.find(l => l.signal === value);
-      if (to && to.name !== current) show(to.name, current);
+      if (!layer) return;
+      if (layer.kind === "hold") {
+        const i = heldLayers.indexOf(layer.name);
+        if (value && i < 0) heldLayers.push(layer.name);
+        if (!value && i >= 0) heldLayers.splice(i, 1);
+      } else if (value) lockedLayer = layer.name;
+      else return;
+      const rule = DATA.conditional.find(c => c.if.every(name => heldLayers.includes(name)));
+      const to = rule ? rule.then : heldLayers.length ? heldLayers[heldLayers.length - 1] : lockedLayer;
+      // tell the app which layer the keyboard is really on (it switches Plover with Steno)
+      window.webkit?.messageHandlers?.layer?.postMessage(to);
+      if (to !== current) show(to, lockedLayer);
     } else if (page === 7 && usage >= 4 && usage <= 231) {
       if (!value) { downKeys.delete(usage); return paintDown(); }
       const here = byName[current], now = performance.now();
@@ -381,7 +412,7 @@ window.live = {
     }
   },
   status(text) {
-    document.body.classList.add("live");
+    goLive();
     document.getElementById("live-status").textContent = text;
   },
 };

@@ -5,7 +5,11 @@
 // follows the layer signals the keymap's macros tap. It only listens: nothing is
 // intercepted, so typing, shortcuts and Plover are unaffected.
 //
+// It also switches Plover with the Steno layer: output on when the keyboard enters
+// Steno, off when it leaves, starting Plover if it isn't running.
+//
 //   --log            print every HID value to stdout
+//   --no-plover      leave Plover alone
 //   --device NAME    listen to keyboards whose product name contains NAME
 //                    (default "Corne"; "" for every keyboard)
 
@@ -15,23 +19,31 @@ import WebKit
 
 let arguments = CommandLine.arguments
 let logging = arguments.contains("--log")
+let managePlover = !arguments.contains("--no-plover")
+let stenoLayer = "Steno"
+let ploverApp = "/Applications/Plover.app"
 let deviceFilter: String = {
     if let i = arguments.firstIndex(of: "--device"), i + 1 < arguments.count { return arguments[i + 1] }
     return "Corne"
 }()
 
-final class Viewer: NSObject, NSApplicationDelegate, WKNavigationDelegate {
+final class Viewer: NSObject, NSApplicationDelegate, WKNavigationDelegate, WKScriptMessageHandler {
     var window: NSPanel!
     var web: WKWebView!
     var manager: IOHIDManager!
     var pageReady = false
     var status = ""
     var connected = Set<String>()
+    var stenoOn = false
+    var ploverNote = ""
+    let ploverQueue = DispatchQueue(label: "plover")
 
     func applicationDidFinishLaunching(_ note: Notification) {
         buildMenu()
         buildWindow()
         listen()
+        // start from a known state: the keyboard is normally on its base layer
+        if managePlover { plover(on: false) }
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ app: NSApplication) -> Bool { true }
@@ -63,7 +75,9 @@ final class Viewer: NSObject, NSApplicationDelegate, WKNavigationDelegate {
         window.setFrameAutosaveName("CorneLayers")
         if window.frame.origin == .zero { window.center() }
 
-        web = WKWebView(frame: window.contentLayoutRect)
+        let configuration = WKWebViewConfiguration()
+        configuration.userContentController.add(self, name: "layer")
+        web = WKWebView(frame: window.contentLayoutRect, configuration: configuration)
         web.autoresizingMask = [.width, .height]
         web.navigationDelegate = self
         web.setValue(false, forKey: "drawsBackground")
@@ -88,6 +102,51 @@ final class Viewer: NSObject, NSApplicationDelegate, WKNavigationDelegate {
         if logging { print("status: \(text)") }
         let quoted = String(data: try! JSONEncoder().encode(text), encoding: .utf8)!
         js("window.live.status(\(quoted))")
+    }
+
+    // MARK: Plover
+
+    // the page reports each layer signal from the keyboard
+    func userContentController(_ controller: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard managePlover, let layer = message.body as? String else { return }
+        let on = layer == stenoLayer
+        if on != stenoOn {
+            stenoOn = on
+            plover(on: on)
+        }
+    }
+
+    func run(_ path: String, _ args: [String]) -> Int32 {
+        let process = Process()
+        process.executableURL = URL(fileURLWithPath: path)
+        process.arguments = args
+        process.standardOutput = FileHandle.nullDevice
+        process.standardError = FileHandle.nullDevice
+        do { try process.run() } catch { return -1 }
+        process.waitUntilExit()
+        return process.terminationStatus
+    }
+
+    func plover(on: Bool) {
+        ploverQueue.async {
+            let binary = ploverApp + "/Contents/MacOS/Plover"
+            guard FileManager.default.isExecutableFile(atPath: binary) else { return }
+            var running = self.run("/usr/bin/pgrep", ["-x", "Plover"]) == 0
+            if !running && !on { return }
+            if !running { _ = self.run("/usr/bin/open", ["-gj", ploverApp]) }
+            // a Plover that was just started takes a few seconds to accept commands
+            var sent = false
+            for _ in 0..<40 {
+                running = self.run("/usr/bin/pgrep", ["-x", "Plover"]) == 0
+                if running && self.run(binary, ["-s", "plover_send_command", on ? "resume" : "suspend"]) == 0 { sent = true; break }
+                Thread.sleep(forTimeInterval: 0.5)
+            }
+            if logging { print("plover \(on ? "resume" : "suspend"): \(sent ? "sent" : "failed")") }
+            DispatchQueue.main.async {
+                self.ploverNote = sent ? (on ? " Plover is on." : " Plover is off.") : " Couldn't reach Plover."
+                if !self.connected.isEmpty { self.sayConnection() }
+            }
+        }
     }
 
     // MARK: HID
@@ -143,7 +202,7 @@ final class Viewer: NSObject, NSApplicationDelegate, WKNavigationDelegate {
 
     func sayConnection() {
         let what = deviceFilter.isEmpty ? "a keyboard" : "the \(deviceFilter)"
-        say(connected.isEmpty ? "Waiting for \(what) to connect." : "Live from \(connected.sorted().joined(separator: ", ")).")
+        say(connected.isEmpty ? "Waiting for \(what) to connect." : "Live from \(connected.sorted().joined(separator: ", ")).\(ploverNote)")
     }
 
     func input(_ value: IOHIDValue) {

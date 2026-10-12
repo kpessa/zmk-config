@@ -36,7 +36,7 @@ STENO = {
 }
 
 # key positions that are physically held down while a layer is showing
-HELD = {"Num/Nav": [38], "Symbols": [39], "Fn": [11]}
+HELD = {"Num/Nav": [38], "Symbols": [39], "Fn": [11], "Row": [38, 39]}
 
 
 def as_dict(key):

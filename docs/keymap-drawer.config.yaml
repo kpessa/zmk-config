@@ -50,6 +50,9 @@ draw_config:
     .layer-Symbols text.label, .layer-Symbols text.held.hold { fill: #ffa04d; }
     .layer-Symbols rect.key:not(.thru):not(.off) { stroke: #a8642a; fill: #3a2a1c; }
     .layer-Symbols rect.held { stroke: #ffa04d; }
+    .layer-Row text.label, .layer-Row text.held.hold { fill: #e6c84f; }
+    .layer-Row rect.key:not(.thru):not(.off) { stroke: #9a8530; fill: #36301a; }
+    .layer-Row rect.held { stroke: #e6c84f; }
     .layer-Fn text.label, .layer-Fn text.held.hold { fill: #b98aff; }
     .layer-Fn rect.key:not(.thru):not(.off) { stroke: #6e4bb0; fill: #2a2140; }
     .layer-Fn rect.held { stroke: #b98aff; }

@@ -49,52 +49,48 @@ layers:
   - t: ␣
   - t: ⌥
   Num/Nav:
-  - t: '='
+  - t: ⇥
+    type: thru
+  - t: ''
+    type: 'off'
+  - t: home
+  - t: ↑
+  - t: end
+  - t: pg↑
+  - t: /
   - t: '1'
   - t: '2'
   - t: '3'
-  - t: '4'
-  - t: '5'
-  - t: '6'
-  - t: '7'
-  - t: '8'
-  - t: '9'
-  - t: '0'
   - t: '-'
+  - t: '='
   - t: esc
     type: thru
   - t: ''
     type: 'off'
-  - t: ''
-    type: 'off'
-  - t: home
-  - t: end
-  - t: ''
-    type: 'off'
-  - t: ''
-    type: 'off'
-  - t: pg↑
+  - t: ←
+  - t: ↓
+  - t: →
   - t: pg↓
-  - t: ''
-    type: 'off'
-  - t: ''
-    type: 'off'
+  - t: '0'
+  - t: '4'
+  - t: '5'
+  - t: '6'
+  - t: .
   - t: ''''
     type: thru
   - t: ⇧
     type: thru
   - t: '`'
   - t: caps
-  - t: ←
-  - t: →
-  - t: ''
-    type: 'off'
-  - t: ''
-    type: 'off'
-  - t: ↑
-  - t: ↓
   - t: '['
   - t: ']'
+  - t: ''
+    type: 'off'
+  - t: ;
+  - t: '7'
+  - t: '8'
+  - t: '9'
+  - t: ','
   - t: ⇧
     type: thru
   - t: ⌘
@@ -111,52 +107,48 @@ layers:
   - t: ⌥
     type: thru
   Symbols:
-  - t: +
+  - t: ⇥
+    type: thru
+  - t: ''
+    type: 'off'
+  - t: home
+  - t: ↑
+  - t: end
+  - t: pg↑
+  - t: '?'
   - t: '!'
   - t: '@'
   - t: '#'
-  - t: $
-  - t: '%'
-  - t: ^
-  - t: '&'
-  - t: '*'
-  - t: (
-  - t: )
   - t: _
+  - t: +
   - t: esc
     type: thru
   - t: ''
     type: 'off'
-  - t: ''
-    type: 'off'
-  - t: home
-  - t: end
-  - t: ''
-    type: 'off'
-  - t: ''
-    type: 'off'
-  - t: pg↑
+  - t: ←
+  - t: ↓
+  - t: →
   - t: pg↓
-  - t: ''
-    type: 'off'
-  - t: ''
-    type: 'off'
+  - t: )
+  - t: $
+  - t: '%'
+  - t: ^
+  - t: '>'
   - t: ''''
     type: thru
   - t: ⇧
     type: thru
   - t: '~'
   - t: caps
-  - t: ←
-  - t: →
-  - t: ''
-    type: 'off'
-  - t: ''
-    type: 'off'
-  - t: ↑
-  - t: ↓
   - t: '{'
   - t: '}'
+  - t: ''
+    type: 'off'
+  - t: ':'
+  - t: '&'
+  - t: '*'
+  - t: (
+  - t: <
   - t: ⇧
     type: thru
   - t: ⌘
@@ -434,6 +426,81 @@ layers:
     h: Num
   - t: ⏎
     h: Sym
+  - t: ␣
+    type: thru
+  - t: ⌥
+    type: thru
+  Row:
+  - t: '='
+  - t: '1'
+  - t: '2'
+  - t: '3'
+  - t: '4'
+  - t: '5'
+  - t: '6'
+  - t: '7'
+  - t: '8'
+  - t: '9'
+  - t: '0'
+  - t: '-'
+  - t: esc
+    type: thru
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''''
+    type: thru
+  - t: ⇧
+    type: thru
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ⇧
+    type: thru
+  - t: ⌘
+    type: thru
+  - t: ⌫
+    type: thru
+  - t: ⌦
+    h: held
+    type: held
+  - t: ⏎
+    h: held
+    type: held
   - t: ␣
     type: thru
   - t: ⌥

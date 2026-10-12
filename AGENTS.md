@@ -6,9 +6,12 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
 
 ## Layout
 
-- `config/corne.keymap` — the source of truth. Six layers: **Kinesis** (base,
-  Kinesis Advantage360 letter block), **Num/Nav** (hold ⌦), **Symbols** (hold ⏎;
-  the Num layer with shift already applied, nav keys unchanged), **Fn** (hold `\`,
+- `config/corne.keymap` — the source of truth. Seven layers: **Kinesis** (base,
+  Kinesis Advantage360 letter block), **Num/Nav** (hold ⌦; numpad under the right
+  hand reading 1 2 3 from the top, arrow cluster under the left), **Symbols**
+  (hold ⏎; the Num layer with shift already applied, nav keys unchanged), **Row**
+  (hold ⌦ and ⏎ one after the other, a ZMK conditional layer; the classic number
+  row, no LED colour or signal of its own), **Fn** (hold `\`,
   top right), **Steno** (both inner thumbs together toggles), **Arrows** (both
   outer thumbs together toggles, locks on).
 - Each layer sets the underglow colour through a macro: white base, blue Num/Nav,
@@ -23,7 +26,7 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
 
 `./draw-keymap [--open]` regenerates, from the keymap:
 
-- `docs/corne-keymap.svg` — all six layers, dark theme, two columns
+- `docs/corne-keymap.svg` — all seven layers, dark theme, two columns
 - `docs/corne-steno.svg` — the Steno layer alone, larger, as a practice card
 - `docs/corne-keymap.html` — interactive: one layer at a time, a tab per layer
   (`--open` opens this one)
@@ -68,20 +71,28 @@ To check a change visually, screenshot the SVG with headless Chrome and look at 
   Monitoring permission). It only listens, so nothing is intercepted. It keeps
   devices whose product name contains "Corne" (`--device NAME` to change,
   `--log` to print every HID value).
-- The Mac can't see layers, so every layer macro in the keymap also taps a
+- The Mac can't see layers, so every layer macro in the keymap also sends a
   consumer key macOS ignores (`SIG_*` defines at the top of `corne.keymap`:
-  Media Select TV/VCR/Tuner/Tape/Cable/Satellite). A new layer needs a `SIG_`
-  define, a tap in its macro, and an entry in `CONSUMER` in `keymap_page.py`.
+  Media Select TV/VCR/Tuner/Tape/Cable/Satellite). Held layers keep theirs down
+  while held; locked layers and the way back to base tap theirs. The page works
+  out the layer from which are down, including conditional layers (Row), which
+  it reads from the keymap's `conditional_layers`. A new layer needs a `SIG_`
+  define, its macro sending it, and an entry in `CONSUMER` in `keymap_page.py`.
 - Signals have to be consumer keys: with NKRO on, ZMK's keyboard report stops
   at keypad `=`, so F13 and up can't be sent.
 - `keymap_page.py` parses the keymap's bindings into per-layer HID usages
   (`codes`), shift-implied positions (`shifted`) and the layer `signal`; the
   page's `window.live.hid(page, usage, value)` does the rest. Rebuild the app
   after a keymap change, since it bundles a copy of the page.
-- Karabiner-Elements is installed on Kurt's Mac. If it grabs the Corne, the app
-  sees nothing from it: turn off "Modify events" for the Corne in Karabiner.
-- Not yet verified on hardware (2026-10-12): that the signals arrive and that
-  macOS ignores them, and that keys still show while Plover is capturing.
+- The app switches Plover with the Steno layer, so chords work without touching
+  Plover: `Plover -s plover_send_command resume` on entering Steno, `suspend` on
+  leaving and at launch, starting Plover first if needed (`--no-plover` to turn
+  this off). The page posts each layer signal to the app for this.
+- Karabiner-Elements is installed on Kurt's Mac. It grabs keyboards
+  exclusively, which hides them from the app, so the Corne is in its ignored
+  devices (Kurt's Karabiner rules don't apply on the Corne).
+- Keys and layer following were confirmed on the keyboard on 2026-10-12. The
+  Plover switching was only confirmed as far as the command reaching Plover.
 
 ## Design state (2026-10-12)
 
