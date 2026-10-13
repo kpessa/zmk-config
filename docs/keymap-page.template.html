@@ -218,6 +218,23 @@ body.steno-mode #tape {
 .tape-row .w { flex: 1; min-width: 0; font-size: 12px; color: var(--quiet); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tape-row:last-child .w { color: var(--ink); }
 
+/* ---- the app's mini player: the board and the layer's name; on Steno, the stroke too ---- */
+#now { display: none; }
+body.mini .tabs, body.mini .caption, body.mini #live-status, body.mini #tape { display: none; }
+body.live.mini main { padding: 30px 10px 8px; }
+body.live.mini .stage { margin-top: 0; padding-top: 0; }
+body.live.mini #board { max-height: calc(100vh - 40px); }
+body.live.mini.steno-mode #board { max-height: calc(100vh - 92px); }
+body.live.mini #readout { height: 48px; margin-top: 4px; gap: 16px; }
+body.mini #stroke { font-size: 34px; }
+body.mini #stroke.empty { font-size: 14px; }
+body.mini #word { font-size: 19px; }
+body.mini #now {
+  display: block; position: fixed; top: 6px; left: 78px; right: 44px; margin: 0;   /* between the window's buttons */
+  font-size: 13px; font-weight: 700; color: var(--led); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  pointer-events: none;
+}
+
 @media (max-width: 760px) {
   main { padding: 20px 16px 32px; }
   .tabs { display: flex; overflow-x: auto; margin: 0 -16px; padding: 0 16px; }
@@ -230,6 +247,7 @@ body.steno-mode #tape {
 </head>
 <body>
 <main>
+  <p id="now"></p>
   <h1>Corne layers</h1>
   <div class="deck">
     <div class="left">
@@ -414,6 +432,7 @@ function show(name, from) {
   current = name;
   back = from && byName[name].kind === "hold" ? from : DATA.base;
   document.body.style.setProperty("--led", byName[name].colour);
+  document.getElementById("now").textContent = name;
   for (const tab of tablist.children) {
     const on = tab.dataset.layer === name;
     tab.setAttribute("aria-selected", on);
@@ -650,6 +669,8 @@ window.live = {
   },
   // the app has finished resizing the window for the pane
   paneDone() { document.querySelector(".left").style.flex = ""; },
+  // the app's window is in its mini player size
+  mini(on) { document.body.classList.toggle("mini", on); },
   status(text) {
     goLive();
     document.getElementById("live-status").textContent = text;

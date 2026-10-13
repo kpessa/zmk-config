@@ -73,8 +73,16 @@ To check a change visually, screenshot the SVG with headless Chrome and look at 
 ## Live viewer app
 
 `./viewer/build [--open]` compiles `viewer/CorneLayers.swift` into
-`viewer/dist/Corne Layers.app` (git-ignored): a floating window that hosts
+`viewer/dist/Corne Layers.app` (git-ignored): a window that hosts
 `docs/corne-keymap.html` and feeds it what the keyboard sends.
+
+- The window is an ordinary one (minimisable, on one desktop, not on top) with a
+  mini player: the button at the right of the title bar, or Window › Mini Player
+  (⇧⌘M), shrinks it to the board and the layer's name, plus the stroke and word
+  on Steno (no paper tape). The mini player floats over other apps unless
+  Window › Keep Mini Player on Top is off. Each mode remembers its own size and
+  place. The page's side of it is `body.mini` and `window.live.mini(on)`. The
+  Naya app in `~/code/naya-layers` has the same window code.
 
 - The app reads the Corne's raw HID reports through `IOHIDManager` (Input
   Monitoring permission). It only listens, so nothing is intercepted. It keeps
