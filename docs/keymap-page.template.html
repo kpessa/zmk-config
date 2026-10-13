@@ -115,6 +115,11 @@ text { font-family: inherit; text-anchor: middle; dominant-baseline: central; po
 .link text { fill: var(--to); font-size: 12px; font-weight: 700; letter-spacing: .02em; }
 .link:hover rect, .link:focus-visible rect { fill: color-mix(in srgb, var(--to) 22%, var(--mat)); }
 
+/* two keys pressed together to type something */
+.pair { pointer-events: none; }
+.pair rect { fill: var(--mat); stroke: #7d8696; stroke-width: 1.5; }
+.pair text { fill: var(--ink); font-size: 13px; font-weight: 700; }
+
 /* pointing at a tab: show its way in, quieten the rest */
 #board .key, #board .link { transition: opacity .15s; }
 #board.pointing .key:not(.hot), #board.pointing .link:not(.hot) { opacity: .28; }
@@ -218,6 +223,23 @@ body.steno-mode #tape {
 .tape-row .w { flex: 1; min-width: 0; font-size: 12px; color: var(--quiet); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tape-row:last-child .w { color: var(--ink); }
 
+/* ---- the app's mini player: the board and the layer's name; on Steno, the stroke too ---- */
+#now { display: none; }
+body.mini .tabs, body.mini .caption, body.mini #live-status, body.mini #tape { display: none; }
+body.live.mini main { padding: 30px 10px 8px; }
+body.live.mini .stage { margin-top: 0; padding-top: 0; }
+body.live.mini #board { max-height: calc(100vh - 40px); }
+body.live.mini.steno-mode #board { max-height: calc(100vh - 92px); }
+body.live.mini #readout { height: 48px; margin-top: 4px; gap: 16px; }
+body.mini #stroke { font-size: 34px; }
+body.mini #stroke.empty { font-size: 14px; }
+body.mini #word { font-size: 19px; }
+body.mini #now {
+  display: block; position: fixed; top: 6px; left: 78px; right: 44px; margin: 0;   /* between the window's buttons */
+  font-size: 13px; font-weight: 700; color: var(--led); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  pointer-events: none;
+}
+
 @media (max-width: 760px) {
   main { padding: 20px 16px 32px; }
   .tabs { display: flex; overflow-x: auto; margin: 0 -16px; padding: 0 16px; }
@@ -230,6 +252,7 @@ body.steno-mode #tape {
 </head>
 <body>
 <main>
+  <p id="now"></p>
   <h1>Corne layers</h1>
   <div class="deck">
     <div class="left">
@@ -289,6 +312,7 @@ for (const half of [geo.filter(k => k.x < midX), geo.filter(k => k.x > midX)]) {
 }
 const linksG = board.appendChild(svg("g"));
 const keysG = board.appendChild(svg("g"));
+const pairsG = board.appendChild(svg("g"));   // over the keys: pills between two keys pressed together
 
 function activate(node, label, fn) {
   node.setAttribute("tabindex", 0);
@@ -363,19 +387,30 @@ function drawBoard() {
 
   // two keys pressed together: a labelled link between them
   for (const d of layer.doors.filter(d => d.kind === "combo")) {
-    const [a, b] = d.p.map(p => geo[p]);
+    const keys = d.p.map(p => geo[p]);
     const up = d.a !== "bottom";
-    const y = up ? Math.min(a.y, b.y) - 62 : Math.max(a.y, b.y) + 84;
-    const x = (a.x + b.x) / 2;
+    const ys = keys.map(k => k.y), xs = keys.map(k => k.x);
+    const y = up ? Math.min(...ys) - 62 : Math.max(...ys) + 84;
+    const x = (Math.min(...xs) + Math.max(...xs)) / 2;
     const label = d.to === DATA.base && current !== DATA.base ? `leave ${current}` : d.to;
     const w = label.length * 7.2 + 26;
     const g = svg("g", { class: "link", "data-to": d.to, "data-pos": d.p.join(" ") });
     g.style.setProperty("--to", byName[d.to === DATA.base ? current : d.to].colour);
-    g.append(svg("path", { d: `M${a.x} ${a.y}V${y}H${b.x}V${b.y}` }));
+    // a line from each key to a bar that joins them
+    g.append(svg("path", { d: keys.map(k => `M${k.x} ${k.y}V${y}`).join("") + `M${Math.min(...xs)} ${y}H${Math.max(...xs)}` }));
     g.append(svg("rect", { x: x - w / 2, y: y - 13, width: w, height: 26, rx: 13 }));
     g.append(svg("text", { x, y }, label));
-    activate(g, d.to === DATA.base ? `Leave ${current}` : `Go to ${d.to}`, () => show(d.to));
+    activate(g, d.to === DATA.base ? `Leave ${current}` : `Go to ${d.to}`, () => show(d.to, d.held ? current : undefined));
     linksG.append(g);
+  }
+  // two keys that type something together: what they type, on a pill between them
+  pairsG.replaceChildren();
+  for (const chord of layer.chords || []) {
+    const [a, b] = chord.p.map(p => geo[p]);
+    const g = svg("g", { class: "pair", transform: `translate(${(a.x + b.x) / 2} ${(a.y + b.y) / 2})` });
+    g.append(svg("rect", { x: -13, y: -12, width: 26, height: 24, rx: 12 }));
+    g.append(svg("text", {}, chord.t));
+    pairsG.append(g);
   }
   setPane(document.body.classList.contains("live") && isSteno(layer));
   markChord();
@@ -414,6 +449,7 @@ function show(name, from) {
   current = name;
   back = from && byName[name].kind === "hold" ? from : DATA.base;
   document.body.style.setProperty("--led", byName[name].colour);
+  document.getElementById("now").textContent = name;
   for (const tab of tablist.children) {
     const on = tab.dataset.layer === name;
     tab.setAttribute("aria-selected", on);
@@ -621,12 +657,15 @@ window.live = {
       if (usage >= 224) modAt.set(usage, now);
       // keys that send their own modifiers (! is shift+1, desk ← is ctrl+←): light that one
       // key, and un-light the modifiers that arrived with it
-      const combo = here.combos
+      // (a pair of keys pressed together to type something counts too: both light, unless
+      // the layer has a key of its own for it, as Arrows does for ← and →)
+      const own = sending(here, usage).length > 0;
+      const combo = [...here.chords.filter(c => c.mods.length || !own), ...here.combos]
         .filter(c => c.key === usage && c.mods.every(m => downKeys.has(m)))
         .sort((a, b) => b.mods.length - a.mods.length)[0];
       let positions;
       if (combo) {
-        positions = [combo.pos];
+        positions = combo.p || [combo.pos];
         combo.mods.forEach(m => { if (now - (modAt.get(m) ?? -1e9) < 40) downKeys.delete(m); });
       } else {
         positions = sending(here, usage);
@@ -650,6 +689,8 @@ window.live = {
   },
   // the app has finished resizing the window for the pane
   paneDone() { document.querySelector(".left").style.flex = ""; },
+  // the app's window is in its mini player size
+  mini(on) { document.body.classList.toggle("mini", on); },
   status(text) {
     goLive();
     document.getElementById("live-status").textContent = text;

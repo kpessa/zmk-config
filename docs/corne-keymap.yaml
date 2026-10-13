@@ -578,6 +578,73 @@ layers:
     type: thru
   - t: ⌥
     type: thru
+  Rows:
+  - t: '='
+  - t: '1'
+  - t: '2'
+  - t: '3'
+  - t: '4'
+  - t: '5'
+  - t: '6'
+  - t: '7'
+  - t: '8'
+  - t: '9'
+  - t: '0'
+  - t: '-'
+  - t: esc
+    h: held
+    type: held
+  - t: '!'
+  - t: '@'
+  - t: '#'
+  - t: $
+  - t: '%'
+  - t: ^
+  - t: '&'
+  - t: '*'
+  - t: (
+  - t: )
+  - t: ''''
+    h: held
+    type: held
+  - t: ⇧
+    h: held
+    type: held
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ⇧
+    h: held
+    type: held
+  - t: ⌘
+    type: thru
+  - t: ⌫
+    type: thru
+  - t: ⌦
+    type: thru
+  - t: ⏎
+    type: thru
+  - t: ␣
+    type: thru
+  - t: ⌥
+    type: thru
 combos:
 - p:
   - 38
@@ -613,3 +680,101 @@ combos:
   - Steno
   a: top
   o: 0.35
+- p:
+  - 15
+  - 16
+  k: (
+  l:
+  - Kinesis
+  - Arrows
+  type: chord
+  w: 26
+  h: 22
+- p:
+  - 19
+  - 20
+  k: )
+  l:
+  - Kinesis
+  - Arrows
+  type: chord
+  w: 26
+  h: 22
+- p:
+  - 13
+  - 14
+  k: '!'
+  l:
+  - Kinesis
+  - Arrows
+  type: chord
+  w: 26
+  h: 22
+- p:
+  - 21
+  - 22
+  k: '-'
+  l:
+  - Kinesis
+  - Arrows
+  type: chord
+  w: 26
+  h: 22
+- p:
+  - 16
+  - 17
+  k: ←
+  l:
+  - Kinesis
+  - Arrows
+  type: chord
+  w: 26
+  h: 22
+- p:
+  - 18
+  - 19
+  k: →
+  l:
+  - Kinesis
+  - Arrows
+  type: chord
+  w: 26
+  h: 22
+- p:
+  - 12
+  - 24
+  k: Rows
+  l:
+  - Kinesis
+  type: hold
+  a: bottom
+  o: 0.35
+- p:
+  - 23
+  - 35
+  k: Rows
+  l:
+  - Kinesis
+  type: hold
+  a: bottom
+  o: 0.35
+- p:
+  - 22
+  - 33
+  - 35
+  k: Arrows
+  l:
+  - Kinesis
+  a: bottom
+  o: 0.35
+  type: nav
+- p:
+  - 22
+  - 33
+  - 35
+  k: exit
+  l:
+  - Arrows
+  a: bottom
+  o: 0.35
+  type: nav

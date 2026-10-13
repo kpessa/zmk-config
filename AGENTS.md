@@ -19,6 +19,29 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
   orange Symbols, yellow NumRow, pink SymRow, purple Fn, green Steno, cyan Arrows.
 - Both inner thumbs pressed together is the Steno toggle, so nothing else should
   use ⌦ + ⏎ (a both-thumbs number row was tried on 2026-10-12 and collided).
+- Parentheses are also home-row combos on the base and Arrows layers: D + F is `(`,
+  J + K is `)` (added 2026-10-13, after a typing test showed several seconds lost at
+  each parenthesis; `(` usually follows a space, and space and the Symbols hold are
+  both on the right thumb). `require-prior-idle-ms` keeps a fast d-f or j-k roll in a
+  word from firing them; raise it if they misfire, lower it if they fail to fire.
+  A + S is `!` and L + ; is `-` the same way (Kurt's choice, 2026-10-13), with a
+  shorter `timeout-ms` because "as" is a common roll; that pair is the one to watch
+  for misfires.
+- F + G is left arrow and H + J is right arrow, the same kind of combo (Kurt uses
+  those two a lot, 2026-10-13). On the Arrows layer the viewer lights the real arrow
+  key for ← / →, since it can't tell which was pressed.
+- **Rows** is a ninth layer (Kurt's idea, 2026-10-13; red LEDs; signal Media Select
+  Program Guide, `C_MEDIA_GUIDE`): the number row on top with each number's symbol on
+  the home row under it, as on a full keyboard. It is held with a two-key combo on
+  either edge: esc + left shift, or ' + right shift (`rows_c`, a hold macro bound to
+  a combo, which ZMK releases when either key comes up). `+` and `_` sit under the
+  left and right pair, so each needs the other edge held. The drawing tools mark such
+  a combo `type: hold` (`HOLD_COMBOS` in `keymap_style.py`). NumRow and SymRow are
+  still there.
+- Arrows also toggles with ; . and right shift together, the keys under its up, left
+  and right arrows (Kurt's idea, 2026-10-13), as well as both outer thumbs.
+  The drawing tools call a combo that types something a "chord" (`type: chord` in the
+  YAML, `chords` in the page data), as opposed to one that changes layer.
 - Home row mods are a planned later step (Kurt agreed 2026-10-12: after the
   numpad settles, additive, with opposite-hand and prior-idle settings). If they
   stick, the esc/ctrl key's hold is the candidate for a pinky-held symbol row.
@@ -73,8 +96,16 @@ To check a change visually, screenshot the SVG with headless Chrome and look at 
 ## Live viewer app
 
 `./viewer/build [--open]` compiles `viewer/CorneLayers.swift` into
-`viewer/dist/Corne Layers.app` (git-ignored): a floating window that hosts
+`viewer/dist/Corne Layers.app` (git-ignored): a window that hosts
 `docs/corne-keymap.html` and feeds it what the keyboard sends.
+
+- The window is an ordinary one (minimisable, on one desktop, not on top) with a
+  mini player: the button at the right of the title bar, or Window › Mini Player
+  (⇧⌘M), shrinks it to the board and the layer's name, plus the stroke and word
+  on Steno (no paper tape). The mini player floats over other apps unless
+  Window › Keep Mini Player on Top is off. Each mode remembers its own size and
+  place. The page's side of it is `body.mini` and `window.live.mini(on)`. The
+  Naya app in `~/code/naya-layers` has the same window code.
 
 - The app reads the Corne's raw HID reports through `IOHIDManager` (Input
   Monitoring permission). It only listens, so nothing is intercepted. It keeps
