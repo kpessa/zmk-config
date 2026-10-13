@@ -316,6 +316,40 @@
             key-positions = <19 20>;
             layers = <BASE NAV>;
         };
+
+        // A + S together is !, L + ; together is -. "as" is a common pair of letters to
+        // roll through, so these have to land closer together than the parentheses do.
+        exclaim {
+            timeout-ms = <25>;
+            require-prior-idle-ms = <75>;
+            bindings = <&kp EXCL>;
+            key-positions = <13 14>;
+            layers = <BASE NAV>;
+        };
+
+        dash {
+            timeout-ms = <25>;
+            require-prior-idle-ms = <75>;
+            bindings = <&kp MINUS>;
+            key-positions = <21 22>;
+            layers = <BASE NAV>;
+        };
+
+        // The three keys under the arrows' up, left and right ( ; . and right shift)
+        // together: arrows layer on / off, the same as both outer thumbs.
+        nav_enter_cluster {
+            timeout-ms = <50>;
+            bindings = <&nav_on>;
+            key-positions = <22 33 35>;
+            layers = <BASE>;
+        };
+
+        nav_exit_cluster {
+            timeout-ms = <50>;
+            bindings = <&nav_off>;
+            key-positions = <22 33 35>;
+            layers = <NAV>;
+        };
     };
 
     keymap {

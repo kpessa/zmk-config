@@ -633,3 +633,43 @@ combos:
   type: chord
   w: 26
   h: 22
+- p:
+  - 13
+  - 14
+  k: '!'
+  l:
+  - Kinesis
+  - Arrows
+  type: chord
+  w: 26
+  h: 22
+- p:
+  - 21
+  - 22
+  k: '-'
+  l:
+  - Kinesis
+  - Arrows
+  type: chord
+  w: 26
+  h: 22
+- p:
+  - 22
+  - 33
+  - 35
+  k: Arrows
+  l:
+  - Kinesis
+  a: bottom
+  o: 0.35
+  type: nav
+- p:
+  - 22
+  - 33
+  - 35
+  k: exit
+  l:
+  - Arrows
+  a: bottom
+  o: 0.35
+  type: nav

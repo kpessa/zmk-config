@@ -24,6 +24,11 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
   each parenthesis; `(` usually follows a space, and space and the Symbols hold are
   both on the right thumb). `require-prior-idle-ms` keeps a fast d-f or j-k roll in a
   word from firing them; raise it if they misfire, lower it if they fail to fire.
+  A + S is `!` and L + ; is `-` the same way (Kurt's choice, 2026-10-13), with a
+  shorter `timeout-ms` because "as" is a common roll; that pair is the one to watch
+  for misfires.
+- Arrows also toggles with ; . and right shift together, the keys under its up, left
+  and right arrows (Kurt's idea, 2026-10-13), as well as both outer thumbs.
   The drawing tools call a combo that types something a "chord" (`type: chord` in the
   YAML, `chords` in the page data), as opposed to one that changes layer.
 - Home row mods are a planned later step (Kurt agreed 2026-10-12: after the

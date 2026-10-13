@@ -90,11 +90,12 @@ def main():
             # two keys that type something together: a small pill between them
             combo.update(type="chord", w=26, h=22)
             continue
+        arrows = combo["k"] in ("&nav_on", "&nav_off")
         combo["k"] = SYMBOLS.get(combo["k"], combo["k"])
-        # inner-thumb combo sits above the thumbs, outer-thumb combo below
+        # inner-thumb combo sits above the thumbs, the others below their keys
         combo["a"] = "top" if combo["p"] == [38, 39] else "bottom"
         combo["o"] = 0.35
-        if combo["p"] == [36, 41]:
+        if arrows:
             combo["type"] = "nav"
     yaml.safe_dump(data, sys.stdout, allow_unicode=True, sort_keys=False, width=200)
 

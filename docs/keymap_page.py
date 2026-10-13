@@ -42,7 +42,8 @@ HOLDS = {"Num": "Num/Nav", "Sym": "Symbols", "Fn": "Fn", "123": "NumRow", "!@#":
 SHIFTED = dict(zip("1234567890-=[]`;',./\\", "!@#$%^&*()_+{}~:\"<>?|"))
 
 # combo key positions -> how to say them
-COMBO_KEYS = {(38, 39): "both inner thumbs", (37, 40): "both middle thumbs", (36, 41): "both outer thumbs"}
+COMBO_KEYS = {(38, 39): "both inner thumbs", (37, 40): "both middle thumbs", (36, 41): "both outer thumbs",
+              (22, 33, 35): "; . and right shift"}
 
 # ZMK key name -> HID keyboard usage, for the keys this keymap uses
 USAGE = {
@@ -200,13 +201,17 @@ def main():
         for door in all_doors[BASE]:
             if door["to"] != name or name == BASE:
                 continue
-            layer["enter"] = door["p"]
             if door["kind"] == "hold":
+                layer["enter"] = door["p"]
                 layer["kind"] = "hold"
                 layer["how"] = " or ".join(layers[BASE][p]["t"] for p in door["p"])
             else:
+                # a layer can have more than one combo that toggles it
+                said = COMBO_KEYS.get(tuple(sorted(door["p"])), "the linked keys")
+                again = layer["kind"] == "toggle"
+                layer["how"] = f'{layer["how"]}, or {said}' if again else said
+                layer["enter"] = layer["enter"] + door["p"] if again else door["p"]
                 layer["kind"] = "toggle"
-                layer["how"] = COMBO_KEYS.get(tuple(sorted(door["p"])), "the linked keys")
         out.append(layer)
 
     # layers reached from a held layer rather than from the base: hold one key, then another
