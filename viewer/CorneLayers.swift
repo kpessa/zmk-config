@@ -29,7 +29,9 @@ let deviceFilter: String = {
 }()
 
 // The web view covers the whole window, title bar included, and swallows the mouse there.
-// This strip sits over its top edge so the window can be dragged by it.
+// This sits over it so the window can be dragged: along the top edge at full size, and
+// over the whole of the mini player (whose keys then can't be clicked, as in a music
+// app's mini player).
 final class DragStrip: NSView {
     override func mouseDown(with event: NSEvent) { window?.performDrag(with: event) }
     override func acceptsFirstMouse(for event: NSEvent?) -> Bool { true }
@@ -45,6 +47,7 @@ final class Viewer: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNavigat
     var paneOpen = false     // the window is currently widened for the steno pane
     var paneWanted = false   // the page is on the Steno layer and has asked for it
     let stripHeight: CGFloat = 30   // the page leaves this much clear at the top when live
+    var dragTop: NSLayoutConstraint!, dragAll: NSLayoutConstraint!   // the drag area: top edge, or everything
     var xBeforePane: CGFloat?
     let paneWidth: CGFloat = 336   // the page's steno pane plus its gap
     var stenoOn = false
@@ -136,6 +139,9 @@ final class Viewer: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNavigat
             window.setFrame(frame, display: true, animate: animate)
         }
         window.level = mini && miniOnTop ? .floating : .normal
+        // drag by the top edge at full size, by anywhere in the mini player
+        (mini ? dragTop : dragAll)?.isActive = false
+        (mini ? dragAll : dragTop)?.isActive = true
         miniButton.image = NSImage(systemSymbolName: mini ? "pip.exit" : "pip.enter", accessibilityDescription: nil)
         miniButton.toolTip = mini ? "Full size" : "Mini player"
         miniItem.state = mini ? .on : .off
@@ -182,10 +188,15 @@ final class Viewer: NSObject, NSApplicationDelegate, NSWindowDelegate, WKNavigat
         web.navigationDelegate = self
         web.setValue(false, forKey: "drawsBackground")
         window.contentView = web
-        let bounds = web.bounds
-        let strip = DragStrip(frame: NSRect(x: 0, y: bounds.height - stripHeight, width: bounds.width, height: stripHeight))
-        strip.autoresizingMask = [.width, .minYMargin]
+        // pinned by constraints: a web view's coordinates run top down, so a frame won't do
+        let strip = DragStrip()
+        strip.translatesAutoresizingMaskIntoConstraints = false
         web.addSubview(strip)
+        NSLayoutConstraint.activate([strip.topAnchor.constraint(equalTo: web.topAnchor),
+                                     strip.leadingAnchor.constraint(equalTo: web.leadingAnchor),
+                                     strip.trailingAnchor.constraint(equalTo: web.trailingAnchor)])
+        dragTop = strip.heightAnchor.constraint(equalToConstant: stripHeight)
+        dragAll = strip.bottomAnchor.constraint(equalTo: web.bottomAnchor)
         if let page = Bundle.main.url(forResource: "corne-keymap", withExtension: "html") {
             web.loadFileURL(page, allowingReadAccessTo: page.deletingLastPathComponent())
         }
