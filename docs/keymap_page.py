@@ -132,6 +132,25 @@ def live(keymap):
     return out
 
 
+CHORD = re.compile(r"bindings\s*=\s*<&kp\s+([^>]+?)\s*>;\s*key-positions\s*=\s*<([\d\s]+)>;\s*layers\s*=\s*<([^>]+)>;")
+
+
+def chords(keymap, names, drawn):
+    """Combos that type a key rather than change layer, per layer name:
+    [{p: positions, t: legend, key: usage, mods: [usages]}]."""
+    defines = dict(re.findall(r"^#define (\w+) (\d+)$", keymap, re.M))
+    legend = {tuple(c["p"]): str(c["k"]) for c in drawn if c.get("type") == "chord"}
+    out = {name: [] for name in names}
+    for param, positions, on in CHORD.findall(keymap.split("combos {")[-1].split("keymap {")[0]):
+        mods, key = unwrap(param)
+        p = [int(n) for n in positions.split()]
+        if key not in USAGE:
+            continue
+        for layer in on.split():
+            out[names[int(defines[layer])]].append({"p": p, "t": legend.get(tuple(p), param), "key": USAGE[key], "mods": mods})
+    return out
+
+
 def conditionals(keymap, names):
     """Layers that switch on while a set of other layers is held: [{if: [names], then: name}]."""
     defines = dict(re.findall(r"^#define (\w+) (\d+)$", keymap, re.M))
@@ -149,7 +168,7 @@ def doors(name, keys, combos, layers):
             found.setdefault(to, {"to": to, "kind": "hold", "p": []})["p"].append(pos)
     out = list(found.values())
     for combo in combos:
-        if name not in combo.get("l", []):
+        if name not in combo.get("l", []) or combo.get("type") == "chord":
             continue
         to = combo["k"] if combo["k"] in layers else BASE
         out.append({"to": to, "kind": "combo", "p": combo["p"], "a": combo.get("a", "top")})
@@ -168,11 +187,13 @@ def main():
 
     out = []
     wiring = live(open(keymap).read())
+    typed = chords(open(keymap).read(), list(layers), combos)
     for (name, keys), wired in zip(layers.items(), wiring):
         colour, led = LEDS.get(name, ("#8d95a3", "Grey"))
         layer = {
             "name": name, "colour": colour, "led": led, "note": NOTES.get(name, ""),
             "keys": keys, "doors": all_doors[name], "kind": "base", "how": "", "enter": [],
+            "chords": typed[name],
             **wired,
         }
         # how you get here from the base layer

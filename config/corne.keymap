@@ -297,6 +297,25 @@
             key-positions = <38 39>;
             layers = <STENO>;
         };
+
+        // Parentheses from the home row, no layer and no thumb: D + F together is (,
+        // J + K together is ). (They are still on Symbols too.) The idle time keeps a
+        // fast roll through d-f or j-k in a word from firing them.
+        paren_open {
+            timeout-ms = <40>;
+            require-prior-idle-ms = <75>;
+            bindings = <&kp LPAR>;
+            key-positions = <15 16>;
+            layers = <BASE NAV>;
+        };
+
+        paren_close {
+            timeout-ms = <40>;
+            require-prior-idle-ms = <75>;
+            bindings = <&kp RPAR>;
+            key-positions = <19 20>;
+            layers = <BASE NAV>;
+        };
     };
 
     keymap {

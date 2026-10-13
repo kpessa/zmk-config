@@ -175,6 +175,9 @@ path.combo { stroke: #5d6573; stroke-dasharray: 2 3; }
 .layer-Kinesis text.combo, .layer-Steno text.combo { fill: #4fd684; }
 rect.combo.nav { stroke: #3fd0dc !important; }
 text.combo.nav { fill: #3fd0dc !important; }
+/* two keys that type something together, rather than change layer */
+rect.combo.chord { stroke: #7d8696 !important; rx: 11; }
+text.combo.chord { fill: #e9ebef !important; font-size: 13px; }
 
 /* steno keys: big steno letter, small QWERTY letter above */
 .layer-Steno text.key.tap { font-size: 22px; font-weight: 700; }
@@ -376,6 +379,14 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <a href="#Arrows">
 <text x="450" y="272" class="combo nav tap layer-activator">Arrows</text>
 </a></g>
+<g class="combo chord combopos-2">
+<rect rx="9" ry="9" x="227" y="83" width="26" height="22" class="combo chord"/>
+<text x="240" y="94" class="combo chord tap">(</text>
+</g>
+<g class="combo chord combopos-3">
+<rect rx="9" ry="9" x="647" y="83" width="26" height="22" class="combo chord"/>
+<text x="660" y="94" class="combo chord tap">)</text>
+</g>
 </g>
 </g>
 <g transform="translate(1008, 0)" class="layer-Num/Nav">
@@ -1300,6 +1311,14 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <path d="M450,272 h204 a6.0,6.0 0 0 0 6.0,-6.0 v-27" class="combo"/>
 <rect rx="9" ry="9" x="423" y="260" width="54" height="24" class="combo nav"/>
 <text x="450" y="272" class="combo nav tap">exit</text>
+</g>
+<g class="combo chord combopos-1">
+<rect rx="9" ry="9" x="227" y="83" width="26" height="22" class="combo chord"/>
+<text x="240" y="94" class="combo chord tap">(</text>
+</g>
+<g class="combo chord combopos-2">
+<rect rx="9" ry="9" x="647" y="83" width="26" height="22" class="combo chord"/>
+<text x="660" y="94" class="combo chord tap">)</text>
 </g>
 </g>
 </g>

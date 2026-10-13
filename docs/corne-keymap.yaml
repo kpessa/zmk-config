@@ -613,3 +613,23 @@ combos:
   - Steno
   a: top
   o: 0.35
+- p:
+  - 15
+  - 16
+  k: (
+  l:
+  - Kinesis
+  - Arrows
+  type: chord
+  w: 26
+  h: 22
+- p:
+  - 19
+  - 20
+  k: )
+  l:
+  - Kinesis
+  - Arrows
+  type: chord
+  w: 26
+  h: 22

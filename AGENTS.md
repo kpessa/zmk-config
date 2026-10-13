@@ -19,6 +19,13 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
   orange Symbols, yellow NumRow, pink SymRow, purple Fn, green Steno, cyan Arrows.
 - Both inner thumbs pressed together is the Steno toggle, so nothing else should
   use ⌦ + ⏎ (a both-thumbs number row was tried on 2026-10-12 and collided).
+- Parentheses are also home-row combos on the base and Arrows layers: D + F is `(`,
+  J + K is `)` (added 2026-10-13, after a typing test showed several seconds lost at
+  each parenthesis; `(` usually follows a space, and space and the Symbols hold are
+  both on the right thumb). `require-prior-idle-ms` keeps a fast d-f or j-k roll in a
+  word from firing them; raise it if they misfire, lower it if they fail to fire.
+  The drawing tools call a combo that types something a "chord" (`type: chord` in the
+  YAML, `chords` in the page data), as opposed to one that changes layer.
 - Home row mods are a planned later step (Kurt agreed 2026-10-12: after the
   numpad settles, additive, with opposite-hand and prior-idle settings). If they
   stick, the esc/ctrl key's hold is the candidate for a pinky-held symbol row.

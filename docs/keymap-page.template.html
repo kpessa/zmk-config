@@ -115,6 +115,11 @@ text { font-family: inherit; text-anchor: middle; dominant-baseline: central; po
 .link text { fill: var(--to); font-size: 12px; font-weight: 700; letter-spacing: .02em; }
 .link:hover rect, .link:focus-visible rect { fill: color-mix(in srgb, var(--to) 22%, var(--mat)); }
 
+/* two keys pressed together to type something */
+.pair { pointer-events: none; }
+.pair rect { fill: var(--mat); stroke: #7d8696; stroke-width: 1.5; }
+.pair text { fill: var(--ink); font-size: 13px; font-weight: 700; }
+
 /* pointing at a tab: show its way in, quieten the rest */
 #board .key, #board .link { transition: opacity .15s; }
 #board.pointing .key:not(.hot), #board.pointing .link:not(.hot) { opacity: .28; }
@@ -307,6 +312,7 @@ for (const half of [geo.filter(k => k.x < midX), geo.filter(k => k.x > midX)]) {
 }
 const linksG = board.appendChild(svg("g"));
 const keysG = board.appendChild(svg("g"));
+const pairsG = board.appendChild(svg("g"));   // over the keys: pills between two keys pressed together
 
 function activate(node, label, fn) {
   node.setAttribute("tabindex", 0);
@@ -394,6 +400,15 @@ function drawBoard() {
     g.append(svg("text", { x, y }, label));
     activate(g, d.to === DATA.base ? `Leave ${current}` : `Go to ${d.to}`, () => show(d.to));
     linksG.append(g);
+  }
+  // two keys that type something together: what they type, on a pill between them
+  pairsG.replaceChildren();
+  for (const chord of layer.chords || []) {
+    const [a, b] = chord.p.map(p => geo[p]);
+    const g = svg("g", { class: "pair", transform: `translate(${(a.x + b.x) / 2} ${(a.y + b.y) / 2})` });
+    g.append(svg("rect", { x: -13, y: -12, width: 26, height: 24, rx: 12 }));
+    g.append(svg("text", {}, chord.t));
+    pairsG.append(g);
   }
   setPane(document.body.classList.contains("live") && isSteno(layer));
   markChord();
@@ -640,12 +655,13 @@ window.live = {
       if (usage >= 224) modAt.set(usage, now);
       // keys that send their own modifiers (! is shift+1, desk ← is ctrl+←): light that one
       // key, and un-light the modifiers that arrived with it
-      const combo = here.combos
+      // (a pair of keys pressed together to type something counts too: both light)
+      const combo = [...here.chords, ...here.combos]
         .filter(c => c.key === usage && c.mods.every(m => downKeys.has(m)))
         .sort((a, b) => b.mods.length - a.mods.length)[0];
       let positions;
       if (combo) {
-        positions = [combo.pos];
+        positions = combo.p || [combo.pos];
         combo.mods.forEach(m => { if (now - (modAt.get(m) ?? -1e9) < 40) downKeys.delete(m); });
       } else {
         positions = sending(here, usage);

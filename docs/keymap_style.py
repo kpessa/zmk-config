@@ -86,6 +86,10 @@ def main():
 
     data["layers"] = layers
     for combo in data.get("combos", []):
+        if not str(combo["k"]).startswith("&"):
+            # two keys that type something together: a small pill between them
+            combo.update(type="chord", w=26, h=22)
+            continue
         combo["k"] = SYMBOLS.get(combo["k"], combo["k"])
         # inner-thumb combo sits above the thumbs, outer-thumb combo below
         combo["a"] = "top" if combo["p"] == [38, 39] else "bottom"
