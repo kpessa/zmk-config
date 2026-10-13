@@ -27,6 +27,9 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
   A + S is `!` and L + ; is `-` the same way (Kurt's choice, 2026-10-13), with a
   shorter `timeout-ms` because "as" is a common roll; that pair is the one to watch
   for misfires.
+- F + G is left arrow and H + J is right arrow, the same kind of combo (Kurt uses
+  those two a lot, 2026-10-13). On the Arrows layer the viewer lights the real arrow
+  key for ← / →, since it can't tell which was pressed.
 - Arrows also toggles with ; . and right shift together, the keys under its up, left
   and right arrows (Kurt's idea, 2026-10-13), as well as both outer thumbs.
   The drawing tools call a combo that types something a "chord" (`type: chord` in the

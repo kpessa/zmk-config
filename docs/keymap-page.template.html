@@ -657,8 +657,10 @@ window.live = {
       if (usage >= 224) modAt.set(usage, now);
       // keys that send their own modifiers (! is shift+1, desk ← is ctrl+←): light that one
       // key, and un-light the modifiers that arrived with it
-      // (a pair of keys pressed together to type something counts too: both light)
-      const combo = [...here.chords, ...here.combos]
+      // (a pair of keys pressed together to type something counts too: both light, unless
+      // the layer has a key of its own for it, as Arrows does for ← and →)
+      const own = sending(here, usage).length > 0;
+      const combo = [...here.chords.filter(c => c.mods.length || !own), ...here.combos]
         .filter(c => c.key === usage && c.mods.every(m => downKeys.has(m)))
         .sort((a, b) => b.mods.length - a.mods.length)[0];
       let positions;

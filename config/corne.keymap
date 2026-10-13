@@ -335,6 +335,25 @@
             layers = <BASE NAV>;
         };
 
+        // F + G together is left arrow, H + J together is right arrow: the two index
+        // fingers reaching in. Held, they repeat; with shift or option they select or
+        // move by word as the arrow keys do.
+        arrow_left {
+            timeout-ms = <40>;
+            require-prior-idle-ms = <75>;
+            bindings = <&kp LEFT>;
+            key-positions = <16 17>;
+            layers = <BASE NAV>;
+        };
+
+        arrow_right {
+            timeout-ms = <40>;
+            require-prior-idle-ms = <75>;
+            bindings = <&kp RIGHT>;
+            key-positions = <18 19>;
+            layers = <BASE NAV>;
+        };
+
         // The three keys under the arrows' up, left and right ( ; . and right shift)
         // together: arrows layer on / off, the same as both outer thumbs.
         nav_enter_cluster {
