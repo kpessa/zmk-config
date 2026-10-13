@@ -30,6 +30,14 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
 - F + G is left arrow and H + J is right arrow, the same kind of combo (Kurt uses
   those two a lot, 2026-10-13). On the Arrows layer the viewer lights the real arrow
   key for ← / →, since it can't tell which was pressed.
+- **Rows** is a ninth layer (Kurt's idea, 2026-10-13; red LEDs; signal Media Select
+  Program Guide, `C_MEDIA_GUIDE`): the number row on top with each number's symbol on
+  the home row under it, as on a full keyboard. It is held with a two-key combo on
+  either edge: esc + left shift, or ' + right shift (`rows_c`, a hold macro bound to
+  a combo, which ZMK releases when either key comes up). `+` and `_` sit under the
+  left and right pair, so each needs the other edge held. The drawing tools mark such
+  a combo `type: hold` (`HOLD_COMBOS` in `keymap_style.py`). NumRow and SymRow are
+  still there.
 - Arrows also toggles with ; . and right shift together, the keys under its up, left
   and right arrows (Kurt's idea, 2026-10-13), as well as both outer thumbs.
   The drawing tools call a combo that types something a "chord" (`type: chord` in the

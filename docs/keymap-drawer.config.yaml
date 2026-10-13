@@ -59,6 +59,11 @@ draw_config:
     .layer-Fn text.label, .layer-Fn text.held.hold { fill: #b98aff; }
     .layer-Fn rect.key:not(.thru):not(.off) { stroke: #6e4bb0; fill: #2a2140; }
     .layer-Fn rect.held { stroke: #b98aff; }
+    .layer-Rows text.label, .layer-Rows text.held.hold { fill: #ff6b6b; }
+    .layer-Rows rect.key:not(.thru):not(.off) { stroke: #a84444; fill: #3a1f1f; }
+    .layer-Rows rect.held { stroke: #ff6b6b; }
+    rect.combo.hold { stroke: #ff6b6b !important; }
+    text.combo.hold { fill: #ff6b6b !important; }
     .layer-Arrows text.label { fill: #3fd0dc; }
     .layer-Arrows rect.key:not(.thru):not(.off) { stroke: #23808a; fill: #17313a; }
     .layer-Steno text.label { fill: #4fd684; }

@@ -17,6 +17,7 @@ hints() {
     -e 's|(class="label"[^>]*>)Symbols<|\1Symbols<tspan class="hint" dx="10">hold ⏎ · orange · numpad shifted, brackets on the left</tspan><|' \
     -e 's|(class="label"[^>]*>)NumRow<|\1Num row<tspan class="hint" dx="10">hold ⌦, then ␣ · yellow</tspan><|' \
     -e 's|(class="label"[^>]*>)SymRow<|\1Sym row<tspan class="hint" dx="10">hold ⏎, then ⌫ · pink</tspan><|' \
+    -e 's|(class="label"[^>]*>)Rows<|\1Rows<tspan class="hint" dx="10">hold esc + left ⇧, or '"'"' + right ⇧ · red · each number over its symbol</tspan><|' \
     -e 's|(class="label"[^>]*>)Fn<|\1Fn<tspan class="hint" dx="10">hold \\ (top right) · purple</tspan><|' \
     -e 's|(class="label"[^>]*>)Steno<|\1Steno<tspan class="hint" dx="10">both inner thumbs together, same to leave · green · small letter = key Plover sees</tspan><|' \
     -e 's|(class="label"[^>]*>)Arrows<|\1Arrows<tspan class="hint" dx="10">both outer thumbs together, or ; . and right shift together, same to leave · cyan</tspan><|'

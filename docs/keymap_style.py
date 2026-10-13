@@ -24,7 +24,11 @@ SYMBOLS = {
     "&num_c": "Num", "&num_cn": "Num", "&sym_c": "Sym", "&sym_cn": "Sym",
     "&row_c": "123", "&srow_c": "!@#", "&fn_c": "Fn", "&fn_cn": "Fn",
     "&steno_on": "Steno", "&steno_off": "exit", "&nav_on": "Arrows", "&nav_off": "exit",
+    "&rows_c": "Rows",
 }
+
+# combos that hold a layer for as long as their keys are down, rather than toggle it
+HOLD_COMBOS = {"&rows_c"}
 
 # QWERTY letter Plover's keyboard machine expects -> (steno key, colour group)
 STENO = {
@@ -38,7 +42,8 @@ STENO = {
 }
 
 # key positions that are physically held down while a layer is showing
-HELD = {"Num/Nav": [38], "Symbols": [39], "Fn": [11], "NumRow": [38, 40], "SymRow": [39, 37]}
+HELD = {"Num/Nav": [38], "Symbols": [39], "Fn": [11], "NumRow": [38, 40], "SymRow": [39, 37],
+        "Rows": [12, 24, 23, 35]}   # either edge pair
 
 
 def as_dict(key):
@@ -91,6 +96,8 @@ def main():
             combo.update(k=SYMBOLS.get(combo["k"], combo["k"]), type="chord", w=26, h=22)
             continue
         arrows = combo["k"] in ("&nav_on", "&nav_off")
+        if combo["k"] in HOLD_COMBOS:
+            combo["type"] = "hold"
         combo["k"] = SYMBOLS.get(combo["k"], combo["k"])
         # inner-thumb combo sits above the thumbs, the others below their keys
         combo["a"] = "top" if combo["p"] == [38, 39] else "bottom"

@@ -28,6 +28,7 @@ LEDS = {
     "Arrows": ("#3fd0dc", "Cyan"),
     "NumRow": ("#e6c84f", "Yellow"),
     "SymRow": ("#ff7eb6", "Pink"),
+    "Rows": ("#ff6b6b", "Red"),
 }
 
 NOTES = {
@@ -43,7 +44,7 @@ SHIFTED = dict(zip("1234567890-=[]`;',./\\", "!@#$%^&*()_+{}~:\"<>?|"))
 
 # combo key positions -> how to say them
 COMBO_KEYS = {(38, 39): "both inner thumbs", (37, 40): "both middle thumbs", (36, 41): "both outer thumbs",
-              (22, 33, 35): "; . and right shift"}
+              (22, 33, 35): "; . and right shift", (12, 24): "esc and left shift", (23, 35): "' and right shift"}
 
 # ZMK key name -> HID keyboard usage, for the keys this keymap uses
 USAGE = {
@@ -70,7 +71,7 @@ MODIFIERS = {"C": 224, "S": 225, "A": 226, "G": 227}
 CONSUMER = {
     "C_MEDIA_TV": 0x89, "C_MEDIA_VCR": 0x92, "C_MEDIA_TUNER": 0x93,
     "C_MEDIA_TAPE": 0x96, "C_MEDIA_CABLE": 0x97, "C_MEDIA_SATELLITE": 0x98,
-    "C_MEDIA_GAMES": 0x8F, "C_MEDIA_CD": 0x91,
+    "C_MEDIA_GAMES": 0x8F, "C_MEDIA_CD": 0x91, "C_MEDIA_GUIDE": 0x8D,
 }
 
 KEY = re.compile(
@@ -172,7 +173,9 @@ def doors(name, keys, combos, layers):
         if name not in combo.get("l", []) or combo.get("type") == "chord":
             continue
         to = combo["k"] if combo["k"] in layers else BASE
-        out.append({"to": to, "kind": "combo", "p": combo["p"], "a": combo.get("a", "top")})
+        # `held`: the layer lasts only while the combo's keys are down
+        out.append({"to": to, "kind": "combo", "p": combo["p"], "a": combo.get("a", "top"),
+                    "held": combo.get("type") == "hold"})
     return out
 
 
@@ -206,12 +209,14 @@ def main():
                 layer["kind"] = "hold"
                 layer["how"] = " or ".join(layers[BASE][p]["t"] for p in door["p"])
             else:
-                # a layer can have more than one combo that toggles it
+                # a layer can have more than one combo that leads to it; a combo either
+                # toggles its layer or holds it for as long as the keys are down
                 said = COMBO_KEYS.get(tuple(sorted(door["p"])), "the linked keys")
-                again = layer["kind"] == "toggle"
+                kind = "hold" if door.get("held") else "toggle"
+                again = layer["kind"] == kind
                 layer["how"] = f'{layer["how"]}, or {said}' if again else said
                 layer["enter"] = layer["enter"] + door["p"] if again else door["p"]
-                layer["kind"] = "toggle"
+                layer["kind"] = kind
         out.append(layer)
 
     # layers reached from a held layer rather than from the base: hold one key, then another

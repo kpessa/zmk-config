@@ -400,7 +400,7 @@ function drawBoard() {
     g.append(svg("path", { d: keys.map(k => `M${k.x} ${k.y}V${y}`).join("") + `M${Math.min(...xs)} ${y}H${Math.max(...xs)}` }));
     g.append(svg("rect", { x: x - w / 2, y: y - 13, width: w, height: 26, rx: 13 }));
     g.append(svg("text", { x, y }, label));
-    activate(g, d.to === DATA.base ? `Leave ${current}` : `Go to ${d.to}`, () => show(d.to));
+    activate(g, d.to === DATA.base ? `Leave ${current}` : `Go to ${d.to}`, () => show(d.to, d.held ? current : undefined));
     linksG.append(g);
   }
   // two keys that type something together: what they type, on a pill between them
