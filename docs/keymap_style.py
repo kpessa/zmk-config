@@ -24,8 +24,14 @@ SYMBOLS = {
     "&num_c": "Num", "&num_cn": "Num", "&sym_c": "Sym", "&sym_cn": "Sym",
     "&row_c": "123", "&srow_c": "!@#", "&fn_c": "Fn", "&fn_cn": "Fn",
     "&steno_on": "Steno", "&steno_off": "exit", "&nav_on": "Arrows", "&nav_off": "exit",
-    "&rows_c": "Rows",
+    "&rows_c": "Rows", "Hyper+D": "dictate", "&lsft_gate": "⇧",
+    # the Rows number row (mod-morphs that drop shift): show the plain key
+    **{f"&us_{k}": v for k, v in {**{f"N{i}": str(i) for i in range(10)}, "EQUAL": "=", "MINUS": "-",
+                                     "UP": "↑", "DOWN": "↓", "LEFT": "←", "RIGHT": "→"}.items()},
 }
+
+# helper layers that are never seen on their own (left shift holds LGate so esc opens Rows)
+HIDDEN = {"LGate"}
 
 # combos that hold a layer for as long as their keys are down, rather than toggle it
 HOLD_COMBOS = {"&rows_c"}
@@ -51,22 +57,23 @@ def as_dict(key):
 
 
 def pretty(key):
-    # the Command thumb: Command is the point, dictation is what a lone tap does
-    if key.get("t") == "Hyper+D" and key.get("h") == "LGUI":
-        key.clear()
-        key.update({"t": "⌘", "s": "dictate"})
     # Bluetooth profiles: ZMK counts from 0, people count from 1
     if key.get("t") == "BT" and str(key.get("h", "")).isdigit():
         key["t"] = f"BT {int(key.pop('h')) + 1}"
     for field in ("t", "h", "s"):
         if field in key:
             key[field] = SYMBOLS.get(str(key[field]), key[field])
+    # a mod-morph that sends the same key either way (the Rows us_* keys) is drawn with its
+    # shifted binding small above; it says nothing new
+    if key.get("s") is not None and key.get("s") == key.get("t"):
+        key.pop("s")
     return key
 
 
 def main():
     data = yaml.safe_load(sys.stdin)
-    layers = {name: [as_dict(k) for row in rows for k in row] for name, rows in data["layers"].items()}
+    layers = {name: [as_dict(k) for row in rows for k in row] for name, rows in data["layers"].items()
+              if name not in HIDDEN}
     base = [pretty(dict(k)) for k in layers[BASE]]
 
     for name, keys in layers.items():

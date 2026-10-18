@@ -199,7 +199,9 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <g transform="translate(30, 52)" class="key keypos-0">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
 <text x="0" y="0" class="key tap">⇥</text>
-</g>
+<a href="#Rows">
+<text x="0" y="25" class="key hold layer-activator">Rows</text>
+</a></g>
 <g transform="translate(90, 52)" class="key keypos-1">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
 <text x="0" y="0" class="key tap">Q</text>
@@ -346,7 +348,6 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <g transform="translate(240, 219)" class="key keypos-36">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
 <text x="0" y="0" class="key tap">⌘</text>
-<text x="0" y="-25" class="key shifted"><tspan style="font-size: 86%">dictate</tspan></text>
 </g>
 <g transform="translate(306, 228) rotate(15.0)" class="key keypos-37">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
@@ -384,45 +385,21 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <a href="#Arrows">
 <text x="450" y="272" class="combo nav tap layer-activator">Arrows</text>
 </a></g>
-<g class="combo chord combopos-2">
-<rect rx="9" ry="9" x="227" y="83" width="26" height="22" class="combo chord"/>
-<text x="240" y="94" class="combo chord tap">(</text>
-</g>
-<g class="combo chord combopos-3">
-<rect rx="9" ry="9" x="647" y="83" width="26" height="22" class="combo chord"/>
-<text x="660" y="94" class="combo chord tap">)</text>
-</g>
-<g class="combo chord combopos-4">
-<rect rx="9" ry="9" x="107" y="94" width="26" height="22" class="combo chord"/>
-<text x="120" y="105" class="combo chord tap">!</text>
-</g>
-<g class="combo chord combopos-5">
-<rect rx="9" ry="9" x="767" y="94" width="26" height="22" class="combo chord"/>
-<text x="780" y="105" class="combo chord tap">-</text>
-</g>
-<g class="combo chord combopos-6">
-<rect rx="9" ry="9" x="287" y="90" width="26" height="22" class="combo chord"/>
-<text x="300" y="101" class="combo chord tap">←</text>
-</g>
-<g class="combo chord combopos-7">
-<rect rx="9" ry="9" x="587" y="90" width="26" height="22" class="combo chord"/>
-<text x="600" y="101" class="combo chord tap">→</text>
-</g>
-<g class="combo hold combopos-8">
+<g class="combo hold combopos-2">
 <path d="M30,225 l0,-92" class="combo"/>
 <path d="M30,225 l0,-32" class="combo"/>
 <rect rx="9" ry="9" x="3" y="213" width="54" height="24" class="combo hold"/>
 <a href="#Rows">
 <text x="30" y="225" class="combo hold tap layer-activator">Rows</text>
 </a></g>
-<g class="combo hold combopos-9">
+<g class="combo hold combopos-3">
 <path d="M870,225 l0,-92" class="combo"/>
 <path d="M870,225 l0,-32" class="combo"/>
 <rect rx="9" ry="9" x="843" y="213" width="54" height="24" class="combo hold"/>
 <a href="#Rows">
 <text x="870" y="225" class="combo hold tap layer-activator">Rows</text>
 </a></g>
-<g class="combo nav combopos-10">
+<g class="combo nav combopos-4">
 <path d="M810,225 l0,-92" class="combo"/>
 <path d="M810,225 h-54 a6.0,6.0 0 0 1 -6.0,-6.0 v-42" class="combo"/>
 <path d="M810,225 h54 a6.0,6.0 0 0 0 6.0,-6.0 v-26" class="combo"/>
@@ -868,8 +845,9 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <tspan x="0" dy="-0.6em">RGB</tspan><tspan x="0" dy="1.2em">fix</tspan>
 </text>
 </g>
-<g transform="translate(330, 105)" class="key off keypos-17">
-<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key off"/>
+<g transform="translate(330, 105)" class="key keypos-17">
+<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
+<text x="0" y="0" class="key tap"><tspan style="font-size: 86%">dictate</tspan></text>
 </g>
 <g transform="translate(570, 105)" class="key keypos-18">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
@@ -1355,31 +1333,7 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <rect rx="9" ry="9" x="423" y="260" width="54" height="24" class="combo nav"/>
 <text x="450" y="272" class="combo nav tap">exit</text>
 </g>
-<g class="combo chord combopos-1">
-<rect rx="9" ry="9" x="227" y="83" width="26" height="22" class="combo chord"/>
-<text x="240" y="94" class="combo chord tap">(</text>
-</g>
-<g class="combo chord combopos-2">
-<rect rx="9" ry="9" x="647" y="83" width="26" height="22" class="combo chord"/>
-<text x="660" y="94" class="combo chord tap">)</text>
-</g>
-<g class="combo chord combopos-3">
-<rect rx="9" ry="9" x="107" y="94" width="26" height="22" class="combo chord"/>
-<text x="120" y="105" class="combo chord tap">!</text>
-</g>
-<g class="combo chord combopos-4">
-<rect rx="9" ry="9" x="767" y="94" width="26" height="22" class="combo chord"/>
-<text x="780" y="105" class="combo chord tap">-</text>
-</g>
-<g class="combo chord combopos-5">
-<rect rx="9" ry="9" x="287" y="90" width="26" height="22" class="combo chord"/>
-<text x="300" y="101" class="combo chord tap">←</text>
-</g>
-<g class="combo chord combopos-6">
-<rect rx="9" ry="9" x="587" y="90" width="26" height="22" class="combo chord"/>
-<text x="600" y="101" class="combo chord tap">→</text>
-</g>
-<g class="combo nav combopos-7">
+<g class="combo nav combopos-1">
 <path d="M810,225 l0,-92" class="combo"/>
 <path d="M810,225 h-54 a6.0,6.0 0 0 1 -6.0,-6.0 v-42" class="combo"/>
 <path d="M810,225 h54 a6.0,6.0 0 0 0 6.0,-6.0 v-26" class="combo"/>
@@ -1699,7 +1653,7 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 </g>
 </g>
 <g transform="translate(36, 1433)" class="layer-Rows">
-<text x="0" y="32" class="label" id="Rows">Rows<tspan class="hint" dx="10">hold esc + left ⇧, or ' + right ⇧ · red · each number over its symbol</tspan></text>
+<text x="0" y="32" class="label" id="Rows">Rows<tspan class="hint" dx="10">hold ⇥, or left ⇧ then esc, or ' + right ⇧ · red · each number over its symbol, arrows on N and the right thumbs</tspan></text>
 <g transform="translate(0, 64)">
 <g transform="translate(30, 52)" class="key keypos-0">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
@@ -1819,8 +1773,9 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <g transform="translate(330, 165)" class="key off keypos-29">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key off"/>
 </g>
-<g transform="translate(570, 165)" class="key off keypos-30">
-<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key off"/>
+<g transform="translate(570, 165)" class="key keypos-30">
+<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
+<text x="0" y="0" class="key tap">↑</text>
 </g>
 <g transform="translate(630, 158)" class="key off keypos-31">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key off"/>
@@ -1851,17 +1806,17 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <rect rx="9" ry="9" x="-27" y="-42" width="54" height="84" class="key thru"/>
 <text x="0" y="0" class="key thru tap">⌦</text>
 </g>
-<g transform="translate(524, 240) rotate(-30.0)" class="key thru keypos-39">
-<rect rx="9" ry="9" x="-27" y="-42" width="54" height="84" class="key thru"/>
-<text x="0" y="0" class="key thru tap">⏎</text>
+<g transform="translate(524, 240) rotate(-30.0)" class="key keypos-39">
+<rect rx="9" ry="9" x="-27" y="-42" width="54" height="84" class="key"/>
+<text x="0" y="0" class="key tap">←</text>
 </g>
-<g transform="translate(594, 228) rotate(-15.0)" class="key thru keypos-40">
-<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key thru"/>
-<text x="0" y="0" class="key thru tap">␣</text>
+<g transform="translate(594, 228) rotate(-15.0)" class="key keypos-40">
+<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
+<text x="0" y="0" class="key tap">↓</text>
 </g>
-<g transform="translate(660, 219)" class="key thru keypos-41">
-<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key thru"/>
-<text x="0" y="0" class="key thru tap">⌥</text>
+<g transform="translate(660, 219)" class="key keypos-41">
+<rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
+<text x="0" y="0" class="key tap">→</text>
 </g>
 </g>
 </g>

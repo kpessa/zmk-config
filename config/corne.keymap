@@ -19,6 +19,7 @@
 #define ROW 6
 #define SROW 7
 #define ROWS 8
+#define LGATE 9
 
 // Layer signals for the viewer app (viewer/): each layer has a consumer key that
 // macOS ignores. Held layers keep theirs down for as long as they are held;
@@ -193,15 +194,32 @@
     };
 
     behaviors {
-        // hold = Command, tap = dictation (Ctrl+Opt+Shift+Cmd+D, the shortcut set
-        // in macOS; the same thing Karabiner does for the other keyboards)
-        cmd_dict: cmd_tap_dictation {
-            compatible = "zmk,behavior-hold-tap";
-            #binding-cells = <2>;
-            flavor = "hold-preferred";
-            tapping-term-ms = <200>;
-            bindings = <&kp>, <&kp>;
+        // Left shift: shift as usual, and while it is down esc opens Rows instead
+        // (the LGate layer). So hold shift first, then esc, and keep both down.
+        lsft_gate: left_shift_gate {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            wait-ms = <0>;
+            tap-ms = <0>;
+            bindings = <&macro_press &kp LSHFT &mo LGATE>,
+                       <&macro_pause_for_release>,
+                       <&macro_release &kp LSHFT &mo LGATE>;
         };
+
+        // The Rows number row: left shift is still held when Rows is reached through it
+        // (lsft_gate), so these drop left shift and type the plain number. Right shift
+        // passes through, so right shift + 1 is !, as on a full keyboard.
+#define UNSHIFTED(name, key) name: name { compatible = "zmk,behavior-mod-morph"; \
+            #binding-cells = <0>; bindings = <&kp key>, <&kp key>; mods = <(MOD_LSFT)>; };
+        UNSHIFTED(us_N1, N1) UNSHIFTED(us_N2, N2) UNSHIFTED(us_N3, N3) UNSHIFTED(us_N4, N4)
+        UNSHIFTED(us_N5, N5) UNSHIFTED(us_N6, N6) UNSHIFTED(us_N7, N7) UNSHIFTED(us_N8, N8)
+        UNSHIFTED(us_N9, N9) UNSHIFTED(us_N0, N0) UNSHIFTED(us_EQUAL, EQUAL) UNSHIFTED(us_MINUS, MINUS)
+
+        // The Rows arrows drop only left shift (the one lsft_gate holds), so right shift +
+        // arrows still selects.
+#define UNSHIFTED_L(name, key) name: name { compatible = "zmk,behavior-mod-morph"; \
+            #binding-cells = <0>; bindings = <&kp key>, <&kp key>; mods = <(MOD_LSFT)>; };
+        UNSHIFTED_L(us_UP, UP) UNSHIFTED_L(us_DOWN, DOWN) UNSHIFTED_L(us_LEFT, LEFT) UNSHIFTED_L(us_RIGHT, RIGHT)
 
         // tap = key, hold = NUM layer (blue)
         ltn: layer_tap_num {
@@ -269,6 +287,16 @@
             bindings = <&fn_cn>, <&kp>;
         };
 
+        // tap = key, hold = Rows (red): the top-left Tab, mirroring Fn on the top right
+        ltrows: layer_tap_rows {
+            compatible = "zmk,behavior-hold-tap";
+            #binding-cells = <2>;
+            flavor = "balanced";
+            tapping-term-ms = <200>;
+            quick-tap-ms = <175>;
+            bindings = <&rows_c>, <&kp>;
+        };
+
         // tap = key, hold = FN layer (purple)
         ltf: layer_tap_fn {
             compatible = "zmk,behavior-hold-tap";
@@ -313,65 +341,10 @@
             layers = <STENO>;
         };
 
-        // Parentheses from the home row, no layer and no thumb: D + F together is (,
-        // J + K together is ). (They are still on Symbols too.) The idle time keeps a
-        // fast roll through d-f or j-k in a word from firing them.
-        paren_open {
-            timeout-ms = <40>;
-            require-prior-idle-ms = <75>;
-            bindings = <&kp LPAR>;
-            key-positions = <15 16>;
-            layers = <BASE NAV>;
-        };
-
-        paren_close {
-            timeout-ms = <40>;
-            require-prior-idle-ms = <75>;
-            bindings = <&kp RPAR>;
-            key-positions = <19 20>;
-            layers = <BASE NAV>;
-        };
-
-        // A + S together is !, L + ; together is -. "as" is a common pair of letters to
-        // roll through, so these have to land closer together than the parentheses do.
-        exclaim {
-            timeout-ms = <25>;
-            require-prior-idle-ms = <75>;
-            bindings = <&kp EXCL>;
-            key-positions = <13 14>;
-            layers = <BASE NAV>;
-        };
-
-        dash {
-            timeout-ms = <25>;
-            require-prior-idle-ms = <75>;
-            bindings = <&kp MINUS>;
-            key-positions = <21 22>;
-            layers = <BASE NAV>;
-        };
-
-        // F + G together is left arrow, H + J together is right arrow: the two index
-        // fingers reaching in. Held, they repeat; with shift or option they select or
-        // move by word as the arrow keys do.
-        arrow_left {
-            timeout-ms = <40>;
-            require-prior-idle-ms = <75>;
-            bindings = <&kp LEFT>;
-            key-positions = <16 17>;
-            layers = <BASE NAV>;
-        };
-
-        arrow_right {
-            timeout-ms = <40>;
-            require-prior-idle-ms = <75>;
-            bindings = <&kp RIGHT>;
-            key-positions = <18 19>;
-            layers = <BASE NAV>;
-        };
-
         // The two outer keys of the home and bottom rows held together, on either edge
         // (esc + left shift, or ' + right shift): the Rows layer for as long as both
-        // are down.
+        // are down. On the left, shift first and esc after also works (lsft_gate); the
+        // right side stays a together-only chord because right shift then ' is ".
         rows_left {
             timeout-ms = <50>;
             bindings = <&rows_c>;
@@ -410,7 +383,7 @@
             display-name = "Kinesis";
             // Kinesis Advantage360 letter block and thumb order.
             // -----------------------------------------------------------------------------------------
-            // |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U  |  I  |  O  |  P  | \ FN |
+            // |TAB/RW|  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U  |  I  |  O  |  P  | \ FN |
             // |ESC/CT|  A  |  S  |  D  |  F  |  G  |   |  H  |  J  |  K  |  L  |  ;  |  '   |
             // | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M  |  ,  |  .  |  /  | SHFT |
             //                    | CMD | BSPC| DEL |   | ENT | SPC | ALT |
@@ -418,10 +391,10 @@
             // LEDs: white here, blue on Num/Nav, orange on Symbols, purple on Fn, green on Steno
 
             bindings = <
-&kp TAB        &kp Q  &kp W  &kp E     &kp R     &kp T          &kp Y          &kp U      &kp I      &kp O    &kp P     &ltf 0 BSLH
+&ltrows 0 TAB  &kp Q  &kp W  &kp E     &kp R     &kp T          &kp Y          &kp U      &kp I      &kp O    &kp P     &ltf 0 BSLH
 &mt LCTRL ESC  &kp A  &kp S  &kp D     &kp F     &kp G          &kp H          &kp J      &kp K      &kp L    &kp SEMI  &kp SQT
-&kp LSHFT      &kp Z  &kp X  &kp C     &kp V     &kp B          &kp N          &kp M      &kp COMMA  &kp DOT  &kp FSLH  &kp RSHFT
-                             &cmd_dict LGUI LC(LA(LS(LG(D))))  &kp BSPC  &ltn 0 DEL    &lts 0 ENTER  &kp SPACE  &kp LALT
+&lsft_gate     &kp Z  &kp X  &kp C     &kp V     &kp B          &kp N          &kp M      &kp COMMA  &kp DOT  &kp FSLH  &kp RSHFT
+                             &kp LGUI  &kp BSPC  &ltn 0 DEL    &lts 0 ENTER  &kp SPACE  &kp LALT
             >;
         };
 
@@ -466,12 +439,12 @@
             // Hold the top-right key (\).
             // -----------------------------------------------------------------------------------------
             // | BOOT | BT1 | BT2 | BT3 | BT4 | BT5 |   | F1  | F2  | F3  | F4  | BOOT |     |
-            // | BTCLR| USB/BT | RGB | STUDIO | RGB RESET |     |   | F5  | F6  | F7  | F8  |      |     |
+            // | BTCLR| USB/BT | RGB | STUDIO | RGB RESET | DICTATE |   | F5  | F6  | F7  | F8  |      |     |
             // | RESET|     |     |     |     |     |   | F9  | F10 | F11 | F12 | RESET|     |
 
             bindings = <
 &bootloader  &bt BT_SEL 0  &bt BT_SEL 1     &bt BT_SEL 2    &bt BT_SEL 3  &bt BT_SEL 4    &kp F1  &kp F2   &kp F3   &kp F4   &bootloader  &trans
-&bt BT_CLR   &out OUT_TOG  &rgb_ug RGB_TOG  &studio_unlock  &rgb_reset    &none           &kp F5  &kp F6   &kp F7   &kp F8   &none        &none
+&bt BT_CLR   &out OUT_TOG  &rgb_ug RGB_TOG  &studio_unlock  &rgb_reset    &kp LC(LA(LS(LG(D))))           &kp F5  &kp F6   &kp F7   &kp F8   &none        &none
 &sys_reset   &none         &none            &none           &none         &none           &kp F9  &kp F10  &kp F11  &kp F12  &sys_reset   &none
                                             &trans          &trans        &trans          &trans  &trans   &trans
             >;
@@ -541,19 +514,36 @@
 
         rows_layer {
             display-name = "Rows";
-            // Hold ESC + left SHIFT, or ' + right SHIFT. The number row, with each
+            // Hold TAB (top left), or left SHIFT then ESC (or both together), or ' + right SHIFT together. The number row, with each
             // number's symbol on the home row under it, as on a full keyboard.
             // -----------------------------------------------------------------------------------------
             // |  =   |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  |  -   |
             // |  +   |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  |  _   |
+            // |      |     |     |     |     |     |   |  ↑  |     |     |     |     |      |
+            //                          |     |     |   |  ←  |  ↓  |  →  |
+            // Right shift on the number row types its symbol (! @ # ...); left shift doesn't,
+            // since it is how Rows is reached.
             // (+ sits under the left pair and _ under the right pair, so each is only
-            //  reachable when holding the other edge)
+            //  reachable when holding the other edge. Arrows: ↑ on N, ← ↓ → on the right
+            //  thumbs, an upside-down T.)
 
             bindings = <
-&kp EQUAL  &kp N1    &kp N2  &kp N3    &kp N4    &kp N5       &kp N6     &kp N7    &kp N8    &kp N9    &kp N0    &kp MINUS
+&us_EQUAL  &us_N1    &us_N2  &us_N3    &us_N4    &us_N5       &us_N6     &us_N7    &us_N8    &us_N9    &us_N0    &us_MINUS
 &kp PLUS   &kp EXCL  &kp AT  &kp HASH  &kp DLLR  &kp PRCNT    &kp CARET  &kp AMPS  &kp STAR  &kp LPAR  &kp RPAR  &kp UNDER
-&trans     &none     &none   &none     &none     &none        &none      &none     &none     &none     &none     &trans
-                             &trans    &trans    &trans       &trans     &trans    &trans
+&trans     &none     &none   &none     &none     &none        &us_UP     &none     &none     &none     &none     &trans
+                             &trans    &trans    &trans       &us_LEFT   &us_DOWN  &us_RIGHT
+            >;
+        };
+
+        lgate_layer {
+            display-name = "LGate";
+            // Not a layer you see: on while left shift is held, so esc opens Rows.
+            // Everything else passes through (shift itself is held by lsft_gate).
+            bindings = <
+&trans   &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
+&rows_c  &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
+&trans   &trans  &trans  &trans  &trans  &trans    &trans  &trans  &trans  &trans  &trans  &trans
+                         &trans  &trans  &trans    &trans  &trans  &trans
             >;
         };
     };

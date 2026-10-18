@@ -19,17 +19,9 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
   orange Symbols, yellow NumRow, pink SymRow, purple Fn, green Steno, cyan Arrows.
 - Both inner thumbs pressed together is the Steno toggle, so nothing else should
   use ⌦ + ⏎ (a both-thumbs number row was tried on 2026-10-12 and collided).
-- Parentheses are also home-row combos on the base and Arrows layers: D + F is `(`,
-  J + K is `)` (added 2026-10-13, after a typing test showed several seconds lost at
-  each parenthesis; `(` usually follows a space, and space and the Symbols hold are
-  both on the right thumb). `require-prior-idle-ms` keeps a fast d-f or j-k roll in a
-  word from firing them; raise it if they misfire, lower it if they fail to fire.
-  A + S is `!` and L + ; is `-` the same way (Kurt's choice, 2026-10-13), with a
-  shorter `timeout-ms` because "as" is a common roll; that pair is the one to watch
-  for misfires.
-- F + G is left arrow and H + J is right arrow, the same kind of combo (Kurt uses
-  those two a lot, 2026-10-13). On the Arrows layer the viewer lights the real arrow
-  key for ← / →, since it can't tell which was pressed.
+- Home-row chords (D + F `(`, J + K `)`, A + S `!`, L + ; `-`, F + G `←`, H + J `→`, added
+  2026-10-13) were removed on 2026-10-18 at Kurt's request. The chord-drawing support
+  (`type: chord`, `chords` in the page data) is still in the tools if they come back.
 - **Rows** is a ninth layer (Kurt's idea, 2026-10-13; red LEDs; signal Media Select
   Program Guide, `C_MEDIA_GUIDE`): the number row on top with each number's symbol on
   the home row under it, as on a full keyboard. It is held with a two-key combo on
@@ -38,6 +30,21 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
   left and right pair, so each needs the other edge held. The drawing tools mark such
   a combo `type: hold` (`HOLD_COMBOS` in `keymap_style.py`). NumRow and SymRow are
   still there.
+  Since 2026-10-18 the left pair also works in sequence: hold left shift, then esc
+  (Kurt found the together-only combo hard to hit). Left shift is `lsft_gate`, a
+  macro that holds LSHFT and a hidden `LGate` layer whose only key is esc → `rows_c`.
+  Because shift is still down, the Rows number row uses `us_*` mod-morphs that drop
+  left shift, so it types 1, not !. Right shift passes through (since 2026-10-18,
+  Kurt wanted shifted symbols in Rows), so right shift + 1 is !. `LGate` is last in the keymap and dropped from the
+  drawings (`HIDDEN` in `keymap_style.py`). The right pair stays together-only:
+  right shift then ' is how a " gets typed. Trade-off: shift-then-ctrl (esc held)
+  now opens Rows; press ctrl first for Ctrl+Shift shortcuts.
+  Also since 2026-10-18: hold Tab (top left) for Rows, mirroring Fn on the top right
+  (`ltrows`, same balanced hold-tap timing as Fn). With Tab held, both `+` and `_` are
+  reachable; `=` sits under Tab, so it needs one of the edge pairs.
+  Rows also has arrows (Kurt, 2026-10-18): ↑ on N, ← ↓ → on the three right thumbs.
+  They are `us_*` mod-morphs masking left shift only, so the left-shift route doesn't
+  turn them into selection, while right shift + arrows still selects.
 - Arrows also toggles with ; . and right shift together, the keys under its up, left
   and right arrows (Kurt's idea, 2026-10-13), as well as both outer thumbs.
   The drawing tools call a combo that types something a "chord" (`type: chord` in the
@@ -45,8 +52,10 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
 - Home row mods are a planned later step (Kurt agreed 2026-10-12: after the
   numpad settles, additive, with opposite-hand and prior-idle settings). If they
   stick, the esc/ctrl key's hold is the candidate for a pinky-held symbol row.
-- Mac shortcuts: the ⌘ thumb is tap = dictation (Ctrl+Opt+Shift+Cmd+D, Kurt's
-  macOS dictation shortcut) / hold = Command; the Symbols layer's far left has
+- Mac shortcuts: the ⌘ thumb is plain Command. It used to be tap = dictation, but
+  Kurt kept setting dictation off when reaching for ⌫ (2026-10-18), so dictation
+  (Ctrl+Opt+Shift+Cmd+D, his macOS shortcut) moved to Fn + G. Karabiner ignores the
+  Corne, so its own tap-⌘-for-dictation rule only affects the other keyboards. The Symbols layer's far left has
   Mission Control (W) over desktop left / right (A, S), sent as Ctrl+arrows.
 - `config/corne.conf` — NKRO is on (`CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y`) because
   steno chords exceed six keys.
@@ -92,6 +101,15 @@ To check a change visually, screenshot the SVG with headless Chrome and look at 
   --hide-scrollbars --window-size=1944,1139 --screenshot=/tmp/corne.png \
   "file://$PWD/docs/corne-keymap.svg"
 ```
+
+- **Key kinds** (2026-10-18, Kurt asked that Rows tell numbers, symbols and arrows apart):
+  on every layer but the base, `kindOf` in `docs/keymap-page.template.html` sorts each key
+  the layer changes by its legend, and CSS (`.k-num` etc.) draws it: numbers filled with the
+  layer colour, symbols dark with a layer-colour outline and glyph, navigation (arrows,
+  home/end, page up/down) dark with a white outline on every layer, and modifiers, F-keys
+  and system shortcuts quiet. Held keys are dashed and unfilled. The caption legend lists
+  only the kinds the layer has. This is the interactive page only; the static SVG sheet
+  is unchanged.
 
 ## Live viewer app
 

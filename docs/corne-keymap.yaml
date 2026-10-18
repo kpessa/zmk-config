@@ -3,6 +3,7 @@ layout:
 layers:
   Kinesis:
   - t: ⇥
+    h: Rows
   - t: Q
   - t: W
   - t: E
@@ -41,7 +42,6 @@ layers:
   - t: /
   - t: ⇧
   - t: ⌘
-    s: dictate
   - t: ⌫
   - t: ⌦
     h: Num
@@ -187,8 +187,7 @@ layers:
   - t: RGB
   - t: studio
   - t: RGB fix
-  - t: ''
-    type: 'off'
+  - t: dictate
   - t: F5
   - t: F6
   - t: F7
@@ -620,8 +619,7 @@ layers:
     type: 'off'
   - t: ''
     type: 'off'
-  - t: ''
-    type: 'off'
+  - t: ↑
   - t: ''
     type: 'off'
   - t: ''
@@ -639,12 +637,9 @@ layers:
     type: thru
   - t: ⌦
     type: thru
-  - t: ⏎
-    type: thru
-  - t: ␣
-    type: thru
-  - t: ⌥
-    type: thru
+  - t: ←
+  - t: ↓
+  - t: →
 combos:
 - p:
   - 38
@@ -680,66 +675,6 @@ combos:
   - Steno
   a: top
   o: 0.35
-- p:
-  - 15
-  - 16
-  k: (
-  l:
-  - Kinesis
-  - Arrows
-  type: chord
-  w: 26
-  h: 22
-- p:
-  - 19
-  - 20
-  k: )
-  l:
-  - Kinesis
-  - Arrows
-  type: chord
-  w: 26
-  h: 22
-- p:
-  - 13
-  - 14
-  k: '!'
-  l:
-  - Kinesis
-  - Arrows
-  type: chord
-  w: 26
-  h: 22
-- p:
-  - 21
-  - 22
-  k: '-'
-  l:
-  - Kinesis
-  - Arrows
-  type: chord
-  w: 26
-  h: 22
-- p:
-  - 16
-  - 17
-  k: ←
-  l:
-  - Kinesis
-  - Arrows
-  type: chord
-  w: 26
-  h: 22
-- p:
-  - 18
-  - 19
-  k: →
-  l:
-  - Kinesis
-  - Arrows
-  type: chord
-  w: 26
-  h: 22
 - p:
   - 12
   - 24
