@@ -214,6 +214,12 @@
         UNSHIFTED(us_N5, N5) UNSHIFTED(us_N6, N6) UNSHIFTED(us_N7, N7) UNSHIFTED(us_N8, N8)
         UNSHIFTED(us_N9, N9) UNSHIFTED(us_N0, N0) UNSHIFTED(us_EQUAL, EQUAL) UNSHIFTED(us_MINUS, MINUS)
 
+        // The Rows arrows drop only left shift (the one lsft_gate holds), so right shift +
+        // arrows still selects.
+#define UNSHIFTED_L(name, key) name: name { compatible = "zmk,behavior-mod-morph"; \
+            #binding-cells = <0>; bindings = <&kp key>, <&kp key>; mods = <(MOD_LSFT)>; };
+        UNSHIFTED_L(us_UP, UP) UNSHIFTED_L(us_DOWN, DOWN) UNSHIFTED_L(us_LEFT, LEFT) UNSHIFTED_L(us_RIGHT, RIGHT)
+
         // tap = key, hold = NUM layer (blue)
         ltn: layer_tap_num {
             compatible = "zmk,behavior-hold-tap";
@@ -568,14 +574,17 @@
             // -----------------------------------------------------------------------------------------
             // |  =   |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  |  -   |
             // |  +   |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  |  _   |
+            // |      |     |     |     |     |     |   |  ↑  |     |     |     |     |      |
+            //                          |     |     |   |  ←  |  ↓  |  →  |
             // (+ sits under the left pair and _ under the right pair, so each is only
-            //  reachable when holding the other edge)
+            //  reachable when holding the other edge. Arrows: ↑ on N, ← ↓ → on the right
+            //  thumbs, an upside-down T.)
 
             bindings = <
 &us_EQUAL  &us_N1    &us_N2  &us_N3    &us_N4    &us_N5       &us_N6     &us_N7    &us_N8    &us_N9    &us_N0    &us_MINUS
 &kp PLUS   &kp EXCL  &kp AT  &kp HASH  &kp DLLR  &kp PRCNT    &kp CARET  &kp AMPS  &kp STAR  &kp LPAR  &kp RPAR  &kp UNDER
-&trans     &none     &none   &none     &none     &none        &none      &none     &none     &none     &none     &trans
-                             &trans    &trans    &trans       &trans     &trans    &trans
+&trans     &none     &none   &none     &none     &none        &us_UP     &none     &none     &none     &none     &trans
+                             &trans    &trans    &trans       &us_LEFT   &us_DOWN  &us_RIGHT
             >;
         };
 

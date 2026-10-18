@@ -26,7 +26,8 @@ SYMBOLS = {
     "&steno_on": "Steno", "&steno_off": "exit", "&nav_on": "Arrows", "&nav_off": "exit",
     "&rows_c": "Rows", "Hyper+D": "dictate", "&lsft_gate": "⇧",
     # the Rows number row (mod-morphs that drop shift): show the plain key
-    **{f"&us_{k}": v for k, v in {**{f"N{i}": str(i) for i in range(10)}, "EQUAL": "=", "MINUS": "-"}.items()},
+    **{f"&us_{k}": v for k, v in {**{f"N{i}": str(i) for i in range(10)}, "EQUAL": "=", "MINUS": "-",
+                                     "UP": "↑", "DOWN": "↓", "LEFT": "←", "RIGHT": "→"}.items()},
 }
 
 # helper layers that are never seen on their own (left shift holds LGate so esc opens Rows)
@@ -62,6 +63,10 @@ def pretty(key):
     for field in ("t", "h", "s"):
         if field in key:
             key[field] = SYMBOLS.get(str(key[field]), key[field])
+    # a mod-morph that sends the same key either way (the Rows us_* keys) is drawn with its
+    # shifted binding small above; it says nothing new
+    if key.get("s") is not None and key.get("s") == key.get("t"):
+        key.pop("s")
     return key
 
 
