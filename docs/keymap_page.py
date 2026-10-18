@@ -37,7 +37,7 @@ NOTES = {
 }
 
 # hold legend (from keymap_style.SYMBOLS) -> layer it holds
-HOLDS = {"Num": "Num/Nav", "Sym": "Symbols", "Fn": "Fn", "123": "NumRow", "!@#": "SymRow"}
+HOLDS = {"Num": "Num/Nav", "Sym": "Symbols", "Fn": "Fn", "123": "NumRow", "!@#": "SymRow", "Rows": "Rows"}
 
 # what a key sends with shift held, shown small above its legend
 SHIFTED = dict(zip("1234567890-=[]`;',./\\", "!@#$%^&*()_+{}~:\"<>?|"))

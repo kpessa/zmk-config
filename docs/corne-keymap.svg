@@ -199,7 +199,9 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <g transform="translate(30, 52)" class="key keypos-0">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
 <text x="0" y="0" class="key tap">⇥</text>
-</g>
+<a href="#Rows">
+<text x="0" y="25" class="key hold layer-activator">Rows</text>
+</a></g>
 <g transform="translate(90, 52)" class="key keypos-1">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
 <text x="0" y="0" class="key tap">Q</text>
@@ -1699,7 +1701,7 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 </g>
 </g>
 <g transform="translate(36, 1433)" class="layer-Rows">
-<text x="0" y="32" class="label" id="Rows">Rows<tspan class="hint" dx="10">hold left ⇧ then esc, or ' + right ⇧ · red · each number over its symbol</tspan></text>
+<text x="0" y="32" class="label" id="Rows">Rows<tspan class="hint" dx="10">hold ⇥, or left ⇧ then esc, or ' + right ⇧ · red · each number over its symbol</tspan></text>
 <g transform="translate(0, 64)">
 <g transform="translate(30, 52)" class="key keypos-0">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>

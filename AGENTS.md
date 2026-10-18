@@ -46,6 +46,9 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
   drawings (`HIDDEN` in `keymap_style.py`). The right pair stays together-only:
   right shift then ' is how a " gets typed. Trade-off: shift-then-ctrl (esc held)
   now opens Rows; press ctrl first for Ctrl+Shift shortcuts.
+  Also since 2026-10-18: hold Tab (top left) for Rows, mirroring Fn on the top right
+  (`ltrows`, same balanced hold-tap timing as Fn). With Tab held, both `+` and `_` are
+  reachable; `=` sits under Tab, so it needs one of the edge pairs.
 - Arrows also toggles with ; . and right shift together, the keys under its up, left
   and right arrows (Kurt's idea, 2026-10-13), as well as both outer thumbs.
   The drawing tools call a combo that types something a "chord" (`type: chord` in the

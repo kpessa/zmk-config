@@ -3,6 +3,7 @@ layout:
 layers:
   Kinesis:
   - t: ⇥
+    h: Rows
   - t: Q
   - t: W
   - t: E
