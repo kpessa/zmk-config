@@ -109,6 +109,15 @@ To check a change visually, screenshot the SVG with headless Chrome and look at 
   "file://$PWD/docs/corne-keymap.svg"
 ```
 
+- **Key kinds** (2026-10-18, Kurt asked that Rows tell numbers, symbols and arrows apart):
+  on every layer but the base, `kindOf` in `docs/keymap-page.template.html` sorts each key
+  the layer changes by its legend, and CSS (`.k-num` etc.) draws it: numbers filled with the
+  layer colour, symbols dark with a layer-colour outline and glyph, navigation (arrows,
+  home/end, page up/down) dark with a white outline on every layer, and modifiers, F-keys
+  and system shortcuts quiet. Held keys are dashed and unfilled. The caption legend lists
+  only the kinds the layer has. This is the interactive page only; the static SVG sheet
+  is unchanged.
+
 ## Live viewer app
 
 `./viewer/build [--open]` compiles `viewer/CorneLayers.swift` into
