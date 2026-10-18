@@ -385,45 +385,21 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <a href="#Arrows">
 <text x="450" y="272" class="combo nav tap layer-activator">Arrows</text>
 </a></g>
-<g class="combo chord combopos-2">
-<rect rx="9" ry="9" x="227" y="83" width="26" height="22" class="combo chord"/>
-<text x="240" y="94" class="combo chord tap">(</text>
-</g>
-<g class="combo chord combopos-3">
-<rect rx="9" ry="9" x="647" y="83" width="26" height="22" class="combo chord"/>
-<text x="660" y="94" class="combo chord tap">)</text>
-</g>
-<g class="combo chord combopos-4">
-<rect rx="9" ry="9" x="107" y="94" width="26" height="22" class="combo chord"/>
-<text x="120" y="105" class="combo chord tap">!</text>
-</g>
-<g class="combo chord combopos-5">
-<rect rx="9" ry="9" x="767" y="94" width="26" height="22" class="combo chord"/>
-<text x="780" y="105" class="combo chord tap">-</text>
-</g>
-<g class="combo chord combopos-6">
-<rect rx="9" ry="9" x="287" y="90" width="26" height="22" class="combo chord"/>
-<text x="300" y="101" class="combo chord tap">←</text>
-</g>
-<g class="combo chord combopos-7">
-<rect rx="9" ry="9" x="587" y="90" width="26" height="22" class="combo chord"/>
-<text x="600" y="101" class="combo chord tap">→</text>
-</g>
-<g class="combo hold combopos-8">
+<g class="combo hold combopos-2">
 <path d="M30,225 l0,-92" class="combo"/>
 <path d="M30,225 l0,-32" class="combo"/>
 <rect rx="9" ry="9" x="3" y="213" width="54" height="24" class="combo hold"/>
 <a href="#Rows">
 <text x="30" y="225" class="combo hold tap layer-activator">Rows</text>
 </a></g>
-<g class="combo hold combopos-9">
+<g class="combo hold combopos-3">
 <path d="M870,225 l0,-92" class="combo"/>
 <path d="M870,225 l0,-32" class="combo"/>
 <rect rx="9" ry="9" x="843" y="213" width="54" height="24" class="combo hold"/>
 <a href="#Rows">
 <text x="870" y="225" class="combo hold tap layer-activator">Rows</text>
 </a></g>
-<g class="combo nav combopos-10">
+<g class="combo nav combopos-4">
 <path d="M810,225 l0,-92" class="combo"/>
 <path d="M810,225 h-54 a6.0,6.0 0 0 1 -6.0,-6.0 v-42" class="combo"/>
 <path d="M810,225 h54 a6.0,6.0 0 0 0 6.0,-6.0 v-26" class="combo"/>
@@ -1357,31 +1333,7 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <rect rx="9" ry="9" x="423" y="260" width="54" height="24" class="combo nav"/>
 <text x="450" y="272" class="combo nav tap">exit</text>
 </g>
-<g class="combo chord combopos-1">
-<rect rx="9" ry="9" x="227" y="83" width="26" height="22" class="combo chord"/>
-<text x="240" y="94" class="combo chord tap">(</text>
-</g>
-<g class="combo chord combopos-2">
-<rect rx="9" ry="9" x="647" y="83" width="26" height="22" class="combo chord"/>
-<text x="660" y="94" class="combo chord tap">)</text>
-</g>
-<g class="combo chord combopos-3">
-<rect rx="9" ry="9" x="107" y="94" width="26" height="22" class="combo chord"/>
-<text x="120" y="105" class="combo chord tap">!</text>
-</g>
-<g class="combo chord combopos-4">
-<rect rx="9" ry="9" x="767" y="94" width="26" height="22" class="combo chord"/>
-<text x="780" y="105" class="combo chord tap">-</text>
-</g>
-<g class="combo chord combopos-5">
-<rect rx="9" ry="9" x="287" y="90" width="26" height="22" class="combo chord"/>
-<text x="300" y="101" class="combo chord tap">←</text>
-</g>
-<g class="combo chord combopos-6">
-<rect rx="9" ry="9" x="587" y="90" width="26" height="22" class="combo chord"/>
-<text x="600" y="101" class="combo chord tap">→</text>
-</g>
-<g class="combo nav combopos-7">
+<g class="combo nav combopos-1">
 <path d="M810,225 l0,-92" class="combo"/>
 <path d="M810,225 h-54 a6.0,6.0 0 0 1 -6.0,-6.0 v-42" class="combo"/>
 <path d="M810,225 h54 a6.0,6.0 0 0 0 6.0,-6.0 v-26" class="combo"/>

@@ -188,8 +188,6 @@ def main():
     data = yaml.safe_load(open(keymap_yaml))
     layers, combos = data["layers"], data.get("combos", [])
     for name, keys in layers.items():
-        if name == "Rows":   # its number row ignores shift (and the symbols sit right below)
-            continue
         for key in keys:
             if not key.get("type") and str(key.get("t")) in SHIFTED:
                 key.setdefault("s", SHIFTED[str(key["t"])])

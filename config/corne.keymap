@@ -206,10 +206,11 @@
                        <&macro_release &kp LSHFT &mo LGATE>;
         };
 
-        // The Rows number row: shift is still held when Rows is reached through left
-        // shift, so these drop it and always type the plain number.
+        // The Rows number row: left shift is still held when Rows is reached through it
+        // (lsft_gate), so these drop left shift and type the plain number. Right shift
+        // passes through, so right shift + 1 is !, as on a full keyboard.
 #define UNSHIFTED(name, key) name: name { compatible = "zmk,behavior-mod-morph"; \
-            #binding-cells = <0>; bindings = <&kp key>, <&kp key>; mods = <(MOD_LSFT|MOD_RSFT)>; };
+            #binding-cells = <0>; bindings = <&kp key>, <&kp key>; mods = <(MOD_LSFT)>; };
         UNSHIFTED(us_N1, N1) UNSHIFTED(us_N2, N2) UNSHIFTED(us_N3, N3) UNSHIFTED(us_N4, N4)
         UNSHIFTED(us_N5, N5) UNSHIFTED(us_N6, N6) UNSHIFTED(us_N7, N7) UNSHIFTED(us_N8, N8)
         UNSHIFTED(us_N9, N9) UNSHIFTED(us_N0, N0) UNSHIFTED(us_EQUAL, EQUAL) UNSHIFTED(us_MINUS, MINUS)
@@ -338,62 +339,6 @@
             bindings = <&steno_off>;
             key-positions = <38 39>;
             layers = <STENO>;
-        };
-
-        // Parentheses from the home row, no layer and no thumb: D + F together is (,
-        // J + K together is ). (They are still on Symbols too.) The idle time keeps a
-        // fast roll through d-f or j-k in a word from firing them.
-        paren_open {
-            timeout-ms = <40>;
-            require-prior-idle-ms = <75>;
-            bindings = <&kp LPAR>;
-            key-positions = <15 16>;
-            layers = <BASE NAV>;
-        };
-
-        paren_close {
-            timeout-ms = <40>;
-            require-prior-idle-ms = <75>;
-            bindings = <&kp RPAR>;
-            key-positions = <19 20>;
-            layers = <BASE NAV>;
-        };
-
-        // A + S together is !, L + ; together is -. "as" is a common pair of letters to
-        // roll through, so these have to land closer together than the parentheses do.
-        exclaim {
-            timeout-ms = <25>;
-            require-prior-idle-ms = <75>;
-            bindings = <&kp EXCL>;
-            key-positions = <13 14>;
-            layers = <BASE NAV>;
-        };
-
-        dash {
-            timeout-ms = <25>;
-            require-prior-idle-ms = <75>;
-            bindings = <&kp MINUS>;
-            key-positions = <21 22>;
-            layers = <BASE NAV>;
-        };
-
-        // F + G together is left arrow, H + J together is right arrow: the two index
-        // fingers reaching in. Held, they repeat; with shift or option they select or
-        // move by word as the arrow keys do.
-        arrow_left {
-            timeout-ms = <40>;
-            require-prior-idle-ms = <75>;
-            bindings = <&kp LEFT>;
-            key-positions = <16 17>;
-            layers = <BASE NAV>;
-        };
-
-        arrow_right {
-            timeout-ms = <40>;
-            require-prior-idle-ms = <75>;
-            bindings = <&kp RIGHT>;
-            key-positions = <18 19>;
-            layers = <BASE NAV>;
         };
 
         // The two outer keys of the home and bottom rows held together, on either edge
@@ -576,6 +521,8 @@
             // |  +   |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  |  _   |
             // |      |     |     |     |     |     |   |  ↑  |     |     |     |     |      |
             //                          |     |     |   |  ←  |  ↓  |  →  |
+            // Right shift on the number row types its symbol (! @ # ...); left shift doesn't,
+            // since it is how Rows is reached.
             // (+ sits under the left pair and _ under the right pair, so each is only
             //  reachable when holding the other edge. Arrows: ↑ on N, ← ↓ → on the right
             //  thumbs, an upside-down T.)

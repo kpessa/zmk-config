@@ -19,17 +19,9 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
   orange Symbols, yellow NumRow, pink SymRow, purple Fn, green Steno, cyan Arrows.
 - Both inner thumbs pressed together is the Steno toggle, so nothing else should
   use ⌦ + ⏎ (a both-thumbs number row was tried on 2026-10-12 and collided).
-- Parentheses are also home-row combos on the base and Arrows layers: D + F is `(`,
-  J + K is `)` (added 2026-10-13, after a typing test showed several seconds lost at
-  each parenthesis; `(` usually follows a space, and space and the Symbols hold are
-  both on the right thumb). `require-prior-idle-ms` keeps a fast d-f or j-k roll in a
-  word from firing them; raise it if they misfire, lower it if they fail to fire.
-  A + S is `!` and L + ; is `-` the same way (Kurt's choice, 2026-10-13), with a
-  shorter `timeout-ms` because "as" is a common roll; that pair is the one to watch
-  for misfires.
-- F + G is left arrow and H + J is right arrow, the same kind of combo (Kurt uses
-  those two a lot, 2026-10-13). On the Arrows layer the viewer lights the real arrow
-  key for ← / →, since it can't tell which was pressed.
+- Home-row chords (D + F `(`, J + K `)`, A + S `!`, L + ; `-`, F + G `←`, H + J `→`, added
+  2026-10-13) were removed on 2026-10-18 at Kurt's request. The chord-drawing support
+  (`type: chord`, `chords` in the page data) is still in the tools if they come back.
 - **Rows** is a ninth layer (Kurt's idea, 2026-10-13; red LEDs; signal Media Select
   Program Guide, `C_MEDIA_GUIDE`): the number row on top with each number's symbol on
   the home row under it, as on a full keyboard. It is held with a two-key combo on
@@ -42,7 +34,8 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
   (Kurt found the together-only combo hard to hit). Left shift is `lsft_gate`, a
   macro that holds LSHFT and a hidden `LGate` layer whose only key is esc → `rows_c`.
   Because shift is still down, the Rows number row uses `us_*` mod-morphs that drop
-  shift, so it types 1, not !. `LGate` is last in the keymap and dropped from the
+  left shift, so it types 1, not !. Right shift passes through (since 2026-10-18,
+  Kurt wanted shifted symbols in Rows), so right shift + 1 is !. `LGate` is last in the keymap and dropped from the
   drawings (`HIDDEN` in `keymap_style.py`). The right pair stays together-only:
   right shift then ' is how a " gets typed. Trade-off: shift-then-ctrl (esc held)
   now opens Rows; press ctrl first for Ctrl+Shift shortcuts.
