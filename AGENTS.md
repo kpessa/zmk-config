@@ -38,6 +38,14 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
   left and right pair, so each needs the other edge held. The drawing tools mark such
   a combo `type: hold` (`HOLD_COMBOS` in `keymap_style.py`). NumRow and SymRow are
   still there.
+  Since 2026-10-18 the left pair also works in sequence: hold left shift, then esc
+  (Kurt found the together-only combo hard to hit). Left shift is `lsft_gate`, a
+  macro that holds LSHFT and a hidden `LGate` layer whose only key is esc → `rows_c`.
+  Because shift is still down, the Rows number row uses `us_*` mod-morphs that drop
+  shift, so it types 1, not !. `LGate` is last in the keymap and dropped from the
+  drawings (`HIDDEN` in `keymap_style.py`). The right pair stays together-only:
+  right shift then ' is how a " gets typed. Trade-off: shift-then-ctrl (esc held)
+  now opens Rows; press ctrl first for Ctrl+Shift shortcuts.
 - Arrows also toggles with ; . and right shift together, the keys under its up, left
   and right arrows (Kurt's idea, 2026-10-13), as well as both outer thumbs.
   The drawing tools call a combo that types something a "chord" (`type: chord` in the
@@ -45,8 +53,10 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
 - Home row mods are a planned later step (Kurt agreed 2026-10-12: after the
   numpad settles, additive, with opposite-hand and prior-idle settings). If they
   stick, the esc/ctrl key's hold is the candidate for a pinky-held symbol row.
-- Mac shortcuts: the ⌘ thumb is tap = dictation (Ctrl+Opt+Shift+Cmd+D, Kurt's
-  macOS dictation shortcut) / hold = Command; the Symbols layer's far left has
+- Mac shortcuts: the ⌘ thumb is plain Command. It used to be tap = dictation, but
+  Kurt kept setting dictation off when reaching for ⌫ (2026-10-18), so dictation
+  (Ctrl+Opt+Shift+Cmd+D, his macOS shortcut) moved to Fn + G. Karabiner ignores the
+  Corne, so its own tap-⌘-for-dictation rule only affects the other keyboards. The Symbols layer's far left has
   Mission Control (W) over desktop left / right (A, S), sent as Ctrl+arrows.
 - `config/corne.conf` — NKRO is on (`CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y`) because
   steno chords exceed six keys.

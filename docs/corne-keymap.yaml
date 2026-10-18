@@ -41,7 +41,6 @@ layers:
   - t: /
   - t: ⇧
   - t: ⌘
-    s: dictate
   - t: ⌫
   - t: ⌦
     h: Num
@@ -187,8 +186,7 @@ layers:
   - t: RGB
   - t: studio
   - t: RGB fix
-  - t: ''
-    type: 'off'
+  - t: dictate
   - t: F5
   - t: F6
   - t: F7
@@ -580,17 +578,29 @@ layers:
     type: thru
   Rows:
   - t: '='
+    s: '='
   - t: '1'
+    s: '1'
   - t: '2'
+    s: '2'
   - t: '3'
+    s: '3'
   - t: '4'
+    s: '4'
   - t: '5'
+    s: '5'
   - t: '6'
+    s: '6'
   - t: '7'
+    s: '7'
   - t: '8'
+    s: '8'
   - t: '9'
+    s: '9'
   - t: '0'
+    s: '0'
   - t: '-'
+    s: '-'
   - t: esc
     h: held
     type: held

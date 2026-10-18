@@ -114,6 +114,10 @@ def live(keymap):
         codes, combos, own = [], [], []
         for pos, binding in enumerate(block.split("&")[1:]):
             behaviour, *params = binding.split()
+            if behaviour.startswith("us_"):   # Rows number row: a plain key with shift dropped
+                behaviour, params = "kp", [behaviour[3:]]
+            elif behaviour == "lsft_gate":    # left shift that also holds LGate
+                behaviour, params = "kp", ["LSHFT"]
             codes.append([])
             if behaviour == "trans" and out:
                 codes[pos] = list(out[0]["codes"][pos])
