@@ -13,7 +13,7 @@ layers:
   - t: I
   - t: O
   - t: P
-  - t: \
+  - t: '-'
     h: Fn
   - t: esc
     h: ctrl
@@ -37,7 +37,9 @@ layers:
   - t: N
   - t: M
   - t: ','
+    s: (
   - t: .
+    s: )
   - t: /
   - t: ⇧
   - t: ⌘
@@ -62,7 +64,7 @@ layers:
   - t: '1'
   - t: '2'
   - t: '3'
-  - t: '-'
+  - t: \
   - t: '='
   - t: esc
     type: thru
@@ -121,7 +123,7 @@ layers:
   - t: '!'
   - t: '@'
   - t: '#'
-  - t: _
+  - t: '|'
   - t: +
   - t: esc
     type: thru
@@ -179,7 +181,7 @@ layers:
   - t: F3
   - t: F4
   - t: boot
-  - t: \
+  - t: '-'
     h: held
     type: held
   - t: BT clear
@@ -372,7 +374,7 @@ layers:
     type: thru
   - t: P
     type: thru
-  - t: \
+  - t: '-'
     h: Fn
   - t: ctrl
   - t: A

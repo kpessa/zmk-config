@@ -234,7 +234,7 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 </g>
 <g transform="translate(870, 52)" class="key keypos-11">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">\</text>
+<text x="0" y="0" class="key tap">-</text>
 <a href="#Fn">
 <text x="0" y="25" class="key hold layer-activator">Fn</text>
 </a></g>
@@ -322,10 +322,12 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 <g transform="translate(690, 150)" class="key keypos-32">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
 <text x="0" y="0" class="key tap">,</text>
+<text x="0" y="-25" class="key shifted">(</text>
 </g>
 <g transform="translate(750, 158)" class="key keypos-33">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
 <text x="0" y="0" class="key tap">.</text>
+<text x="0" y="-25" class="key shifted">)</text>
 </g>
 <g transform="translate(810, 172)" class="key keypos-34">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
@@ -422,7 +424,7 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 </g>
 <g transform="translate(810, 52)" class="key keypos-10">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">-</text>
+<text x="0" y="0" class="key tap">\</text>
 </g>
 <g transform="translate(870, 52)" class="key keypos-11">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
@@ -595,7 +597,7 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 </g>
 <g transform="translate(810, 52)" class="key keypos-10">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">_</text>
+<text x="0" y="0" class="key tap">|</text>
 </g>
 <g transform="translate(870, 52)" class="key keypos-11">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
@@ -727,7 +729,7 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 </g>
 </g>
 <g transform="translate(1008, 358)" class="layer-Fn">
-<text x="0" y="32" class="label" id="Fn">Fn<tspan class="hint" dx="10">hold \ (top right) · purple</tspan></text>
+<text x="0" y="32" class="label" id="Fn">Fn<tspan class="hint" dx="10">hold - (top right) · purple</tspan></text>
 <g transform="translate(0, 64)">
 <g transform="translate(30, 52)" class="key keypos-0">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
@@ -785,7 +787,7 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 </g>
 <g transform="translate(870, 52)" class="key held keypos-11">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key held"/>
-<text x="0" y="0" class="key held tap">\</text>
+<text x="0" y="0" class="key held tap">-</text>
 <text x="0" y="25" class="key held hold">held</text>
 </g>
 <g transform="translate(30, 112)" class="key keypos-12">
@@ -1169,7 +1171,7 @@ rect.sn { fill: #2a2e37; stroke: #596170; }   text.sn.tap { fill: #a7aebb; font-
 </g>
 <g transform="translate(870, 52)" class="key keypos-11">
 <rect rx="9" ry="9" x="-27" y="-27" width="54" height="54" class="key"/>
-<text x="0" y="0" class="key tap">\</text>
+<text x="0" y="0" class="key tap">-</text>
 <a href="#Fn">
 <text x="0" y="25" class="key hold layer-activator">Fn</text>
 </a></g>
