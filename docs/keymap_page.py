@@ -37,7 +37,7 @@ NOTES = {
 }
 
 # hold legend (from keymap_style.SYMBOLS) -> layer it holds
-HOLDS = {"Num": "Num/Nav", "Sym": "Symbols", "Fn": "Fn", "123": "NumRow", "!@#": "SymRow"}
+HOLDS = {"Num": "Num/Nav", "Sym": "Symbols", "Fn": "Fn", "123": "NumRow", "!@#": "SymRow", "Rows": "Rows"}
 
 # what a key sends with shift held, shown small above its legend
 SHIFTED = dict(zip("1234567890-=[]`;',./\\", "!@#$%^&*()_+{}~:\"<>?|"))
@@ -99,6 +99,10 @@ def unwrap(param):
     return mods, param
 
 
+# mod-morph keys: what each sends unshifted and (as a bare key) with shift
+MORPHS = {"cm_lpar": ("COMMA", "N9"), "dot_rpar": ("DOT", "N0")}
+
+
 def live(keymap):
     """Per layer: the usages each position sends, the keys sent with modifiers, the signal.
 
@@ -114,6 +118,12 @@ def live(keymap):
         codes, combos, own = [], [], []
         for pos, binding in enumerate(block.split("&")[1:]):
             behaviour, *params = binding.split()
+            if behaviour.startswith("us_"):   # Rows number row: a plain key with shift dropped
+                behaviour, params = "kp", [behaviour[3:]]
+            elif behaviour == "lsft_gate":    # left shift that also holds LGate
+                behaviour, params = "kp", ["LSHFT"]
+            elif behaviour in MORPHS:         # , . that send ( ) with shift: light for either
+                behaviour, params = "kp", list(MORPHS[behaviour])
             codes.append([])
             if behaviour == "trans" and out:
                 codes[pos] = list(out[0]["codes"][pos])
@@ -183,7 +193,7 @@ def main():
     keymap_yaml, keymap_svg, template, keymap = sys.argv[1:5]
     data = yaml.safe_load(open(keymap_yaml))
     layers, combos = data["layers"], data.get("combos", [])
-    for keys in layers.values():
+    for name, keys in layers.items():
         for key in keys:
             if not key.get("type") and str(key.get("t")) in SHIFTED:
                 key.setdefault("s", SHIFTED[str(key["t"])])

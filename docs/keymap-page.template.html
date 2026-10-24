@@ -88,6 +88,30 @@ text { font-family: inherit; text-anchor: middle; dominant-baseline: central; po
 .live .side { stroke: color-mix(in srgb, var(--led) 55%, var(--mat)); }
 .live .top { fill: color-mix(in srgb, var(--led) 17%, var(--cap)); }
 
+/* what kind of key it is, so a layer reads at a glance. Everything stays in the layer's
+   colour except navigation, which looks the same on every layer:
+   numbers  filled with the layer colour (the strongest)
+   symbols  dark cap, layer-colour outline and glyph
+   nav      dark cap, white outline, bigger glyph (arrows, home/end, page up/down)
+   mods/fn/system  quiet: they are there, but not what the layer is for */
+.k-num .side { fill: color-mix(in srgb, var(--led) 30%, var(--cap-side)); stroke: var(--led); stroke-width: 1.6; }
+.k-num .top { fill: color-mix(in srgb, var(--led) 48%, var(--cap)); }
+.k-num .tap { fill: #fff; font-weight: 700; font-size: 19px; }
+
+.k-sym .side { fill: var(--cap-side); stroke: color-mix(in srgb, var(--led) 80%, var(--mat)); stroke-width: 1.6; }
+.k-sym .top { fill: color-mix(in srgb, var(--led) 7%, var(--mat)); }
+.k-sym .tap { fill: color-mix(in srgb, var(--led) 70%, #fff); font-weight: 700; }
+
+.k-nav .side { fill: #0d0f13; stroke: #e9ebef; stroke-width: 1.8; }
+.k-nav .top { fill: #1c2027; }
+.k-nav .tap { fill: #fff; font-weight: 700; font-size: 21px; }
+.k-nav .tap.mid, .k-nav .tap.small { font-size: 12px; letter-spacing: .02em; }
+
+.k-mod .side, .k-sys .side, .k-fn .side { stroke: color-mix(in srgb, var(--led) 30%, var(--edge)); }
+.k-mod .top, .k-sys .top, .k-fn .top { fill: color-mix(in srgb, var(--led) 6%, var(--cap)); }
+.k-mod .tap, .k-sys .tap { fill: var(--quiet); }
+.k-fn .tap { fill: color-mix(in srgb, var(--led) 35%, var(--ink)); font-size: 15px; }
+
 /* same as the base layer: its legend, ghosted */
 .thru .side { fill: #16181e; stroke: #252930; }
 .thru .top { fill: none; }
@@ -97,8 +121,9 @@ text { font-family: inherit; text-anchor: middle; dominant-baseline: central; po
 .off .top { fill: none; }
 
 /* the key you are holding down */
-.held .side { stroke: var(--led); stroke-width: 2; }
-.held .top { fill: color-mix(in srgb, var(--led) 10%, var(--cap)); }
+/* dashed and unfilled, so it never reads as one of the layer's own keys */
+.held .side { stroke: var(--led); stroke-width: 2; stroke-dasharray: 5 4; fill: var(--mat); }
+.held .top { fill: none; }
 .held .tap { fill: var(--quiet); }
 .held .hold { fill: var(--led); }
 
@@ -341,6 +366,23 @@ function drawLegend(g, key) {
   words.forEach((w, i) => g.append(svg("text", { class: size, y: (i - (words.length - 1) / 2) * 14 }, w)));
 }
 
+// what a key is for, from its legend: num | sym | nav | mod | fn | sys | other
+const NAV = new Set(["←", "→", "↑", "↓", "home", "end", "pg↑", "pg↓"]);
+const MODS = new Set(["⇧", "ctrl", "⌥", "⌘", "caps", "esc", "⇥", "⏎", "⌫", "⌦", "␣"]);
+function kindOf(key) {
+  const t = String(key.t ?? "");
+  if (/^\d$/.test(t)) return "num";
+  if (NAV.has(t)) return "nav";
+  if (MODS.has(t)) return "mod";
+  if (/^F\d{1,2}$/.test(t)) return "fn";
+  if (t.length === 1 && /[^\p{L}\p{N}\s]/u.test(t)) return "sym";
+  return t ? "sys" : "other";
+}
+// legends on keys that hold another layer (they are drawn as doors, not as a kind)
+const HOLDS_LEGEND = new Set(["Num", "Sym", "Fn", "123", "!@#", "Rows"]);
+const KIND_NAMES = { num: "Numbers", sym: "Symbols", nav: "Arrows & navigation", fn: "Function keys",
+                     mod: "Modifiers & editing", sys: "System & shortcuts" };
+
 // live only: legends follow the shift key (a / A, 1 / !)
 let shiftHeld = false;
 function shown(key) {
@@ -365,7 +407,7 @@ function drawBoard() {
     const cls = ["key"];
     if (key.type) cls.push(key.type);
     if (/^s[lrvxn]$/.test(key.type || "")) cls.push("steno");
-    if (!key.type && current !== DATA.base && !holdDoor[pos]) cls.push("live");
+    if (!key.type && current !== DATA.base && !holdDoor[pos]) cls.push("live", "k-" + kindOf(key));
     g.append(svg("rect", { class: "side", x: -k.w / 2, y: -k.h / 2, width: k.w, height: k.h, rx: 9 }));
     g.append(svg("rect", { class: "top", x: -k.w / 2 + 4, y: -k.h / 2 + 3, width: k.w - 8, height: k.h - 9, rx: 6 }));
     drawLegend(g, key);
@@ -432,6 +474,17 @@ function drawCaption() {
   if (kinds.has("sl")) items.push(["Left consonants", "border-color:#4a82c9;background:#1d3350"],
     ["Vowels", "border-color:#d19a3c;background:#45351a"], ["Star", "border-color:#cf5f72;background:#44222a"],
     ["Right consonants", "border-color:#3fa57a;background:#1b3a30"], ["Number bar", "border-color:#596170"]);
+  // the kinds of key this layer changes, in the order they matter
+  const tint = layer.colour;
+  const mine = new Set(layer.keys.filter(k => !k.type && !HOLDS_LEGEND.has(k.h)).map(kindOf));
+  if (layer.name !== DATA.base) for (const [kind, style] of [
+    ["num", `background:color-mix(in srgb, ${tint} 48%, #272b34);border-color:${tint}`],
+    ["sym", `background:#15171c;border-color:${tint}`],
+    ["nav", "background:#1c2027;border-color:#e9ebef"],
+    ["fn", `background:#272b34;border-color:color-mix(in srgb, ${tint} 30%, #3b414c)`],
+    ["mod", `background:#272b34;border-color:color-mix(in srgb, ${tint} 30%, #3b414c)`],
+    ["sys", `background:#272b34;border-color:color-mix(in srgb, ${tint} 30%, #3b414c)`],
+  ]) if (mine.has(kind)) items.push([KIND_NAMES[kind], style]);
   if (kinds.has("thru")) items.push([`Same as ${DATA.base}`, "background:#16181e;border-color:#252930"]);
   if (kinds.has("off")) items.push(["Does nothing", "background:none;border-style:dashed"]);
   const legend = document.getElementById("legend");
