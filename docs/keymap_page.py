@@ -99,6 +99,10 @@ def unwrap(param):
     return mods, param
 
 
+# mod-morph keys: what each sends unshifted and (as a bare key) with shift
+MORPHS = {"cm_lpar": ("COMMA", "N9"), "dot_rpar": ("DOT", "N0")}
+
+
 def live(keymap):
     """Per layer: the usages each position sends, the keys sent with modifiers, the signal.
 
@@ -118,6 +122,8 @@ def live(keymap):
                 behaviour, params = "kp", [behaviour[3:]]
             elif behaviour == "lsft_gate":    # left shift that also holds LGate
                 behaviour, params = "kp", ["LSHFT"]
+            elif behaviour in MORPHS:         # , . that send ( ) with shift: light for either
+                behaviour, params = "kp", list(MORPHS[behaviour])
             codes.append([])
             if behaviour == "trans" and out:
                 codes[pos] = list(out[0]["codes"][pos])

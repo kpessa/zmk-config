@@ -194,6 +194,21 @@
     };
 
     behaviors {
+        // , and . as usual, but Shift gives ( ) instead of < > (those live on Symbols)
+        cm_lpar: comma_lparen {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp COMMA>, <&kp LPAR>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
+        dot_rpar: dot_rparen {
+            compatible = "zmk,behavior-mod-morph";
+            #binding-cells = <0>;
+            bindings = <&kp DOT>, <&kp RPAR>;
+            mods = <(MOD_LSFT|MOD_RSFT)>;
+        };
+
         // Left shift: shift as usual, and while it is down esc opens Rows instead
         // (the LGate layer). So hold shift first, then esc, and keep both down.
         lsft_gate: left_shift_gate {
@@ -383,17 +398,17 @@
             display-name = "Kinesis";
             // Kinesis Advantage360 letter block and thumb order.
             // -----------------------------------------------------------------------------------------
-            // |TAB/RW|  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U  |  I  |  O  |  P  | \ FN |
+            // |TAB/RW|  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U  |  I  |  O  |  P  | - FN |
             // |ESC/CT|  A  |  S  |  D  |  F  |  G  |   |  H  |  J  |  K  |  L  |  ;  |  '   |
-            // | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M  |  ,  |  .  |  /  | SHFT |
+            // | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M  | , ( | . ) |  /  | SHFT |
             //                    | CMD | BSPC| DEL |   | ENT | SPC | ALT |
             //                          (hold DEL for numbers, ENT for their symbols)
             // LEDs: white here, blue on Num/Nav, orange on Symbols, purple on Fn, green on Steno
 
             bindings = <
-&ltrows 0 TAB  &kp Q  &kp W  &kp E     &kp R     &kp T          &kp Y          &kp U      &kp I      &kp O    &kp P     &ltf 0 BSLH
+&ltrows 0 TAB  &kp Q  &kp W  &kp E     &kp R     &kp T          &kp Y          &kp U      &kp I      &kp O    &kp P     &ltf 0 MINUS
 &mt LCTRL ESC  &kp A  &kp S  &kp D     &kp F     &kp G          &kp H          &kp J      &kp K      &kp L    &kp SEMI  &kp SQT
-&lsft_gate     &kp Z  &kp X  &kp C     &kp V     &kp B          &kp N          &kp M      &kp COMMA  &kp DOT  &kp FSLH  &kp RSHFT
+&lsft_gate     &kp Z  &kp X  &kp C     &kp V     &kp B          &kp N          &kp M      &cm_lpar   &dot_rpar  &kp FSLH  &kp RSHFT
                              &kp LGUI  &kp BSPC  &ltn 0 DEL    &lts 0 ENTER  &kp SPACE  &kp LALT
             >;
         };
@@ -402,13 +417,13 @@
             display-name = "Num/Nav";
             // Numpad under the right hand, reading 1 2 3 from the top; arrow cluster under the left.
             // -----------------------------------------------------------------------------------------
-            // |      |     | HOME|  UP | END | PGUP|   |  /  |  1  |  2  |  3  |  -  |  =   |
+            // |      |     | HOME|  UP | END | PGUP|   |  /  |  1  |  2  |  3  |  \  |  =   |
             // |      |     | LFT | DWN | RGT | PGDN|   |  0  |  4  |  5  |  6  |  .  |      |
             // |      |  `  | CAPS|  [  |  ]  |     |   |  ;  |  7  |  8  |  9  |  ,  |      |
             //                          (also hold SPC for the number row across the top)
 
             bindings = <
-&trans  &none      &kp HOME  &kp UP    &kp END    &kp PG_UP    &kp FSLH  &kp N1  &kp N2  &kp N3  &kp MINUS  &kp EQUAL
+&trans  &none      &kp HOME  &kp UP    &kp END    &kp PG_UP    &kp FSLH  &kp N1  &kp N2  &kp N3  &kp BSLH   &kp EQUAL
 &trans  &none      &kp LEFT  &kp DOWN  &kp RIGHT  &kp PG_DN    &kp N0    &kp N4  &kp N5  &kp N6  &kp DOT    &trans
 &trans  &kp GRAVE  &kp CAPS  &kp LBKT  &kp RBKT   &none        &kp SEMI  &kp N7  &kp N8  &kp N9  &kp COMMA  &trans
                              &trans    &trans     &trans       &trans    &ltr 0 SPACE  &trans
@@ -421,13 +436,13 @@
             // Left hand: the bracket pairs, opposite the thumb that holds the layer.
             // -----------------------------------------------------------------------------------------
             // Far left: Mission Control over desktop left / right (Ctrl + arrows).
-            // |      |     | MCTL|  [  |  ]  |     |   |  ?  |  !  |  @  |  #  |  _  |  +   |
+            // |      |     | MCTL|  [  |  ]  |     |   |  ?  |  !  |  @  |  #  |  |  |  +   |
             // |      | DSK<| DSK>|  (  |  )  |     |   |  )  |  $  |  %  |  ^  |  >  |      |
             // |      |  ~  |     |  {  |  }  |     |   |  :  |  &  |  *  |  (  |  <  |      |
             //                          (also hold BSPC for the symbol row across the top)
 
             bindings = <
-&trans  &none         &kp LC(UP)     &kp LBKT  &kp RBKT  &none    &kp QMARK  &kp EXCL  &kp AT     &kp HASH   &kp UNDER  &kp PLUS
+&trans  &none         &kp LC(UP)     &kp LBKT  &kp RBKT  &none    &kp QMARK  &kp EXCL  &kp AT     &kp HASH   &kp PIPE   &kp PLUS
 &trans  &kp LC(LEFT)  &kp LC(RIGHT)  &kp LPAR  &kp RPAR  &none    &kp RPAR   &kp DLLR  &kp PRCNT  &kp CARET  &kp GT     &trans
 &trans  &kp TILDE      &none          &kp LBRC  &kp RBRC  &none    &kp COLON  &kp AMPS  &kp STAR   &kp LPAR   &kp LT     &trans
                              &trans    &ltsr 0 BSPC  &trans    &trans     &trans    &trans
@@ -436,7 +451,7 @@
 
         fn_layer {
             display-name = "Fn";
-            // Hold the top-right key (\).
+            // Hold the top-right key (-).
             // -----------------------------------------------------------------------------------------
             // | BOOT | BT1 | BT2 | BT3 | BT4 | BT5 |   | F1  | F2  | F3  | F4  | BOOT |     |
             // | BTCLR| USB/BT | RGB | STUDIO | RGB RESET | DICTATE |   | F5  | F6  | F7  | F8  |      |     |
@@ -477,7 +492,7 @@
             // | SHFT |     |     |     |     |     |   |     |     |     | LFT | DWN | RGT  |
 
             bindings = <
-&kp LALT   &trans  &trans  &trans  &trans  &trans         &trans           &trans  &trans  &trans    &trans    &ltfn 0 BSLH
+&kp LALT   &trans  &trans  &trans  &trans  &trans         &trans           &trans  &trans  &trans    &trans    &ltfn 0 MINUS
 &kp LCTRL  &trans  &trans  &trans  &trans  &trans         &trans           &trans  &trans  &trans    &kp UP    &trans
 &kp LSHFT  &trans  &trans  &trans  &trans  &trans         &trans           &trans  &trans  &kp LEFT  &kp DOWN  &kp RIGHT
                            &trans  &trans  &ltnn 0 DEL    &ltsn 0 ENTER    &trans  &trans

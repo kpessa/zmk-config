@@ -12,7 +12,7 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
   (hold ⏎; right hand is the Num layer with shift already applied, left hand is
   the bracket pairs `[ ]` / `( )` / `{ }` stacked on the E/R, D/F, C/V columns), **NumRow**
   (hold ⌦, then also ␣: the classic number row across the top), **SymRow** (hold
-  ⏎, then also ⌫: that row's symbols), **Fn** (hold `\`,
+  ⏎, then also ⌫: that row's symbols), **Fn** (hold `-`,
   top right), **Steno** (both inner thumbs together toggles), **Arrows** (both
   outer thumbs together toggles, locks on).
 - Each layer sets the underglow colour through a macro: white base, blue Num/Nav,
@@ -52,6 +52,11 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
 - Home row mods are a planned later step (Kurt agreed 2026-10-12: after the
   numpad settles, additive, with opposite-hand and prior-idle settings). If they
   stick, the esc/ctrl key's hold is the candidate for a pinky-held symbol row.
+- Shifted punctuation (2026-10-24): on the base layer `,` and `.` are ZMK
+  mod-morphs (`cm_lpar`, `dot_rpar`) so Shift gives `(` `)` instead of `< >`
+  (those stay on Symbols). The top-right key taps `-` (Shift = `_`) and holds Fn;
+  `\` moved to Num where `-` was, and `|` to the same spot on Symbols. Caveat:
+  any Shift chord on `,`/`.` (e.g. ⌘⇧. in Finder) now sends the paren instead.
 - Mac shortcuts: the ⌘ thumb is plain Command. It used to be tap = dictation, but
   Kurt kept setting dictation off when reaching for ⌫ (2026-10-18), so dictation
   (Ctrl+Opt+Shift+Cmd+D, his macOS shortcut) moved to Fn + G. Karabiner ignores the
