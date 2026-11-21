@@ -15,7 +15,7 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
   ⏎, then also ⌫: that row's symbols), **Fn** (hold `-`,
   top right), **Steno** (both inner thumbs together toggles), **Arrows** (both
   outer thumbs together toggles, locks on).
-- Each layer sets the underglow colour through a macro: white base, blue Num/Nav,
+- Each layer sets the underglow colour through a macro: lights OFF on base (battery, 2026-11-21; they used to be white), blue Num/Nav,
   orange Symbols, yellow NumRow, pink SymRow, purple Fn, green Steno, cyan Arrows.
 - Both inner thumbs pressed together is the Steno toggle, so nothing else should
   use ⌦ + ⏎ (a both-thumbs number row was tried on 2026-10-12 and collided).
