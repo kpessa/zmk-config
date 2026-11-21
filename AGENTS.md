@@ -15,8 +15,9 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
   ⏎, then also ⌫: that row's symbols), **Fn** (hold `-`,
   top right), **Steno** (both inner thumbs together toggles), **Arrows** (both
   outer thumbs together toggles, locks on).
+- **Vim** (added 2026-11-21): hold ⌫ (tap still deletes; `ltv` hold-tap). Right hand: h j k l arrows; N M , . = line start / word back / word forward / line end; Y U I O P = copy / undo / redo / new line below / paste. Left hand: S D F G = delete to line start / word back / word forward / line end (line end is select-then-delete, since Ctrl+K is a VS Code prefix); X = cut. Same left-to-right order on both hands; Shift selects. Signal key `C_MEDIA_DVD` (0x8B).
 - Each layer sets the underglow colour through a macro: lights OFF on base (battery, 2026-11-21; they used to be white), blue Num/Nav,
-  orange Symbols, yellow NumRow, pink SymRow, purple Fn, green Steno, cyan Arrows.
+  orange Symbols, yellow NumRow, pink SymRow, purple Fn, green Steno, cyan Arrows, red Vim.
 - Both inner thumbs pressed together is the Steno toggle, so nothing else should
   use ⌦ + ⏎ (a both-thumbs number row was tried on 2026-10-12 and collided).
 - Home row mods are a planned later step (Kurt agreed 2026-10-12: after the
