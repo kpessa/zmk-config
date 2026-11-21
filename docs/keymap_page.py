@@ -20,7 +20,7 @@ BASE = "Kinesis"
 
 # layer -> (underglow colour, its name in words)
 LEDS = {
-    "Kinesis": ("#f2f3f5", "White"),
+    "Kinesis": ("#5a5f6b", "No"),  # lights off while typing (battery, 2026-11-21)
     "Num/Nav": ("#6f9bff", "Blue"),
     "Symbols": ("#ffa04d", "Orange"),
     "Fn": ("#b98aff", "Purple"),
