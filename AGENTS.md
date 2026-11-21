@@ -30,7 +30,7 @@ generated visual of its layers. Firmware builds on GitHub Actions on push
 - Mac shortcuts: the ⌘ thumb is tap = dictation (Ctrl+Opt+Shift+Cmd+D, Kurt's
   macOS dictation shortcut) / hold = Command; the Symbols layer's far left has
   Mission Control (W) over desktop left / right (A, S), sent as Ctrl+arrows.
-- `config/corne.conf` — NKRO is on (`CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y`) because
+- `config/corne.conf` — battery: lights start off, and the left half proxies the right half's battery level to the Mac (two Battery Services; Keyboard Layers shows both). NKRO is on (`CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y`) because
   steno chords exceed six keys.
 - The Steno layer sends the QWERTY letters Plover's "Keyboard" machine expects.
   Vowels are on the outer two thumbs per hand: C V = A O, N M = E U. The left
