@@ -45,6 +45,7 @@ layers:
   - t: ⌘
     s: dictate
   - t: ⌫
+    h: Vim
   - t: ⌦
     h: Num
   - t: ⏎
@@ -576,6 +577,74 @@ layers:
   - t: ⏎
     h: held
     type: held
+  - t: ␣
+    type: thru
+  - t: ⌥
+    type: thru
+  Vim:
+  - t: ⇥
+    type: thru
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: copy
+  - t: undo
+  - t: redo
+  - t: new line ↓
+  - t: paste
+  - t: '-'
+    type: thru
+  - t: esc
+    type: thru
+  - t: ''
+    type: 'off'
+  - t: ⌫ line
+  - t: ⌫ word
+  - t: ⌦ word
+  - t: ⌦ line
+  - t: ←
+  - t: ↓
+  - t: ↑
+  - t: →
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ⇧
+    type: thru
+  - t: ''
+    type: 'off'
+  - t: cut
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: ''
+    type: 'off'
+  - t: line ←
+  - t: word ←
+  - t: word →
+  - t: line →
+  - t: ''
+    type: 'off'
+  - t: ⇧
+    type: thru
+  - t: ⌘
+    type: thru
+  - t: ⌫
+    h: held
+    type: held
+  - t: ⌦
+    type: thru
+  - t: ⏎
+    type: thru
   - t: ␣
     type: thru
   - t: ⌥

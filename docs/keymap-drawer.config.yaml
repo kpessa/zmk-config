@@ -59,6 +59,9 @@ draw_config:
     .layer-Fn text.label, .layer-Fn text.held.hold { fill: #b98aff; }
     .layer-Fn rect.key:not(.thru):not(.off) { stroke: #6e4bb0; fill: #2a2140; }
     .layer-Fn rect.held { stroke: #b98aff; }
+    .layer-Vim text.label, .layer-Vim text.held.hold { fill: #ff5c5c; }
+    .layer-Vim rect.key:not(.thru):not(.off) { stroke: #a83a3a; fill: #3a1c1c; }
+    .layer-Vim rect.held { stroke: #ff5c5c; }
     .layer-Arrows text.label { fill: #3fd0dc; }
     .layer-Arrows rect.key:not(.thru):not(.off) { stroke: #23808a; fill: #17313a; }
     .layer-Steno text.label { fill: #4fd684; }

@@ -23,6 +23,10 @@ SYMBOLS = {
     "Ctl+UP": "mission control", "Ctl+LEFT": "desk ←", "Ctl+RIGHT": "desk →",
     "&num_c": "Num", "&num_cn": "Num", "&sym_c": "Sym", "&sym_cn": "Sym",
     "&row_c": "123", "&srow_c": "!@#", "&fn_c": "Fn", "&fn_cn": "Fn",
+    "Gui+C": "copy", "Gui+V": "paste", "Gui+X": "cut", "Gui+Z": "undo", "Gui+Sft+Z": "redo",
+    "Gui+BSPC": "⌫ line", "Alt+BSPC": "⌫ word", "Alt+DEL": "⌦ word",
+    "Gui+LEFT": "line ←", "Alt+LEFT": "word ←", "Alt+RIGHT": "word →", "Gui+RIGHT": "line →",
+    "&vim_c": "Vim", "&vim_o": "new line ↓", "&vim_dl": "⌦ line",
     "&steno_on": "Steno", "&steno_off": "exit", "&nav_on": "Arrows", "&nav_off": "exit",
 }
 
@@ -38,7 +42,7 @@ STENO = {
 }
 
 # key positions that are physically held down while a layer is showing
-HELD = {"Num/Nav": [38], "Symbols": [39], "Fn": [11], "NumRow": [38, 40], "SymRow": [39, 37]}
+HELD = {"Num/Nav": [38], "Symbols": [39], "Fn": [11], "NumRow": [38, 40], "SymRow": [39, 37], "Vim": [37]}
 
 
 def as_dict(key):

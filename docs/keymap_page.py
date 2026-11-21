@@ -28,15 +28,17 @@ LEDS = {
     "Arrows": ("#3fd0dc", "Cyan"),
     "NumRow": ("#e6c84f", "Yellow"),
     "SymRow": ("#ff7eb6", "Pink"),
+    "Vim": ("#ff5c5c", "Red"),
 }
 
 NOTES = {
     "Steno": "The small letter on each key is the one Plover sees.",
     "Arrows": "Typing still works here.",
+    "Vim": "Right hand moves, left hand deletes, both in the order line start, word back, word forward, line end. Hold Shift too to select instead of move.",
 }
 
 # hold legend (from keymap_style.SYMBOLS) -> layer it holds
-HOLDS = {"Num": "Num/Nav", "Sym": "Symbols", "Fn": "Fn", "123": "NumRow", "!@#": "SymRow"}
+HOLDS = {"Num": "Num/Nav", "Sym": "Symbols", "Fn": "Fn", "123": "NumRow", "!@#": "SymRow", "Vim": "Vim"}
 
 # what a key sends with shift held, shown small above its legend
 SHIFTED = dict(zip("1234567890-=[]`;',./\\", "!@#$%^&*()_+{}~:\"<>?|"))
@@ -69,7 +71,7 @@ MODIFIERS = {"C": 224, "S": 225, "A": 226, "G": 227}
 CONSUMER = {
     "C_MEDIA_TV": 0x89, "C_MEDIA_VCR": 0x92, "C_MEDIA_TUNER": 0x93,
     "C_MEDIA_TAPE": 0x96, "C_MEDIA_CABLE": 0x97, "C_MEDIA_SATELLITE": 0x98,
-    "C_MEDIA_GAMES": 0x8F, "C_MEDIA_CD": 0x91,
+    "C_MEDIA_GAMES": 0x8F, "C_MEDIA_CD": 0x91, "C_MEDIA_DVD": 0x8B,
 }
 
 KEY = re.compile(
